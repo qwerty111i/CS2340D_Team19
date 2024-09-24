@@ -1,0 +1,15 @@
+# Default ignored files
+/shelf/
+/workspace.xml
+
+# Ignore misc.xml in .idea folder
+.idea/misc.xml
+
+# Ignore Gradle's build directory and cache file
+.gradle/
+# Ignore custom Gradle app settings
+gradle-app.settings
+
+# Don't ignore the Gradle wrapper JAR file and properties
+!gradle-wrapper.jar
+!gradle-wrapper.properties
