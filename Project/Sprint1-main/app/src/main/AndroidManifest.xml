@@ -17,7 +17,26 @@
             android:exported="false" />
         <activity
             android:name=".view.Login"
-            android:exported="true" />
+            android:exported="false" />
+      <activity
+            android:name=".view.TravelActivity"
+            android:exported="false" />
+        <activity
+            android:name=".view.TransportationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".view.AccommodationsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".view.DiningActivity"
+            android:exported="false" />
+        <activity
+            android:name=".view.DestinationsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".view.LogisticsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Sprint1" />
         <activity
             android:name=".view.MainActivity"
             android:exported="true">
