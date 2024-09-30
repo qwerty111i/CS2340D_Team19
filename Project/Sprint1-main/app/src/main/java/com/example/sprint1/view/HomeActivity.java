@@ -22,6 +22,6 @@ public class HomeActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        // Add navigation bar
     }
+    // Add navigation bar
 }
