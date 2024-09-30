@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "244055932360",
+    "project_id": "wandersync-c48ea",
+    "storage_bucket": "wandersync-c48ea.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:244055932360:android:20d0e827b843f401fa94fd",
+        "android_client_info": {
+          "package_name": "com.example.sprint1"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD3mz66DaKbujIqKMBItEK6K_vZq58ZZ1A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

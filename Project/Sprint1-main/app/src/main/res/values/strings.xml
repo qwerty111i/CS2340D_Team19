@@ -1,5 +1,22 @@
 <resources>
     <string name="app_name">Sprint1</string>
+
+    <!-- String resources for Login page -->
+    <string name="login_title">Log In</string>
+    <string name="user_label">Enter Email</string>
+    <string name="password_label">Enter Password</string>
+    <string name="sign_up_text">Don\'t have an account?</string>
+
+    <!-- String resources for Signup Page -->
+    <string name="signup_title">Sign Up</string>
+    <string name="user_creation_label">Enter Email</string>
+    <string name="password_creation_label">Enter Password</string>
+    <string name="sign_in_text">Already have an account?</string>
+
+    <!-- Shared resources for Login/Signup Page -->
+    <string name="sign_in_button">Sign In</string>
+    <string name="sign_up_button">Sign Up</string>
+
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
