@@ -62,8 +62,8 @@ public class TransportationActivity extends AppCompatActivity {
         btnAccom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(TransportationActivity.this, AccommodationsActivity.class);
-                startActivity(intent);
+                Intent i = new Intent(TransportationActivity.this, AccommodationsActivity.class);
+                startActivity(i);
             }
         });
 
@@ -78,8 +78,8 @@ public class TransportationActivity extends AppCompatActivity {
         btnTransport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(TransportationActivity.this, TransportationActivity.class);
-                startActivity(intent);
+                Intent i = new Intent(TransportationActivity.this, TransportationActivity.class);
+                startActivity(i);
             }
         });
     }
