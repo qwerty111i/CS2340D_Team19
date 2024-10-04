@@ -16,9 +16,6 @@
             android:name=".view.HomeActivity"
             android:exported="false" />
         <activity
-            android:name=".viewmodel.home2"
-            android:exported="false" />
-        <activity
             android:name=".view.SplashPageMain"
             android:exported="false" />
         <activity
@@ -48,7 +45,7 @@
             android:theme="@style/Theme.Sprint1" />
         <activity
             android:name=".view.MainActivity"
-            android:exported="true">
+            android:exported="true"/>
         <activity
             android:name=".view.SplashPage"
             android:theme="@style/Theme.Design.NoActionBar"
