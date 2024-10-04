@@ -164,7 +164,7 @@ public class Login extends AppCompatActivity {
         viewModel.areInputsValid().observe(this, isValid -> {
             if (viewModel.areInputsValid().getValue()) {
                 // Check database
-                viewModel.login();
+                viewModel.Login();
             }
         });
     }
