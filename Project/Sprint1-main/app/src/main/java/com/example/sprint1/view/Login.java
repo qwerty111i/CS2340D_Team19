@@ -2,10 +2,7 @@ package com.example.sprint1.view;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,7 +10,6 @@ import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.sprint1.BR;
@@ -26,9 +22,12 @@ import com.google.android.material.textfield.TextInputLayout;
 
 public class Login extends AppCompatActivity {
 
-    TextInputLayout username, password;
-    TextInputEditText usernameText, passwordText;
-    Button signIn, signUp;
+    private TextInputLayout username;
+    private TextInputLayout password;
+    private TextInputEditText usernameText;
+    private TextInputEditText passwordText;
+    private Button signIn;
+    private Button signUp;
     private LoginViewModel viewModel;
 
 
@@ -52,8 +51,10 @@ public class Login extends AppCompatActivity {
         String message = getIntent().getStringExtra("creation_successful");
         if (message != null) {
             // Creates and displays message
-            Snackbar display = Snackbar.make(binding.getRoot(), "Account Creation Successful!", Snackbar.LENGTH_LONG)
-                    .setAction("OK", v -> {});
+            Snackbar display =
+                    Snackbar.make(binding.getRoot(), "Account Creation Successful!",
+                                    Snackbar.LENGTH_LONG)
+                    .setAction("OK", v -> { });
             display.setBackgroundTint(ContextCompat.getColor(this, R.color.snackbar_background));
             display.setTextColor(ContextCompat.getColor(this, R.color.white));
             display.setActionTextColor(ContextCompat.getColor(this, R.color.snackbar_action_text));
@@ -142,11 +143,14 @@ public class Login extends AppCompatActivity {
         // Updates new variable errorMessage to match the specific sign in error
         viewModel.getLoginError().observe(this, errorMessage -> {
             if (errorMessage != null) {
-                Snackbar display = Snackbar.make(binding.getRoot(), errorMessage, Snackbar.LENGTH_LONG)
-                        .setAction("OK", v -> {});
-                display.setBackgroundTint(ContextCompat.getColor(this, R.color.snackbar_background));
+                Snackbar display =
+                        Snackbar.make(binding.getRoot(), errorMessage, Snackbar.LENGTH_LONG)
+                        .setAction("OK", v -> { });
+                display.setBackgroundTint(ContextCompat.getColor(this,
+                        R.color.snackbar_background));
                 display.setTextColor(ContextCompat.getColor(this, R.color.white));
-                display.setActionTextColor(ContextCompat.getColor(this, R.color.snackbar_action_text));
+                display.setActionTextColor(ContextCompat.getColor(this,
+                        R.color.snackbar_action_text));
                 display.show();
             } else {
                 // Successful sign in
@@ -169,8 +173,8 @@ public class Login extends AppCompatActivity {
         // Checks if username text field is edited after error is shown
         username.getEditText().addTextChangedListener(new android.text.TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+            public void onTextChanged(CharSequence s, int start, int before, int count) { }
             public void afterTextChanged(android.text.Editable s) {
                 // Sets error to null if field is edited
                 username.setError(null);
@@ -180,8 +184,8 @@ public class Login extends AppCompatActivity {
         // Checks if password text field is edited after error is shown
         password.getEditText().addTextChangedListener(new android.text.TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+            public void onTextChanged(CharSequence s, int start, int before, int count) { }
             public void afterTextChanged(android.text.Editable s) {
                 // Sets error to null if field is edited
                 password.setError(null);

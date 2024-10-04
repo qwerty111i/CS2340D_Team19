@@ -2,9 +2,7 @@ package com.example.sprint1.view;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,9 +14,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.sprint1.BR;
 import com.example.sprint1.R;
-import com.example.sprint1.databinding.ActivityLoginBinding;
 import com.example.sprint1.databinding.ActivitySignupBinding;
-import com.example.sprint1.viewmodel.LoginViewModel;
 import com.example.sprint1.viewmodel.SignupViewModel;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
