@@ -19,7 +19,6 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.sprint1.BR;
 import com.example.sprint1.R;
 import com.example.sprint1.databinding.ActivityLoginBinding;
-import com.example.sprint1.databinding.ActivityMainBinding;
 import com.example.sprint1.viewmodel.LoginViewModel;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
