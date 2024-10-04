@@ -13,12 +13,18 @@
         android:theme="@style/Base.Theme.Sprint1"
         tools:targetApi="31">
         <activity
+            android:name=".view.HomeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".view.SplashPageMain"
+            android:exported="false" />
+        <activity
             android:name=".view.Signup"
             android:exported="false" />
         <activity
             android:name=".view.Login"
             android:exported="false" />
-      <activity
+        <activity
             android:name=".view.TravelActivity"
             android:exported="false" />
         <activity
@@ -39,13 +45,16 @@
             android:theme="@style/Theme.Sprint1" />
         <activity
             android:name=".view.MainActivity"
-            android:exported="true">
+            android:exported="true"/>
+        <activity
+            android:name=".view.SplashPage"
+            android:theme="@style/Theme.Design.NoActionBar"
+            android:exported="true"/>
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
     </application>
 
 </manifest>
