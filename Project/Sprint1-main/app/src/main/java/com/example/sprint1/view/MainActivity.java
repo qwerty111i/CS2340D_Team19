@@ -12,6 +12,7 @@ import com.example.sprint1.BR;
 import com.example.sprint1.R;
 import com.example.sprint1.viewmodel.LoginViewModel;
 import com.example.sprint1.databinding.ActivityMainBinding;
+
 import androidx.lifecycle.ViewModelProvider;
 
 public class MainActivity extends AppCompatActivity {
@@ -37,5 +38,6 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
     }
 }
