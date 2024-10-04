@@ -16,9 +16,6 @@
             android:name=".view.HomeActivity"
             android:exported="false" />
         <activity
-            android:name=".viewmodel.home2"
-            android:exported="false" />
-        <activity
             android:name=".view.Signup"
             android:exported="false" />
         <activity
