@@ -25,15 +25,13 @@ public class MainActivity extends AppCompatActivity {
         //use databinding to inflate the layout
         ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        //      setContentView(R.layout.activity_main);
+        //setContentView(R.layout.activity_main);
 
         //create viewmodel
         LoginViewModel viewModel = new ViewModelProvider(this).get(LoginViewModel.class);
         //bind viewmodel to layout
         binding.setVariable(BR.ViewModel, viewModel);
         binding.setLifecycleOwner(this);
-
-
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
