@@ -39,13 +39,13 @@ public class LoginViewModel extends ViewModel {
         passwordError.setValue(null);
 
         // Username Error
-        if (!CheckInput(username.getValue())) {
+        if (!checkInput(username.getValue())) {
             valid = false;
             usernameError.setValue("Invalid Username.");
         }
 
         // Password Error
-        if (!CheckInput(password.getValue())) {
+        if (!checkInput(password.getValue())) {
             valid = false;
             passwordError.setValue("Invalid Password.");
         }
@@ -54,26 +54,27 @@ public class LoginViewModel extends ViewModel {
         validInputs.setValue(valid);
     }
 
-    public void Login() {
-        mAuth.signInWithEmailAndPassword(username.getValue(), password.getValue()).addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                loginError.setValue(null);
-            } else {
-                Exception exception = task.getException();
-                FirebaseAuthException authException = (FirebaseAuthException) exception;
-                String errorCode = authException.getErrorCode();
-                if (errorCode.equals("ERROR_INVALID_EMAIL")) {
-                    usernameError.setValue("The email address is invalid.");
-                } else {
-                    usernameError.setValue("Invalid email or password");
-                    passwordError.setValue("Invalid email or password");
-                }
-            }
-        });
+    public void login() {
+        mAuth.signInWithEmailAndPassword(username.getValue(),
+                password.getValue()).addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        loginError.setValue(null);
+                    } else {
+                        Exception exception = task.getException();
+                        FirebaseAuthException authException = (FirebaseAuthException) exception;
+                        String errorCode = authException.getErrorCode();
+                        if (errorCode.equals("ERROR_INVALID_EMAIL")) {
+                            usernameError.setValue("The email address is invalid.");
+                        } else {
+                            usernameError.setValue("Invalid email or password");
+                            passwordError.setValue("Invalid email or password");
+                        }
+                    }
+                });
     }
 
     // Method to check whether inputs are formatted correctly
-    private boolean CheckInput(String input) {
+    private boolean checkInput(String input) {
         return input != null && !input.isEmpty() && !input.contains(" ");
     }
 
@@ -89,5 +90,7 @@ public class LoginViewModel extends ViewModel {
         return passwordError;
     }
 
-    public LiveData<String> getLoginError() { return loginError; }
+    public LiveData<String> getLoginError() {
+        return loginError;
+    }
 }
