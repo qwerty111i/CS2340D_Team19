@@ -12,6 +12,7 @@
       <list>
         <ConfigurationLocation id="bundled-sun-checks" type="BUNDLED" scope="All" description="Sun Checks">(bundled)</ConfigurationLocation>
         <ConfigurationLocation id="bundled-google-checks" type="BUNDLED" scope="All" description="Google Checks">(bundled)</ConfigurationLocation>
+        <ConfigurationLocation id="24e5d2c7-7ec7-4110-948b-04c8028ef1cb" type="LOCAL_FILE" scope="All" description="CS2340">$PROJECT_DIR$/../../../cs2340_checks.xml</ConfigurationLocation>
         <ConfigurationLocation id="76c55c31-69e2-4960-a9f6-bde794e6bb97" type="LOCAL_FILE" scope="All" description="checkstyle check">$PROJECT_DIR$/../../../../cs2340_checks.xml</ConfigurationLocation>
         <ConfigurationLocation id="9de3c989-5875-4f96-97e6-fee6669192e1" type="LOCAL_FILE" scope="All" description="from dsa one">$PROJECT_DIR$/../../../../CS1332 DSA/CS1332-checkstyle.xml</ConfigurationLocation>
       </list>
