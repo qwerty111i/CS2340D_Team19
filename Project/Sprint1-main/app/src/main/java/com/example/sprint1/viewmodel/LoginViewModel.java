@@ -55,8 +55,8 @@ public class LoginViewModel extends ViewModel {
     }
 
     public void login() {
-        mAuth.signInWithEmailAndPassword(
-                username.getValue(), password.getValue()).addOnCompleteListener(task -> {
+        mAuth.signInWithEmailAndPassword(username.getValue(),
+                password.getValue()).addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         loginError.setValue(null);
                     } else {
