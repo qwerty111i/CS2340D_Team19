@@ -8,13 +8,18 @@
     tools:context=".view.DestinationsActivity">
 
     <TextView
+        android:id="@+id/travel_community_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Destinations Screen."
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:fontFamily="@font/merriweather_black"
+        android:gravity="center"
+        android:paddingTop="32dp"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="30dp"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="Destinations Screen"
+        android:textSize="28sp"
+        android:textStyle="bold" />
 
     <LinearLayout
         android:id="@+id/bottom_navigation"

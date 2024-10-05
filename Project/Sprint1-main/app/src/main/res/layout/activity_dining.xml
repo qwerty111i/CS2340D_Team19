@@ -8,16 +8,18 @@
     tools:context=".view.DiningActivity">
 
     <TextView
-        android:id="@+id/dining_text"
+        android:id="@+id/travel_community_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/merriweather_black"
         android:gravity="center"
         android:paddingTop="32dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:text="Dining Screen"
-        android:textSize="20sp"/>
+        android:textSize="28sp"
+        android:textStyle="bold" />
 
     <LinearLayout
         android:id="@+id/bottom_navigation"
