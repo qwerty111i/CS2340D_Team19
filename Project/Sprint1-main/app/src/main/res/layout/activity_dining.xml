@@ -17,7 +17,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:text="Dining Screen"
-        android:textSize="20sp"/>
+        android:textSize="30sp"
+        android:textStyle="bold"/>
 
     <LinearLayout
         android:id="@+id/bottom_navigation"
