@@ -154,7 +154,7 @@ public class Login extends AppCompatActivity {
                 display.show();
             } else {
                 // Successful sign in
-                Intent intent = new Intent(Login.this, HomeActivity.class);
+                Intent intent = new Intent(Login.this, LogisticsActivity.class);
                 startActivity(intent);
             }
         });
