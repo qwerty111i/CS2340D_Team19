@@ -1,19 +1,15 @@
 package com.example.sprint1.viewmodel;
 
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-
 import com.example.sprint1.model.User;
 import com.example.sprint1.model.UserModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 public class SignupViewModel extends ViewModel {
     // Creating the LiveData
@@ -50,13 +46,13 @@ public class SignupViewModel extends ViewModel {
         passwordError.setValue(null);
 
         // Username error
-        if (!CheckInput(username.getValue())) {
+        if (!checkInput(username.getValue())) {
             valid = false;
             usernameError.setValue("Cannot contain Whitespace!");
         }
 
         // Password error
-        if (!CheckInput(password.getValue())) {
+        if (!checkInput(password.getValue())) {
             valid = false;
             passwordError.setValue("Cannot contain Whitespace!");
         }
@@ -65,35 +61,37 @@ public class SignupViewModel extends ViewModel {
         validInputs.setValue(valid);
     }
 
-    public void SignUp() {
+    public void signUp() {
         // Creates a new user with an email and password
-        Log.d("SignupViewModel", "Email: " + username.getValue() + ", Password: " + password.getValue());
-        mAuth.createUserWithEmailAndPassword(username.getValue(), password.getValue()).addOnCompleteListener(task -> {
-           if (task.isSuccessful()) {
-               // Retrieves the authenticated user
-               FirebaseUser user = mAuth.getCurrentUser();
-               // Calls the storeUser method in userModel, which handles data with the firebase
-               userModel.storeUser(user.getUid(), new User(username.getValue()));
-               validationError.setValue(null);
-           } else {
-               Exception exception = task.getException();
-               FirebaseAuthException authException = (FirebaseAuthException) exception;
-               String errorCode = authException.getErrorCode();
-               if (errorCode.equals("ERROR_INVALID_EMAIL")) {
-                   usernameError.setValue("The email address is invalid.");
-               } else if (errorCode.equals("ERROR_EMAIL_ALREADY_IN_USE")) {
-                   usernameError.setValue("The email is already in used.");
-               } else if (errorCode.equals("ERROR_WEAK_PASSWORD")) {
-                   passwordError.setValue("Must be at least 6 characters.");
-               } else {
-                   validationError.setValue("Something went wrong.  Try again later.");
-               }
-           }
-        });
+        Log.d("SignupViewModel", "Email: "
+                + username.getValue() + ", Password: " + password.getValue());
+        mAuth.createUserWithEmailAndPassword(
+                username.getValue(), password.getValue()).addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        // Retrieves the authenticated user
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        // Calls the storeUser method in userModel, which handles data with firebase
+                        userModel.storeUser(user.getUid(), new User(username.getValue()));
+                        validationError.setValue(null);
+                    } else {
+                        Exception exception = task.getException();
+                        FirebaseAuthException authException = (FirebaseAuthException) exception;
+                        String errorCode = authException.getErrorCode();
+                        if (errorCode.equals("ERROR_INVALID_EMAIL")) {
+                            usernameError.setValue("The email address is invalid.");
+                        } else if (errorCode.equals("ERROR_EMAIL_ALREADY_IN_USE")) {
+                            usernameError.setValue("The email is already in used.");
+                        } else if (errorCode.equals("ERROR_WEAK_PASSWORD")) {
+                            passwordError.setValue("Must be at least 6 characters.");
+                        } else {
+                            validationError.setValue("Something went wrong.  Try again later.");
+                        }
+                    }
+                });
     }
 
     // Method to check whether inputs are formatted correctly
-    private boolean CheckInput(String input) {
+    private boolean checkInput(String input) {
         return input != null && !input.isEmpty() && !input.contains(" ");
     }
 
