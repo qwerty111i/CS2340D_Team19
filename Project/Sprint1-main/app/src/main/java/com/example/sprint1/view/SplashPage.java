@@ -25,6 +25,6 @@ public class SplashPage extends AppCompatActivity {
                 startActivity(intent);
                 finish();
             }
-        }, 3000); //we can manually change the delay here
+        }, 2000); //we can manually change the delay here
     }
 }
