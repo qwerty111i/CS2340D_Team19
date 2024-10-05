@@ -51,9 +51,8 @@ public class Login extends AppCompatActivity {
         String message = getIntent().getStringExtra("creation_successful");
         if (message != null) {
             // Creates and displays message
-            Snackbar display =
-                    Snackbar.make(binding.getRoot(), "Account Creation Successful!",
-                                    Snackbar.LENGTH_LONG)
+            Snackbar display = Snackbar.make(binding.getRoot(),
+                            "Account Creation Successful!", Snackbar.LENGTH_LONG)
                     .setAction("OK", v -> { });
             display.setBackgroundTint(ContextCompat.getColor(this, R.color.snackbar_background));
             display.setTextColor(ContextCompat.getColor(this, R.color.white));
@@ -146,11 +145,12 @@ public class Login extends AppCompatActivity {
                 Snackbar display =
                         Snackbar.make(binding.getRoot(), errorMessage, Snackbar.LENGTH_LONG)
                         .setAction("OK", v -> { });
-                display.setBackgroundTint(ContextCompat.getColor(this,
-                        R.color.snackbar_background));
-                display.setTextColor(ContextCompat.getColor(this, R.color.white));
-                display.setActionTextColor(ContextCompat.getColor(this,
-                        R.color.snackbar_action_text));
+                display.setBackgroundTint(
+                        ContextCompat.getColor(this, R.color.snackbar_background));
+                display.setTextColor(
+                        ContextCompat.getColor(this, R.color.white));
+                display.setActionTextColor(
+                        ContextCompat.getColor(this, R.color.snackbar_action_text));
                 display.show();
             } else {
                 // Successful sign in
@@ -164,7 +164,7 @@ public class Login extends AppCompatActivity {
         viewModel.areInputsValid().observe(this, isValid -> {
             if (viewModel.areInputsValid().getValue()) {
                 // Check database
-                viewModel.Login();
+                viewModel.login();
             }
         });
     }

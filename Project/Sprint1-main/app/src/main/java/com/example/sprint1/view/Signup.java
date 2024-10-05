@@ -23,9 +23,12 @@ import com.google.firebase.FirebaseApp;
 
 public class Signup extends AppCompatActivity {
 
-    TextInputLayout username, password;
-    TextInputEditText usernameText, passwordText;
-    Button signUp, signIn;
+    private TextInputLayout username;
+    private TextInputLayout password;
+    private TextInputEditText usernameText;
+    private TextInputEditText passwordText;
+    private Button signUp;
+    private Button signIn;
     private SignupViewModel viewModel;
 
     @Override
@@ -130,16 +133,21 @@ public class Signup extends AppCompatActivity {
         // Checks if account can be created
         viewModel.getValidationError().observe(this, errorMessage -> {
             if (errorMessage != null) {
-                Snackbar display = Snackbar.make(binding.getRoot(), errorMessage, Snackbar.LENGTH_LONG)
-                        .setAction("OK", v -> {});
-                display.setBackgroundTint(ContextCompat.getColor(this, R.color.snackbar_background));
-                display.setTextColor(ContextCompat.getColor(this, R.color.white));
-                display.setActionTextColor(ContextCompat.getColor(this, R.color.snackbar_action_text));
+                Snackbar display = Snackbar.make(binding.getRoot(), errorMessage,
+                                Snackbar.LENGTH_LONG)
+                        .setAction("OK", v -> { });
+                display.setBackgroundTint(
+                        ContextCompat.getColor(this, R.color.snackbar_background));
+                display.setTextColor(
+                        ContextCompat.getColor(this, R.color.white));
+                display.setActionTextColor(
+                        ContextCompat.getColor(this, R.color.snackbar_action_text));
                 display.show();
             } else {
                 Intent intent = new Intent(Signup.this, Login.class);
                 // Tells the Login screen to display a message
-                intent.putExtra("creation_successful", "Account Creation Successful!  Please sign in.");
+                intent.putExtra("creation_successful",
+                        "Account Creation Successful!  Please sign in.");
                 startActivity(intent);
             }
         });
@@ -150,7 +158,7 @@ public class Signup extends AppCompatActivity {
         viewModel.areInputsValid().observe(this, isValid -> {
             if (viewModel.areInputsValid().getValue()) {
                 // Create account method in viewModel
-                viewModel.SignUp();
+                viewModel.signUp();
             }
         });
     }
@@ -159,8 +167,8 @@ public class Signup extends AppCompatActivity {
         // Checks if username text field is edited after error is shown
         username.getEditText().addTextChangedListener(new android.text.TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+            public void onTextChanged(CharSequence s, int start, int before, int count) { }
             public void afterTextChanged(android.text.Editable s) {
                 // Sets error to null if field is edited
                 username.setError(null);
@@ -170,8 +178,8 @@ public class Signup extends AppCompatActivity {
         // Checks if password text field is edited after error is shown
         password.getEditText().addTextChangedListener(new android.text.TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+            public void onTextChanged(CharSequence s, int start, int before, int count) { }
             public void afterTextChanged(android.text.Editable s) {
                 // Sets error to null if field is edited
                 password.setError(null);
