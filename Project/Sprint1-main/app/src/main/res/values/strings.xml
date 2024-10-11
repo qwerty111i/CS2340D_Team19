@@ -17,6 +17,16 @@
     <string name="sign_in_button">Sign In</string>
     <string name="sign_up_button">Sign Up</string>
 
+    <!-- String resources for Destinations Page -->
+    <string name="log_travel_btn">Log Travel</string>
+    <string name="log_travel_title">Log Travel</string>
+    <string name="travel_location">Travel Location</string>
+    <string name="travel_location_input">Enter Travel Location</string>
+    <string name="start_date">Start Date</string>
+    <string name="date_view">Select Date</string>
+    <string name="end_date">End Date</string>
+    <string name="log_travel_submit">Submit</string>
+
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>

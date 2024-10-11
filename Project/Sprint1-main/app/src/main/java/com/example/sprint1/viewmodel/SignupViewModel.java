@@ -26,7 +26,7 @@ public class SignupViewModel extends ViewModel {
     // Initializes the FirebaseAuth and UserModel instances
     public SignupViewModel() {
         mAuth = FirebaseAuth.getInstance();
-        userModel = new UserModel();
+        userModel = UserModel.getInstance();
     }
 
     // Method to set username to user input

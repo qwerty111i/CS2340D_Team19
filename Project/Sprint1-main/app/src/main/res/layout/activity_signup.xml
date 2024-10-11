@@ -16,7 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/sign_up_background"
-        tools:context=".view.Signup">
+        tools:context=".view.SignupActivity">
 
         <View
             android:id="@+id/rectangleCard"
