@@ -28,7 +28,7 @@ public class SplashPageMain extends AppCompatActivity {
         //creating the start button
         Button buttonStart = (Button) findViewById(R.id.start);
         buttonStart.setOnClickListener(v -> {
-            Intent intent = new Intent(SplashPageMain.this, Login.class);
+            Intent intent = new Intent(SplashPageMain.this, LoginActivity.class);
             startActivity(intent);
         });
 

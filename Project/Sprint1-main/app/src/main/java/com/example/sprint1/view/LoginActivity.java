@@ -14,43 +14,53 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.sprint1.BR;
 import com.example.sprint1.R;
-import com.example.sprint1.databinding.ActivitySignupBinding;
-import com.example.sprint1.viewmodel.SignupViewModel;
+import com.example.sprint1.databinding.ActivityLoginBinding;
+import com.example.sprint1.viewmodel.LoginViewModel;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
-import com.google.firebase.FirebaseApp;
 
-public class Signup extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
 
     private TextInputLayout username;
     private TextInputLayout password;
     private TextInputEditText usernameText;
     private TextInputEditText passwordText;
-    private Button signUp;
     private Button signIn;
-    private SignupViewModel viewModel;
+    private Button signUp;
+    private LoginViewModel viewModel;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
 
-        // Initializing Firebase
-        FirebaseApp.initializeApp(this);
-
         // Inflating the layout
-        ActivitySignupBinding binding = ActivitySignupBinding.inflate(getLayoutInflater());
+        ActivityLoginBinding binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // Creating the ViewModel
-        viewModel = new ViewModelProvider(this).get(SignupViewModel.class);
+        // Setting the ViewModel
+        viewModel = new ViewModelProvider(this).get(LoginViewModel.class);
 
         // Binding the ViewModel
         binding.setVariable(BR.viewModel, viewModel);
         binding.setLifecycleOwner(this);
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.signup), (v, insets) -> {
+        // Receives messages from Sign Up
+        String message = getIntent().getStringExtra("creation_successful");
+        if (message != null) {
+            // Creates and displays message
+            Snackbar display = Snackbar.make(binding.getRoot(),
+                            "Account Creation Successful!", Snackbar.LENGTH_LONG)
+                    .setAction("OK", v -> { });
+            display.setBackgroundTint(ContextCompat.getColor(this, R.color.snackbar_background));
+            display.setTextColor(ContextCompat.getColor(this, R.color.white));
+            display.setActionTextColor(ContextCompat.getColor(this, R.color.snackbar_action_text));
+            display.show();
+        }
+
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.login), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
@@ -66,17 +76,17 @@ public class Signup extends AppCompatActivity {
         textWatchers();
     }
 
-    private void listeners(ActivitySignupBinding binding) {
+    private void listeners(ActivityLoginBinding binding) {
         // Linking components from XML to activity
         username = binding.usernameLayout;
         password = binding.passwordLayout;
         usernameText = binding.username;
         passwordText = binding.password;
-        signUp = binding.signUp;
         signIn = binding.signIn;
+        signUp = binding.signUp;
 
-        // Sign Up button listener
-        signUp.setOnClickListener(v -> {
+        // Sign In button listener
+        signIn.setOnClickListener(v -> {
             // Setting values in the viewModel
             viewModel.setUsername(username.getEditText().getText().toString());
             viewModel.setPassword(password.getEditText().getText().toString());
@@ -85,10 +95,10 @@ public class Signup extends AppCompatActivity {
             viewModel.signInValidation();
         });
 
-        // Sign In button listener
-        signIn.setOnClickListener(v -> {
+        // Sign Up button listener
+        signUp.setOnClickListener(v -> {
             // Sends the user to the Sign Up page
-            Intent intent = new Intent(Signup.this, Login.class);
+            Intent intent = new Intent(LoginActivity.this, SignupActivity.class);
             startActivity(intent);
         });
 
@@ -107,7 +117,7 @@ public class Signup extends AppCompatActivity {
         });
     }
 
-    private void observers(ActivitySignupBinding binding) {
+    private void observers(ActivityLoginBinding binding) {
         // Obtains username error using getUsernameError in viewModel
         // Updates new variable errorMessage to match the username error
         viewModel.getUsernameError().observe(this, errorMessage -> {
@@ -128,13 +138,12 @@ public class Signup extends AppCompatActivity {
             }
         });
 
-        // Obtains account creation errors using getValidationError in viewModel
-        // Updates new variable errorMessage to get the specific error
-        // Checks if account can be created
-        viewModel.getValidationError().observe(this, errorMessage -> {
+        // Obtains sign in error using getLoginError in viewModel
+        // Updates new variable errorMessage to match the specific sign in error
+        viewModel.getLoginError().observe(this, errorMessage -> {
             if (errorMessage != null) {
-                Snackbar display = Snackbar.make(binding.getRoot(), errorMessage,
-                                Snackbar.LENGTH_LONG)
+                Snackbar display =
+                        Snackbar.make(binding.getRoot(), errorMessage, Snackbar.LENGTH_LONG)
                         .setAction("OK", v -> { });
                 display.setBackgroundTint(
                         ContextCompat.getColor(this, R.color.snackbar_background));
@@ -144,21 +153,18 @@ public class Signup extends AppCompatActivity {
                         ContextCompat.getColor(this, R.color.snackbar_action_text));
                 display.show();
             } else {
-                Intent intent = new Intent(Signup.this, Login.class);
-                // Tells the Login screen to display a message
-                intent.putExtra("creation_successful",
-                        "Account Creation Successful!  Please sign in.");
+                // Successful sign in
+                Intent intent = new Intent(LoginActivity.this, LogisticsActivity.class);
                 startActivity(intent);
             }
         });
 
         // Obtains validity using areInputsValid in viewModel
         // Updates new variable isValid to match the validity
-        // Checks if inputs are valid
         viewModel.areInputsValid().observe(this, isValid -> {
             if (viewModel.areInputsValid().getValue()) {
-                // Create account method in viewModel
-                viewModel.signUp();
+                // Check database
+                viewModel.login();
             }
         });
     }

@@ -7,9 +7,21 @@ public class UserModel {
     // Creates an instance of the DatabaseReference
     private DatabaseReference database;
 
-    public UserModel() {
+    // Creates a static instance
+    private static UserModel instance;
+
+    // Private constructor
+    private UserModel() {
         // Uses the DatabaseReference to point to the "users" node in Firebase
         database = FirebaseDatabase.getInstance().getReference("users");
+    }
+
+    // Uses the Singleton design pattern to get instance
+    public static synchronized UserModel getInstance() {
+        if (instance == null) {
+            instance = new UserModel();
+        }
+        return instance;
     }
 
     public void storeUser(String userId, User user) {

@@ -3,14 +3,14 @@
     <style name="Base.Theme.Sprint1" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
-
     </style>
 
+    <!-- Default Styling -->
+    <style name="Theme.Sprint1" parent="Base.Theme.Sprint1" />
+
+    <!-- Text Input Error Text Size -->
     <style name="ErrorTextStyle">
         <item name="android:textSize">15sp</item>
     </style>
-
-    <style name="Theme.Sprint1" parent="Base.Theme.Sprint1" />
-
 
 </resources>
