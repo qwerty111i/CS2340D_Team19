@@ -5,7 +5,7 @@ public class TravelDetails {
     private String startDate;
     private String endDate;
 
-    public TravelDetails() {}
+    public TravelDetails() { }
 
     public TravelDetails(String location, String startDate, String endDate) {
         this.location = location;

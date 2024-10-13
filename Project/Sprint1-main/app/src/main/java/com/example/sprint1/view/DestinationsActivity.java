@@ -2,7 +2,6 @@ package com.example.sprint1.view;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 
@@ -29,7 +28,8 @@ public class DestinationsActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
 
         // Inflating the layout
-        ActivityDestinationsBinding binding = ActivityDestinationsBinding.inflate(getLayoutInflater());
+        ActivityDestinationsBinding binding =
+                ActivityDestinationsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         // Creating the ViewModel

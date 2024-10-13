@@ -34,7 +34,8 @@ public class LogTravelDialog extends DialogFragment {
     private TextInputEditText endDateText;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(
+            LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the binding for the dialog layout
         binding = ActivityLogTravelDialogBinding.inflate(inflater, container, false);
 
@@ -95,8 +96,7 @@ public class LogTravelDialog extends DialogFragment {
                 // Formats the date as MM/DD/YY
                 (datePicker, selectedYear, selectedMonth, selectedDay) -> {
                     String selectedDate =
-                            (selectedMonth + 1) + "/" +
-                                    selectedDay + "/" + (selectedYear % 100);
+                            (selectedMonth + 1) + "/" + selectedDay + "/" + (selectedYear % 100);
 
                     // Sets the input field to the selected date
                     dateInput.setText(selectedDate);
