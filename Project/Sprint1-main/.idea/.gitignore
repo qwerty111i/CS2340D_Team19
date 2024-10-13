@@ -5,6 +5,9 @@
 # Ignore misc.xml in .idea folder
 .idea/misc.xml
 
+# Ignore deploymentTargetSelector.xml in .idea folder
+.idea/deploymentTargetSelector.xml
+
 # Ignore Gradle's build directory and cache file
 .gradle/
 # Ignore custom Gradle app settings
