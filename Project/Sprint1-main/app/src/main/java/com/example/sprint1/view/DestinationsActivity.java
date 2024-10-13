@@ -21,6 +21,7 @@ public class DestinationsActivity extends AppCompatActivity {
 
     private DestinationsViewModel viewModel;
     private Button logTravelBtn;
+    private Button vacationBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +59,15 @@ public class DestinationsActivity extends AppCompatActivity {
         logTravelBtn.setOnClickListener(v -> {
             LogTravelDialog dialog = new LogTravelDialog();
             dialog.show(getSupportFragmentManager(), "LogTravelDialog");
+        });
+    }
+
+    public void calculateVacation(ActivityDestinationsBinding binding) {
+        vacationBtn = binding.buttonVacation;
+
+        vacationBtn.setOnClickListener(v -> {
+            LogTravelDialog dialog = new LogTravelDialog();
+            dialog.show(getSupportFragmentManager(), "CalculateVacationDialog");
         });
     }
 

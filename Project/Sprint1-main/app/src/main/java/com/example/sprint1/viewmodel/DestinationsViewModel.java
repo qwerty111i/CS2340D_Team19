@@ -19,6 +19,9 @@ public class DestinationsViewModel extends ViewModel {
     private MutableLiveData<String> locationError = new MutableLiveData<>();
     private MutableLiveData<String> dateError = new MutableLiveData<>();
     private MutableLiveData<Boolean> validInputs = new MutableLiveData<>();
+    private MutableLiveData<Integer> duration = new MutableLiveData<>();
+    private MutableLiveData<String> startVacationDate = new MutableLiveData<>();
+    private MutableLiveData<String> endVacationDate = new MutableLiveData<>();
 
     public void setTravelDetails(String location, String startDate, String endDate) {
         // Sets the values of the MutableLiveData
