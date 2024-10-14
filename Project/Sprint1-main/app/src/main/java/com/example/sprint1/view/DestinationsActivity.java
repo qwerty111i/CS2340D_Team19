@@ -51,6 +51,9 @@ public class DestinationsActivity extends AppCompatActivity {
 
         // Log Travel Feature
         logTravel(binding);
+
+        // Calculate Vacation Time Feature
+        calculateVacation(binding);
     }
 
     public void logTravel(ActivityDestinationsBinding binding) {
@@ -66,7 +69,7 @@ public class DestinationsActivity extends AppCompatActivity {
         vacationBtn = binding.buttonVacation;
 
         vacationBtn.setOnClickListener(v -> {
-            LogTravelDialog dialog = new LogTravelDialog();
+            CalculateVacationDialog dialog = new CalculateVacationDialog();
             dialog.show(getSupportFragmentManager(), "CalculateVacationDialog");
         });
     }
