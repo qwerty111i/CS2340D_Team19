@@ -15,7 +15,6 @@ import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.sprint1.databinding.ActivityCalculateVacationDialogBinding;
-import com.example.sprint1.databinding.ActivityLogTravelDialogBinding;
 import com.example.sprint1.viewmodel.DestinationsViewModel;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -128,27 +127,37 @@ public class CalculateVacationDialog extends DialogFragment {
 
         // Called when the Submit button is pressed
         submitButton.setOnClickListener(v -> {
-            String locationText = this.durationText.getText().toString();
+            String durationText = this.durationText.getText().toString();
             String startDateText = this.startDateText.getText().toString();
             String endDateText = this.endDateText.getText().toString();
 
-            // Updates the MutableLiveData in the View Model
-            viewModel.setTravelDetails(locationText, startDateText, endDateText);
-
-            if (viewModel.areInputsValid().getValue()) {
-                // Saves details in the database
-                viewModel.saveDetails();
-
-                // Closes the dialog
-                dismiss();
-            }
+            // Does calculations in the View Model
+            viewModel.calculateVacationTime(durationText, startDateText, endDateText);
         });
     }
 
     private void observers() {
-        // Obtains location error using getLocationError in viewModel
-        // Updates new variable errorMessage to match the location error
-        viewModel.getLocationError().observe(this, errorMessage -> {
+        viewModel.getDuration().observe(this, d -> {
+            if (d != null) {
+                durationText.setText(d);
+            }
+        });
+
+        viewModel.getStartDate().observe(this, d -> {
+            if (d != null) {
+                startDateText.setText(d);
+            }
+        });
+
+        viewModel.getEndDate().observe(this, d -> {
+            if (d != null) {
+                endDateText.setText(d);
+            }
+        });
+
+        // Obtains duration error using getDurationError in viewModel
+        // Updates new variable errorMessage to match the duration error
+        viewModel.getDurationError().observe(this, errorMessage -> {
             if (errorMessage != null) {
                 duration.setError(errorMessage);
             } else {
@@ -156,14 +165,22 @@ public class CalculateVacationDialog extends DialogFragment {
             }
         });
 
-        // Obtains date error using getDateError in viewModel
+        // Obtains startdate error using getStateDateError in viewModel
         // Updates new variable errorMessage to match the date error
-        viewModel.getDateError().observe(this, errorMessage -> {
+        viewModel.getStartDateError().observe(this, errorMessage -> {
             if (errorMessage != null) {
                 startDate.setError(errorMessage);
-                endDate.setError(errorMessage);
             } else {
                 startDate.setError(null);
+            }
+        });
+
+        // Obtains enddate error using getStateDateError in viewModel
+        // Updates new variable errorMessage to match the date error
+        viewModel.getEndDateError().observe(this, errorMessage -> {
+            if (errorMessage != null) {
+                endDate.setError(errorMessage);
+            } else {
                 endDate.setError(null);
             }
         });

@@ -28,4 +28,9 @@ public class UserModel {
         // Stores the user data in the database under the node "users"
         database.child(userId).setValue(user);
     }
+
+    public void storeVacation(String vacaID, VacationTime vacationTime) {
+        // Stores the vacation information under user database
+        database.child(vacaID).setValue(vacationTime);
+    }
 }
