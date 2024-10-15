@@ -1,20 +1,18 @@
 package com.example.sprint1.model;
 
-public class TravelDetails {
-    private String location;
+public class VacationTime {
+    private Integer duration;
     private String startDate;
     private String endDate;
 
-    public TravelDetails() { }
-
-    public TravelDetails(String location, String startDate, String endDate) {
-        this.location = location;
+    public VacationTime(Integer duration, String startDate, String endDate) {
+        this.duration = duration;
         this.startDate = startDate;
         this.endDate = endDate;
     }
 
-    public String getLocation() {
-        return location;
+    public Integer getDuration() {
+        return duration;
     }
 
     public String getStartDate() {

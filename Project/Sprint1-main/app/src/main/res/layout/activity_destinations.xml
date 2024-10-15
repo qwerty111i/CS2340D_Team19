@@ -39,11 +39,27 @@
             android:fontFamily="@font/poppins_regular"
             app:backgroundTint="@color/modern_blue"
             app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Medium"
-            app:layout_constraintWidth_percent="0.5"
+            app:layout_constraintWidth_percent="0.78"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHeight_percent="0.08"
             app:layout_constraintTop_toBottomOf="@id/travel_community_text"
+            app:layout_constraintBottom_toTopOf="@id/button_vacation" />
+
+        <Button
+            android:id="@+id/button_vacation"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:text="Calculate Vacation Time"
+            android:textSize="23sp"
+            android:fontFamily="@font/poppins_regular"
+            app:backgroundTint="@color/modern_blue"
+            app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Medium"
+            app:layout_constraintWidth_percent="0.78"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHeight_percent="0.12"
+            app:layout_constraintTop_toBottomOf="@id/log_travel"
             app:layout_constraintBottom_toTopOf="@id/bottom_navigation" />
 
         <LinearLayout

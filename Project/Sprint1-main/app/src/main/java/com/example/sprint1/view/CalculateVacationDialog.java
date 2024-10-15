@@ -14,22 +14,22 @@ import android.widget.Button;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.sprint1.databinding.ActivityLogTravelDialogBinding;
+import com.example.sprint1.databinding.ActivityCalculateVacationDialogBinding;
 import com.example.sprint1.viewmodel.DestinationsViewModel;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.Calendar;
 
-public class LogTravelDialog extends DialogFragment {
+public class CalculateVacationDialog extends DialogFragment {
 
     private DestinationsViewModel viewModel;
-    private ActivityLogTravelDialogBinding binding;
+    private ActivityCalculateVacationDialogBinding binding;
     private Button submitButton;
-    private TextInputLayout location;
+    private TextInputLayout duration;
     private TextInputLayout startDate;
     private TextInputLayout endDate;
-    private TextInputEditText locationText;
+    private TextInputEditText durationText;
     private TextInputEditText startDateText;
     private TextInputEditText endDateText;
 
@@ -37,7 +37,7 @@ public class LogTravelDialog extends DialogFragment {
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the binding for the dialog layout
-        binding = ActivityLogTravelDialogBinding.inflate(inflater, container, false);
+        binding = ActivityCalculateVacationDialogBinding.inflate(inflater, container, false);
 
         // Creating the ViewModel
         viewModel = new ViewModelProvider(this).get(DestinationsViewModel.class);
@@ -109,8 +109,8 @@ public class LogTravelDialog extends DialogFragment {
 
     private void startDialog() {
         // Binds the variables to the proper xml components
-        location = binding.locationView;
-        locationText = binding.locationText;
+        duration = binding.durationView;
+        durationText = binding.durationBox;
 
         startDate = binding.startDateView;
         startDateText = binding.startDateText;
@@ -127,50 +127,68 @@ public class LogTravelDialog extends DialogFragment {
 
         // Called when the Submit button is pressed
         submitButton.setOnClickListener(v -> {
-            String locationText = this.locationText.getText().toString();
+            String durationText = this.durationText.getText().toString();
             String startDateText = this.startDateText.getText().toString();
             String endDateText = this.endDateText.getText().toString();
 
-            // Updates the MutableLiveData in the View Model
-            viewModel.setTravelDetails(locationText, startDateText, endDateText);
-
-            if (viewModel.areInputsValid().getValue()) {
-                // Saves details in the database
-                viewModel.saveDetails();
-
-                // Closes the dialog
-                dismiss();
-            }
+            // Does calculations in the View Model
+            viewModel.calculateVacationTime(durationText, startDateText, endDateText);
         });
     }
 
     private void observers() {
-        // Obtains location error using getLocationError in viewModel
-        // Updates new variable errorMessage to match the location error
-        viewModel.getLocationError().observe(this, errorMessage -> {
-            if (errorMessage != null) {
-                location.setError(errorMessage);
-            } else {
-                location.setError(null);
+        viewModel.getDuration().observe(this, d -> {
+            if (d != null) {
+                durationText.setText(d);
             }
         });
 
-        // Obtains date error using getDateError in viewModel
+        viewModel.getStartDate().observe(this, d -> {
+            if (d != null) {
+                startDateText.setText(d);
+            }
+        });
+
+        viewModel.getEndDate().observe(this, d -> {
+            if (d != null) {
+                endDateText.setText(d);
+            }
+        });
+
+        // Obtains duration error using getDurationError in viewModel
+        // Updates new variable errorMessage to match the duration error
+        viewModel.getDurationError().observe(this, errorMessage -> {
+            if (errorMessage != null) {
+                duration.setError(errorMessage);
+            } else {
+                duration.setError(null);
+            }
+        });
+
+        // Obtains startdate error using getStateDateError in viewModel
         // Updates new variable errorMessage to match the date error
-        viewModel.getDateError().observe(this, errorMessage -> {
+        viewModel.getStartDateError().observe(this, errorMessage -> {
             if (errorMessage != null) {
                 startDate.setError(errorMessage);
-                endDate.setError(errorMessage);
             } else {
                 startDate.setError(null);
+            }
+        });
+
+        // Obtains enddate error using getStateDateError in viewModel
+        // Updates new variable errorMessage to match the date error
+        viewModel.getEndDateError().observe(this, errorMessage -> {
+            if (errorMessage != null) {
+                endDate.setError(errorMessage);
+            } else {
                 endDate.setError(null);
             }
         });
     }
 
     private void textWatchers() {
-        // Checks if username text field is edited after error is shown
-        locationText.addTextChangedListener(new android.text.TextWatcher() {
+        // Checks if duration text field is edited after error is shown
+        durationText.addTextChangedListener(new android.text.TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
@@ -180,7 +198,7 @@ public class LogTravelDialog extends DialogFragment {
 
             public void afterTextChanged(android.text.Editable s) {
                 // Sets error to null if field is edited
-                locationText.setError(null);
+                durationText.setError(null);
             }
         });
     }

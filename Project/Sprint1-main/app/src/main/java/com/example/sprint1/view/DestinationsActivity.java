@@ -2,7 +2,6 @@ package com.example.sprint1.view;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 
@@ -22,6 +21,7 @@ public class DestinationsActivity extends AppCompatActivity {
 
     private DestinationsViewModel viewModel;
     private Button logTravelBtn;
+    private Button vacationBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +29,8 @@ public class DestinationsActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
 
         // Inflating the layout
-        ActivityDestinationsBinding binding = ActivityDestinationsBinding.inflate(getLayoutInflater());
+        ActivityDestinationsBinding binding =
+                ActivityDestinationsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         // Creating the ViewModel
@@ -50,6 +51,9 @@ public class DestinationsActivity extends AppCompatActivity {
 
         // Log Travel Feature
         logTravel(binding);
+
+        // Calculate Vacation Time Feature
+        calculateVacation(binding);
     }
 
     public void logTravel(ActivityDestinationsBinding binding) {
@@ -58,6 +62,15 @@ public class DestinationsActivity extends AppCompatActivity {
         logTravelBtn.setOnClickListener(v -> {
             LogTravelDialog dialog = new LogTravelDialog();
             dialog.show(getSupportFragmentManager(), "LogTravelDialog");
+        });
+    }
+
+    public void calculateVacation(ActivityDestinationsBinding binding) {
+        vacationBtn = binding.buttonVacation;
+
+        vacationBtn.setOnClickListener(v -> {
+            CalculateVacationDialog dialog = new CalculateVacationDialog();
+            dialog.show(getSupportFragmentManager(), "CalculateVacationDialog");
         });
     }
 
