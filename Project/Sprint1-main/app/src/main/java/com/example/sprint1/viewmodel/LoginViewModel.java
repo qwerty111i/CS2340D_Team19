@@ -4,8 +4,10 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.sprint1.model.UserModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
+
 
 public class LoginViewModel extends ViewModel {
     // Creating the LiveData
@@ -17,9 +19,11 @@ public class LoginViewModel extends ViewModel {
     private MutableLiveData<String> loginError = new MutableLiveData<>();
 
     private FirebaseAuth mAuth;
+    private UserModel userModel;
 
     public LoginViewModel() {
         mAuth = FirebaseAuth.getInstance();
+        userModel = UserModel.getInstance();
     }
 
     // Method to set username to user input
@@ -58,6 +62,13 @@ public class LoginViewModel extends ViewModel {
         mAuth.signInWithEmailAndPassword(username.getValue(),
                 password.getValue()).addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
+                        // Retrieve the userid of logged-in user
+                        String userId = mAuth.getCurrentUser().getUid();
+
+                        // new userId setup
+                        userModel.setUserId(userId);
+
+                        // clear login errors
                         loginError.setValue(null);
                     } else {
                         Exception exception = task.getException();
