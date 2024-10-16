@@ -56,14 +56,16 @@
             android:text="Calculate Vacation Time"
             android:textSize="23sp"
             android:fontFamily="@font/poppins_regular"
-            app:backgroundTint="@color/modern_blue"
+            app:backgroundTint="@color/modern_purple"
             app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Medium"
             app:layout_constraintWidth_percent="0.78"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHeight_percent="0.12"
             app:layout_constraintTop_toBottomOf="@id/log_travel"
-            app:layout_constraintBottom_toTopOf="@id/bottom_navigation" />
+            app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
+            android:layout_marginBottom="420dp"
+            />
 
 
 <!--Log entry UI -->
@@ -71,12 +73,12 @@
             android:id="@+id/entry_card1"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="15dp"
             android:layout_marginBottom="25dp"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
             android:background="@drawable/entry_rectangle_card"
-            app:layout_constraintTop_toBottomOf="@id/log_travel"
+            app:layout_constraintTop_toBottomOf="@id/button_vacation"
              />
 
         <TextView
