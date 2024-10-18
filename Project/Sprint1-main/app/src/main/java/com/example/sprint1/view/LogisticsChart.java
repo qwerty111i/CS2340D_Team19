@@ -14,20 +14,18 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.sprint1.R;
 
-public class LogisticsActivity extends AppCompatActivity {
+public class LogisticsChart extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_logistics);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.logistics), (v, insets) -> {
+        setContentView(R.layout.activity_logistics_chart);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-
-        // Add navigation bar
 
         ImageButton btnLogistics = findViewById(R.id.btn_logistics);
         ImageButton btnAccom = findViewById(R.id.btn_accom);
@@ -35,17 +33,11 @@ public class LogisticsActivity extends AppCompatActivity {
         ImageButton btnDining = findViewById(R.id.btn_dining);
         ImageButton btnTransport = findViewById(R.id.btn_transport);
         ImageButton btnTravel = findViewById(R.id.btn_travel);
-        Button btnalloted = (Button) findViewById(R.id.alloted_vs_planned);
-
-        btnalloted.setOnClickListener(v -> {
-            Intent intent = new Intent(LogisticsActivity.this, LogisticsChart.class);
-            startActivity(intent);
-        });
 
         btnLogistics.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(LogisticsActivity.this, LogisticsActivity.class);
+                Intent intent = new Intent(LogisticsChart.this, LogisticsActivity.class);
                 startActivity(intent);
             }
         });
@@ -53,7 +45,7 @@ public class LogisticsActivity extends AppCompatActivity {
         btnDest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(LogisticsActivity.this, DestinationsActivity.class);
+                Intent intent = new Intent(LogisticsChart.this, DestinationsActivity.class);
                 startActivity(intent);
             }
         });
@@ -61,7 +53,7 @@ public class LogisticsActivity extends AppCompatActivity {
         btnDining.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(LogisticsActivity.this, DiningActivity.class);
+                Intent intent = new Intent(LogisticsChart.this, DiningActivity.class);
                 startActivity(intent);
             }
         });
@@ -69,7 +61,7 @@ public class LogisticsActivity extends AppCompatActivity {
         btnAccom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(LogisticsActivity.this, AccommodationsActivity.class);
+                Intent intent = new Intent(LogisticsChart.this, AccommodationsActivity.class);
                 startActivity(intent);
             }
         });
@@ -77,7 +69,7 @@ public class LogisticsActivity extends AppCompatActivity {
         btnTravel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(LogisticsActivity.this, TravelActivity.class);
+                Intent intent = new Intent(LogisticsChart.this, TravelActivity.class);
                 startActivity(intent);
             }
         });
@@ -85,7 +77,7 @@ public class LogisticsActivity extends AppCompatActivity {
         btnTransport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(LogisticsActivity.this, TransportationActivity.class);
+                Intent intent = new Intent(LogisticsChart.this, TransportationActivity.class);
                 startActivity(intent);
             }
         });
