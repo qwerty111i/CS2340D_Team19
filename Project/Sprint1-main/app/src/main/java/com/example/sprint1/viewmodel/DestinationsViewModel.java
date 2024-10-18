@@ -5,7 +5,8 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.sprint1.model.TravelDetails;
-import com.example.sprint1.model.TravelModel;
+import com.example.sprint1.model.UserModel;
+import com.example.sprint1.model.VacationTime;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -24,6 +25,7 @@ public class DestinationsViewModel extends ViewModel {
     private MutableLiveData<String> endDateError = new MutableLiveData<>();
     private MutableLiveData<String> dateError = new MutableLiveData<>();
     private MutableLiveData<Boolean> validInputs = new MutableLiveData<>();
+    private MutableLiveData<Boolean> validCalcInputs = new MutableLiveData<>();
     private MutableLiveData<String> duration = new MutableLiveData<>();
     private MutableLiveData<String> startVacationDate = new MutableLiveData<>();
     private MutableLiveData<String> endVacationDate = new MutableLiveData<>();
@@ -68,18 +70,22 @@ public class DestinationsViewModel extends ViewModel {
             durationError.setValue("Invalid Duration!");
             startDateError.setValue("Invalid Start Date!");
             endDateError.setValue("Invalid End Date!");
+            validCalcInputs.setValue(false);
         } else if (!isStartDateValid && !isEndDateValid) {
             durationError.setValue(null);
             startDateError.setValue("Invalid Start Date!");
             endDateError.setValue("Invalid End Date!");
+            validCalcInputs.setValue(false);
         } else if (!isDurationValid && !isEndDateValid) {
             durationError.setValue("Invalid Duration!");
             startDateError.setValue(null);
             endDateError.setValue("Invalid End Date!");
+            validCalcInputs.setValue(false);
         } else if (!isStartDateValid && !isDurationValid) {
             startDateError.setValue("Invalid Start Date!");
             durationError.setValue("Invalid Duration!");
             endDateError.setValue(null);
+            validCalcInputs.setValue(false);
         } else if (isStartDateValid && isEndDateValid && !validDates) {
             startDateError.setValue("Invalid Start Date!");
             endDateError.setValue("Invalid End Date!");
@@ -88,46 +94,54 @@ public class DestinationsViewModel extends ViewModel {
             } else {
                 durationError.setValue(null);
             }
+            validCalcInputs.setValue(false);
         } else if (!isDurationValid) {
-            try {
+            try { //valid case
                 // Calculate duration
                 Date start = formatter.parse(startDate);
                 Date end = formatter.parse(endDate);
                 int dur = (int) ((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
                 this.duration.setValue("" + dur);
+                this.startVacationDate.setValue(startDate);
+                this.endVacationDate.setValue(endDate);
                 startDateError.setValue(null);
                 durationError.setValue(null);
                 endDateError.setValue(null);
+                validCalcInputs.setValue(true);
             } catch (ParseException e) {
                 // This should not occur since we have already validated the date formats
             }
         } else if (!isEndDateValid) {
-            try {
+            try {  //valid case
                 // Calculate end date
                 Date start = formatter.parse(startDate);
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(start);
                 calendar.add(Calendar.DAY_OF_MONTH, Integer.parseInt(duration));
                 Date end = calendar.getTime();
-                this.endDate.setValue(formatter.format(end));
+                this.endVacationDate.setValue(formatter.format(end));
+                this.startVacationDate.setValue(startDate);
                 startDateError.setValue(null);
                 durationError.setValue(null);
                 endDateError.setValue(null);
+                validCalcInputs.setValue(true);
             } catch (ParseException e) {
                 // This should not occur since we have already validated the date formats
             }
         } else if (!isStartDateValid) {
-            try {
+            try {  //valid case
                 // Calculate start date
                 Date end = formatter.parse(endDate);
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(end);
                 calendar.add(Calendar.DAY_OF_MONTH, -Integer.parseInt(duration));
                 Date start = calendar.getTime();
-                this.startDate.setValue(formatter.format(start));
+                this.startVacationDate.setValue(formatter.format(start));
+                this.endVacationDate.setValue(endDate);
                 startDateError.setValue(null);
                 durationError.setValue(null);
                 endDateError.setValue(null);
+                validCalcInputs.setValue(true);
             } catch (ParseException e) {
                 // This should not occur since we have already validated the date formats
             }
@@ -139,13 +153,17 @@ public class DestinationsViewModel extends ViewModel {
                 int dur = (int) ((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
                 int d2 = Integer.parseInt(duration);
                 if (dur != d2) {
-                    durationError.setValue("Invalid Duration!");
+                    durationError.setValue("Duration isn't correctly calculated!");
                     startDateError.setValue("Invalid Start Date!");
                     endDateError.setValue("Invalid End Date!");
-                } else {
+                    validCalcInputs.setValue(false);
+                } else { //valid case
+                    this.startVacationDate.setValue(startDate);
+                    this.endVacationDate.setValue(endDate);
                     startDateError.setValue(null);
                     durationError.setValue(null);
                     endDateError.setValue(null);
+                    validCalcInputs.setValue(true);
                 }
             } catch (ParseException e) {
                 // This should not occur since we have already validated the date formats
@@ -214,11 +232,26 @@ public class DestinationsViewModel extends ViewModel {
                 endDate.getValue());
 
         // Uses the Singleton implemented Database to store information
-        TravelModel.getInstance().storeTravelDetails(travelDetails);
+        UserModel.getInstance().storeTravelDetails(travelDetails);
+    }
+
+    // Saves the calculation details in the database
+    public void saveDetails2() {
+        // Creates a new VacationTime object, storing all the data
+        VacationTime vtime = new VacationTime(
+                startVacationDate.getValue(),
+                endVacationDate.getValue());
+
+        // Uses the Singleton implemented user Database to store information
+        UserModel.getInstance().storeVacation(vtime);
     }
 
     public LiveData<Boolean> areInputsValid() {
         return validInputs;
+    }
+
+    public LiveData<Boolean> areCalcInputsValid() {
+        return validCalcInputs;
     }
 
     public LiveData<String> getLocationError() {
@@ -251,5 +284,13 @@ public class DestinationsViewModel extends ViewModel {
 
     public LiveData<String> getEndDate() {
         return endDate;
+    }
+
+    public LiveData<String> getStartVacationDate() {
+        return startVacationDate;
+    }
+
+    public LiveData<String> getEndVacationDate() {
+        return endVacationDate;
     }
 }
