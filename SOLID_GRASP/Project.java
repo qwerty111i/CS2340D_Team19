@@ -16,8 +16,8 @@ public class Project {
         this.startDate = startDate;
         this.endDate = endDate;
 
-        tasks = new ArrayList<Task>();
-        members = new ArrayList<Member>();
+        tasks = new ArrayList<>();
+        members = new ArrayList<>();
     }
 
     // Adds a task
@@ -49,7 +49,7 @@ public class Project {
     // Removes a member
     public void removeMember(Member member) {
         boolean foundMember = false;
-        for (Task currentMember: members) {
+        for (Member currentMember: members) {
             if (currentMember.equals(member)) {
                 members.remove(member);
                 foundMember = true;
