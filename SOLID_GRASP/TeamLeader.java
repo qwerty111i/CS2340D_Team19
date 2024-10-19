@@ -1,21 +1,28 @@
-public class TeamLeader extends Leader {
+import java.util.ArrayList;
+
+public class TeamLeader implements Leader {
     private String name;
     private String email;
+
     public TeamLeader(String name, String email) {
         this.name = name;
         this.email = email;
     }
-    public String checkProgress() {
-        String result = "Status of Tasks in List: ";
-        for (int i = 0; i < tasks.size(); i++) {
-            result += task.get(i).getStatus();
-            if (i < tasks.size() - 1) {
-                result += ", ";
-            }
+
+    // Checks the progress of tasks for a specific member
+    @Override
+    public String checkProgress(Task task, ArrayList<Task> tasks) {
+        String result = "Tasks needed to be completed: ";
+        for (Task currentTask : tasks) {
+            result += currentTask + "\n";
         }
+
         return result;
     }
-    public void assignTasks(Project project, Task task) {
-        this.addTask(); //unfinished
+
+    // Assigns tasks to a specific member
+    @Override
+    public void assignTasks(Member member, Task task) {
+        member.addTask(task);
     }
 }

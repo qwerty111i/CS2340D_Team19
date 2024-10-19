@@ -1,7 +1,12 @@
-public class TeamMember extends Member {
-	public String role;
-	public String name;
-	public String email;
+import java.util.ArrayList;
+
+public class TeamMember implements Member {
+	private ArrayList<Task> tasks;
+	
+	private String role;
+	private String name;
+	private String email;
+
 
 	public TeamMember(String role, String name, String email) {
 		this.role = role;
@@ -9,15 +14,23 @@ public class TeamMember extends Member {
 		this.email = email;
 	}
 
+	// Member joining project
+	@Override
 	public void joinProject(Project project) {
-		//join 
-		project.addMember(TeamMember);
+		project.addMember(this);
 	}
 	
+	// Member leaving project
+	@Override
 	public void leaveProject(Project project) {
-		//leave
-		project.removeMember(TeamMember);
+		project.removeMember(this);
 		
 	}
+
+	// Adds a task to a specific member
+    @Override
+    public void addTask(Task task) {
+        tasks.add(task);
+    }
 	
 }

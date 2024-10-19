@@ -1,4 +1,6 @@
+import java.util.ArrayList;
+
 public interface Leader {
-    void checkProgress();
-    void assignTasks(Project project);
+    String checkProgress(Task task, ArrayList<Task> tasks);
+    void assignTasks(Member member, Task task);
 }
