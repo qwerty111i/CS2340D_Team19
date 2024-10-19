@@ -6,12 +6,13 @@ public class SpecificTask implements Priority, Task, Recurring {
     private int priority;
     private int frequency;
 
-    public SpecificTask(String title, String description, String dueDate, String status, int priority) {
+    public SpecificTask(String title, String description, String dueDate, String status, int priority, int frequency) {
         this.title = title;
         this.description = description;
         this.dueDate = dueDate;
         this.status = status;
         this.priority = priority;
+        this.frequency = frequency;
     }
 
     @Override
