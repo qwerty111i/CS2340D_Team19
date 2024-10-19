@@ -10,11 +10,12 @@ public class Project {
     private String startDate;
     private String endDate;
 
-    public Project(String name, String description, String startDate, String endDate) {
+    public Project(String name, String description, String startDate, String endDate, TeamLeader leader) {
         this.name = name;
         this.description = description;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.leader = leader;
 
         tasks = new ArrayList<>();
         members = new ArrayList<>();
