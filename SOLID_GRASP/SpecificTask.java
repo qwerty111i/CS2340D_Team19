@@ -1,9 +1,10 @@
-public class BaseTask implements Priority, Task {
+public class SpecificTask implements Priority, Task {
     private String title;
     private String description;
     private String dueDate;
     private String status;
     private int priority;
+    private int frequency;
 
     public BaseTask(String title, String description, String dueDate, String status, int priority) {
         this.title = title;
@@ -36,5 +37,10 @@ public class BaseTask implements Priority, Task {
     @Override
     public void setPriority(int priority) {
         this.priority = priority;
+    }
+
+    @Override
+    public void setFrequency(int frequency) {
+        this.frequency = frequency;
     }
 }
