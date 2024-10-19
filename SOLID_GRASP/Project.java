@@ -2,7 +2,7 @@ import java.util.ArrayList;
 
 public class Project {
     private ArrayList<Task> tasks;
-    private ArrayList<Member> members;
+    private ArrayList<TeamMember> members;
     private Leader leader;
 
     private String name;
@@ -50,7 +50,7 @@ public class Project {
     // Removes a member
     public void removeMember(TeamMember member) {
         boolean foundMember = false;
-        for (Member currentMember: members) {
+        for (TeamMember currentMember: members) {
             if (currentMember.equals(member)) {
                 members.remove(member);
                 foundMember = true;
