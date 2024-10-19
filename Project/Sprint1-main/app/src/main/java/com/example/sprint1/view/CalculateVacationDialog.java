@@ -133,6 +133,14 @@ public class CalculateVacationDialog extends DialogFragment {
 
             // Does calculations in the View Model
             viewModel.calculateVacationTime(durationText, startDateText, endDateText);
+
+            if (viewModel.areCalcInputsValid().getValue()) {
+                // Saves details in the database
+                viewModel.saveDetails2();
+
+                // Closes the dialog
+                dismiss();
+            }
         });
     }
 

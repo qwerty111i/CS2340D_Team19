@@ -34,6 +34,10 @@ android {
 }
 
 dependencies {
+<<<<<<< HEAD
+=======
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+>>>>>>> origin
     implementation libs.appcompat
     implementation libs.material
     implementation libs.activity

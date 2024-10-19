@@ -71,7 +71,10 @@ public class SignupViewModel extends ViewModel {
                         // Retrieves the authenticated user
                         FirebaseUser user = mAuth.getCurrentUser();
                         // Calls the storeUser method in userModel, which handles data with firebase
-                        userModel.storeUser(user.getUid(), new User(username.getValue()));
+                        userModel.setUserId(user.getUid());
+
+                        // Now store the user data under the correct userId
+                        userModel.storeUser(new User(username.getValue()));
                         validationError.setValue(null);
                     } else {
                         Exception exception = task.getException();

@@ -1,5 +1,7 @@
 package com.example.sprint1.model;
 
+import android.util.Log;
+
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -9,6 +11,7 @@ public class UserModel {
 
     // Creates a static instance
     private static UserModel instance;
+    private String userId;
 
     // Private constructor
     private UserModel() {
@@ -24,13 +27,36 @@ public class UserModel {
         return instance;
     }
 
-    public void storeUser(String userId, User user) {
-        // Stores the user data in the database under the node "users"
-        database.child(userId).setValue(user);
+    // Store the userId when it becomes available (after signup/login)
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
-    public void storeVacation(String vacaID, VacationTime vacationTime) {
-        // Stores the vacation information under user database
-        database.child(vacaID).setValue(vacationTime);
+    public void storeUser(User user) {
+        // Stores the user data in the database under the node "users"
+        if (userId != null) {
+            database.child(userId).setValue(user);
+        } else {
+            // Handle case where userId is not set
+            Log.e("UserModel", "UserId is not set, cannot store user.");
+        }
+    }
+
+    // Method to store travel details under the specific user's node
+    public void storeTravelDetails(TravelDetails travelDetails) {
+        if (userId != null) {
+            database.child(userId).child("travelDetails").push().setValue(travelDetails);
+        } else {
+            Log.e("UserModel", "UserId is not set, cannot store travel details.");
+        }
+    }
+
+    public void storeVacation(VacationTime vacationTime) {
+        // Stores the vacation data in the database under the node "user"
+        if (userId != null) {
+            database.child(userId).child("vacations").push().setValue(vacationTime);
+        } else {
+            Log.e("UserModel", "UserId is not set, cannot store vacation.");
+        }
     }
 }
