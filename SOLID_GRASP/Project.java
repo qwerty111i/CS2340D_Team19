@@ -43,12 +43,12 @@ public class Project {
     }
 
     // Adds a new member
-    public void addMember(Member member) {
+    public void addMember(TeamMember member) {
         members.add(member);
     }
 
     // Removes a member
-    public void removeMember(Member member) {
+    public void removeMember(TeamMember member) {
         boolean foundMember = false;
         for (Member currentMember: members) {
             if (currentMember.equals(member)) {
