@@ -2,10 +2,12 @@ package com.example.sprint1.view;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageButton;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -16,12 +18,31 @@ import com.example.sprint1.BR;
 import com.example.sprint1.R;
 import com.example.sprint1.databinding.ActivityDestinationsBinding;
 import com.example.sprint1.viewmodel.DestinationsViewModel;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DestinationsActivity extends AppCompatActivity {
 
     private DestinationsViewModel viewModel;
     private Button logTravelBtn;
     private Button vacationBtn;
+
+
+    //Initialize Firebase
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference travel_details_ref = database.getReference("travel_details");
+
+    //Create local lists for data pulled from Firebase
+    List<String> startDates = new ArrayList<>();
+    List<String> endDates = new ArrayList<>();
+    List<String> locations = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +75,10 @@ public class DestinationsActivity extends AppCompatActivity {
 
         // Calculate Vacation Time Feature
         calculateVacation(binding);
+
+        //Pulling data for log entries from Firebase
+        getTravelDetails();
+
     }
 
     public void logTravel(ActivityDestinationsBinding binding) {
@@ -73,6 +98,46 @@ public class DestinationsActivity extends AppCompatActivity {
             dialog.show(getSupportFragmentManager(), "CalculateVacationDialog");
         });
     }
+
+
+    private void getTravelDetails(){
+        travel_details_ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot travelSnapshot : snapshot.getChildren()){
+                    String startDate = travelSnapshot.child("startDate").getValue(String.class);
+                    String endDate = travelSnapshot.child("endDate").getValue(String.class);
+                    String location = travelSnapshot.child("location").getValue(String.class);
+
+                    if(startDate != null){
+                        startDates.add(startDate);
+                    }
+
+                    if(endDate != null){
+                        endDates.add(endDate);
+                    }
+
+                    if(location != null){
+                        locations.add(location);
+                    }
+
+
+                }
+                //verify data retrieval
+                Log.d("Firebase", "Start Dates: " + startDates);
+                Log.d("Firebase", "End Dates: " + endDates);
+                Log.d("Firebase", "Locations:" + locations);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.d("Firebase", "Error retrieving data");
+
+            }
+        });
+    }
+
 
     public void navigationBar(ActivityDestinationsBinding binding) {
         ImageButton btnLogistics = binding.btnLogistics;
