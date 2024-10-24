@@ -18,6 +18,8 @@ import com.example.sprint1.BR;
 import com.example.sprint1.R;
 import com.example.sprint1.databinding.ActivityDestinationsBinding;
 import com.example.sprint1.viewmodel.DestinationsViewModel;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -34,14 +36,17 @@ public class DestinationsActivity extends AppCompatActivity {
     private Button vacationBtn;
 
 
-    //Initialize Firebase
-    FirebaseDatabase database = FirebaseDatabase.getInstance();
-    DatabaseReference travel_details_ref = database.getReference("travel_details");
 
     //Create local lists for data pulled from Firebase
     List<String> startDates = new ArrayList<>();
     List<String> endDates = new ArrayList<>();
     List<String> locations = new ArrayList<>();
+
+    private String currentEmail;
+
+    //Initialize Firebase
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference travel_details_ref = database.getReference();
 
 
     @Override
@@ -67,6 +72,15 @@ public class DestinationsActivity extends AppCompatActivity {
             return insets;
         });
 
+
+        //Get currently logged in user
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        if(currentUser != null){
+            currentEmail = currentUser.getEmail();
+            Log.d("UserEmail", "User email: " + currentEmail);
+        }
+
         // Add navigation bar
         navigationBar(binding);
 
@@ -77,7 +91,7 @@ public class DestinationsActivity extends AppCompatActivity {
         calculateVacation(binding);
 
         //Pulling data for log entries from Firebase
-        getTravelDetails();
+        getTravelDetails(currentEmail);
 
     }
 
@@ -100,29 +114,16 @@ public class DestinationsActivity extends AppCompatActivity {
     }
 
 
-    private void getTravelDetails(){
-        travel_details_ref.addValueEventListener(new ValueEventListener() {
+    private void getTravelDetails(String email){
+        DatabaseReference travelDetailsRef = travel_details_ref.child("users");
+
+        travelDetailsRef.orderByChild("email").equalTo(email).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for(DataSnapshot travelSnapshot : snapshot.getChildren()){
-                    String startDate = travelSnapshot.child("startDate").getValue(String.class);
-                    String endDate = travelSnapshot.child("endDate").getValue(String.class);
-                    String location = travelSnapshot.child("location").getValue(String.class);
-
-                    if(startDate != null){
-                        startDates.add(startDate);
-                    }
-
-                    if(endDate != null){
-                        endDates.add(endDate);
-                    }
-
-                    if(location != null){
-                        locations.add(location);
-                    }
-
-
+                    addTravelToLists(travelSnapshot.child("travelDetails"));
                 }
+
                 //verify data retrieval
                 Log.d("Firebase", "Start Dates: " + startDates);
                 Log.d("Firebase", "End Dates: " + endDates);
@@ -138,6 +139,28 @@ public class DestinationsActivity extends AppCompatActivity {
         });
     }
 
+    private void addTravelToLists(DataSnapshot travelDetailsSnapshot){
+        //Loop through each travel detail
+        for(DataSnapshot snapshot : travelDetailsSnapshot.getChildren()){
+
+                String startDate = snapshot.child("startDate").getValue(String.class);
+                String endDate = snapshot.child("endDate").getValue(String.class);
+                String location = snapshot.child("location").getValue(String.class);
+
+                if (startDate != null) {
+                    startDates.add(startDate);
+                }
+
+                if (endDate != null) {
+                    endDates.add(endDate);
+                }
+
+                if (location != null) {
+                    locations.add(location);
+                }
+
+        }
+    }
 
     public void navigationBar(ActivityDestinationsBinding binding) {
         ImageButton btnLogistics = binding.btnLogistics;
