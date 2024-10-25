@@ -13,11 +13,14 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.sprint1.BR;
 import com.example.sprint1.R;
 import com.example.sprint1.databinding.ActivityDestinationsBinding;
 import com.example.sprint1.viewmodel.DestinationsViewModel;
+import com.example.sprint1.viewmodel.TravelAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -48,6 +51,8 @@ public class DestinationsActivity extends AppCompatActivity {
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
     private DatabaseReference travelDatabase = database.getReference();
 
+    private TravelAdapter adapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +78,7 @@ public class DestinationsActivity extends AppCompatActivity {
         });
 
 
+
         //Get currently logged in user
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -90,8 +96,16 @@ public class DestinationsActivity extends AppCompatActivity {
         // Calculate Vacation Time Feature
         calculateVacation(binding);
 
+
+        //connect adapter to Recycler View
+        RecyclerView recyclerView = findViewById(R.id.logRecycler);
+        adapter = new TravelAdapter(locations);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
         //Pulling data for log entries from Firebase
         getTravelDetails(currentEmail);
+
 
     }
 
@@ -117,20 +131,30 @@ public class DestinationsActivity extends AppCompatActivity {
     private void getTravelDetails(String email) {
         DatabaseReference travelDetailsRef = travelDatabase.child("users");
 
-        travelDetailsRef.orderByChild("email").equalTo(email).addValueEventListener(
-                new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        for (DataSnapshot travelSnapshot : snapshot.getChildren()) {
-                            addTravelToLists(travelSnapshot.child("travelDetails"));
-                        }
 
-                        //verify data retrieval
-                        Log.d("Firebase", "Start Dates: " + startDates);
-                        Log.d("Firebase", "End Dates: " + endDates);
-                        Log.d("Firebase", "Locations:" + locations);
+        travelDetailsRef.orderByChild("email").equalTo(email).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                //clear lists to avoid duplication
+                locations.clear();
+                startDates.clear();
+                endDates.clear();
 
+                for(DataSnapshot travelSnapshot : snapshot.getChildren()){
+                    addTravelToLists(travelSnapshot.child("travelDetails"));
                 }
+
+
+                //verify data retrieval
+                Log.d("Firebase", "Start Dates: " + startDates);
+                Log.d("Firebase", "End Dates: " + endDates);
+                Log.d("Firebase", "Locations:" + locations);
+
+                //Notify adapter when data has changed
+                adapter.notifyDataSetChanged();
+
+            }
+
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {

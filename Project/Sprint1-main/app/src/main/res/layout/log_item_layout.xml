@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_marginTop="10dp"
+    >
+
+
+
+    <!--Log entry UI -->
+    <View
+        android:id="@+id/entry_card"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="25dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:background="@drawable/entry_rectangle_card"
+
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/log_destination_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Destination1"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="8dp"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:fontFamily="@font/poppins_regular"
+        app:layout_constraintTop_toTopOf="@id/entry_card"
+        android:paddingStart="17dp"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/log_days"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0 days"
+        android:layout_marginLeft="280dp"
+        android:layout_marginRight="15dp"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        app:layout_constraintStart_toStartOf ="@id/log_destination_text"
+        app:layout_constraintTop_toTopOf="@id/log_destination_text"
+        />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
