@@ -121,14 +121,24 @@
         android:paddingStart="15dp"
         android:gravity="center" />
 
+    <TextView
+        android:id="@+id/tv_invited_users"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Invited Users:"
+        android:padding="100dp"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="@id/username3"
+        app:layout_constraintTop_toTopOf="@id/username3"/>
+
     <Button
-        android:id="@+id/button_edit"
+        android:id="@+id/button_notes"
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:layout_marginStart="15dp"
         android:layout_marginBottom="60dp"
         android:backgroundTint="@color/modern_blue"
-        android:text="pencil"
+        android:text="notes"
         android:textColor="@color/white"
         android:textSize="15sp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -137,19 +147,21 @@
 
 
     <Button
-        android:id="@+id/button_users"
+        android:id="@+id/button_invite"
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:layout_marginBottom="60dp"
         android:layout_marginEnd="15dp"
         android:backgroundTint="@color/modern_blue"
-        android:text="human"
+        android:text="invite"
         android:textColor="@color/white"
         android:textSize="15sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:cornerRadius="10dp"
         />
+
+
 
     <LinearLayout
         android:id="@+id/bottom_navigation"
@@ -214,6 +226,8 @@
             android:background="@android:color/transparent"
             android:src="@drawable/ic_travel"
             android:contentDescription="Travel Community" />
+
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
