@@ -161,6 +161,7 @@ public class LogisticsActivity extends AppCompatActivity {
     }
 
     // Handle inviting selected users
+    // Either some error here or in the next function im not sure
     private void inviteUsers(ArrayList<User> selectedUsers) {
         String itineraryId = FirebaseDatabase.getInstance().getReference("itineraries").push().getKey();
 
@@ -169,7 +170,6 @@ public class LogisticsActivity extends AppCompatActivity {
             for (User user : selectedUsers) {
                 invitedEmails.add(user.getEmail());
             }
-
             FirebaseDatabase.getInstance().getReference("itineraries").child(itineraryId)
                     .child("invitedUsers").setValue(invitedEmails)
                     .addOnSuccessListener(aVoid -> {
@@ -192,7 +192,7 @@ public class LogisticsActivity extends AppCompatActivity {
         for (String email : invitedEmails) {
             emailsDisplay.append(email).append("\n");
         }
-        tvInvitedUsers.setText(emailsDisplay.toString()); // Now accessible here
+        tvInvitedUsers.setText(emailsDisplay.toString()); //adding to the text view
     }
 
 }
