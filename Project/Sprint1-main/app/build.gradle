@@ -27,6 +27,8 @@ android {
         sourceCompatibility JavaVersion.VERSION_11
         targetCompatibility JavaVersion.VERSION_11
     }
+
+
     buildFeatures{
         dataBinding true
         viewBinding true
@@ -46,6 +48,8 @@ dependencies {
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
+    implementation 'androidx.recyclerview:recyclerview:1.3.0'
+    implementation 'com.google.firebase:firebase-database:20.2.1'
     }
 
 apply plugin: 'com.google.gms.google-services'
