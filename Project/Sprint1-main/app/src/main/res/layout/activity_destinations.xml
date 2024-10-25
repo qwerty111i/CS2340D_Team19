@@ -11,6 +11,8 @@
             type="com.example.sprint1.viewmodel.DestinationsViewModel" />
     </data>
 
+
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/destinations"
         android:layout_width="match_parent"
@@ -31,7 +33,7 @@
             android:textSize="30sp"
             android:textStyle="bold"
             android:textColor="@color/black"
-            android:fontFamily="@font/poppins_bold"/>
+            android:fontFamily="@font/merriweather_black"/>
 
         <Button
             android:id="@+id/log_travel"
@@ -67,49 +69,14 @@
             android:layout_marginBottom="420dp"
             />
 
-
-<!--Log entry UI -->
-        <View
-            android:id="@+id/entry_card1"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/logRecycler"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginBottom="25dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:background="@drawable/entry_rectangle_card"
+            android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/button_vacation"
-             />
-
-        <TextView
-            android:id="@+id/log_destination_text1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Destination1"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="8dp"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="@color/white"
-            android:fontFamily="@font/poppins_regular"
-            app:layout_constraintTop_toTopOf="@id/entry_card1"
-            app:layout_constraintBottom_toBottomOf="@id/entry_card1"
-            android:paddingStart="17dp"
-            tools:ignore="MissingConstraints" />
-
-        <TextView
-            android:id="@+id/log_days1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="0 days"
-            android:layout_marginLeft="190dp"
-            android:layout_marginRight="15dp"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="@color/white"
-            app:layout_constraintStart_toEndOf="@id/log_destination_text1"
-            app:layout_constraintTop_toTopOf="@id/log_destination_text1"
+            android:layout_marginTop="20dp"
             />
+
 
         <LinearLayout
             android:id="@+id/bottom_navigation"
@@ -174,6 +141,7 @@
                 android:src="@drawable/ic_travel"
                 android:contentDescription="Travel Community" />
         </LinearLayout>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
