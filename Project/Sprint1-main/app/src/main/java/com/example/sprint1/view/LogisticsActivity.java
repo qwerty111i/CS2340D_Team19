@@ -108,7 +108,8 @@ public class LogisticsActivity extends AppCompatActivity {
                         Log.d("LogisticsActivity", "Fetched user: " + email);
                         userList.add(new User(email));
                     } else {
-                        Log.w("LogisticsActivity", "User email is null for document: " + userSnapshot.getKey());
+                        Log.w("LogisticsActivity",
+                                "User email is null for document: " + userSnapshot.getKey());
                     }
                 }
                 Log.d("LogisticsActivity", "Total users fetched: " + userList.size());
@@ -116,14 +117,17 @@ public class LogisticsActivity extends AppCompatActivity {
                 if (!userList.isEmpty()) {
                     showInviteDialog(userList);
                 } else {
-                    Toast.makeText(LogisticsActivity.this, "No users found to invite", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LogisticsActivity.this,
+                            "No users found to invite", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.e("LogisticsActivity", "Error getting users: ", databaseError.toException());
-                Toast.makeText(LogisticsActivity.this, "Error getting users", Toast.LENGTH_SHORT).show();
+                Log.e("LogisticsActivity",
+                        "Error getting users: ", databaseError.toException());
+                Toast.makeText(LogisticsActivity.this,
+                        "Error getting users", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -163,7 +167,8 @@ public class LogisticsActivity extends AppCompatActivity {
     // Handle inviting selected users
     // Either some error here or in the next function im not sure
     private void inviteUsers(ArrayList<User> selectedUsers) {
-        String itineraryId = FirebaseDatabase.getInstance().getReference("itineraries").push().getKey();
+        String itineraryId =
+                FirebaseDatabase.getInstance().getReference("itineraries").push().getKey();
 
         if (itineraryId != null) {
             ArrayList<String> invitedEmails = new ArrayList<>();
@@ -173,16 +178,20 @@ public class LogisticsActivity extends AppCompatActivity {
             FirebaseDatabase.getInstance().getReference("itineraries").child(itineraryId)
                     .child("invitedUsers").setValue(invitedEmails)
                     .addOnSuccessListener(aVoid -> {
-                        Toast.makeText(LogisticsActivity.this, "Users invited successfully!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LogisticsActivity.this,
+                                "Users invited successfully!", Toast.LENGTH_SHORT).show();
                         displayInvitedUsers(invitedEmails);
                     })
                     .addOnFailureListener(e -> {
                         Log.e("LogisticsActivity", "Error inviting users: ", e); // Log the error
-                        Toast.makeText(LogisticsActivity.this, "Error inviting users: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LogisticsActivity.this,
+                                "Error inviting users: " + e.getMessage(),
+                                Toast.LENGTH_SHORT).show();
                     });
         } else {
             Log.e("LogisticsActivity", "Failed to create itinerary ID");
-            Toast.makeText(LogisticsActivity.this, "Failed to create itinerary ID", Toast.LENGTH_SHORT).show();
+            Toast.makeText(LogisticsActivity.this,
+                    "Failed to create itinerary ID", Toast.LENGTH_SHORT).show();
         }
     }
 
