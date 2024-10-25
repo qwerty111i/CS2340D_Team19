@@ -48,8 +48,8 @@ public class DestinationsActivity extends AppCompatActivity {
     private String currentEmail;
 
     //Initialize Firebase
-    FirebaseDatabase database = FirebaseDatabase.getInstance();
-    DatabaseReference travel_details_ref = database.getReference();
+    private FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private DatabaseReference travelDatabase = database.getReference();
 
     private TravelAdapter adapter;
 
@@ -82,7 +82,7 @@ public class DestinationsActivity extends AppCompatActivity {
         //Get currently logged in user
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        if(currentUser != null){
+        if (currentUser != null) {
             currentEmail = currentUser.getEmail();
             Log.d("UserEmail", "User email: " + currentEmail);
         }
@@ -128,8 +128,9 @@ public class DestinationsActivity extends AppCompatActivity {
     }
 
 
-    private void getTravelDetails(String email){
-        DatabaseReference travelDetailsRef = travel_details_ref.child("users");
+    private void getTravelDetails(String email) {
+        DatabaseReference travelDetailsRef = travelDatabase.child("users");
+
 
         travelDetailsRef.orderByChild("email").equalTo(email).addValueEventListener(new ValueEventListener() {
             @Override
@@ -154,33 +155,34 @@ public class DestinationsActivity extends AppCompatActivity {
 
             }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.d("Firebase", "Error retrieving data");
 
-            }
-        });
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Log.d("Firebase", "Error retrieving data");
+
+                }
+            });
     }
 
-    private void addTravelToLists(DataSnapshot travelDetailsSnapshot){
+    private void addTravelToLists(DataSnapshot travelDetailsSnapshot) {
         //Loop through each travel detail
-        for(DataSnapshot snapshot : travelDetailsSnapshot.getChildren()){
+        for (DataSnapshot snapshot : travelDetailsSnapshot.getChildren()) {
 
-                String startDate = snapshot.child("startDate").getValue(String.class);
-                String endDate = snapshot.child("endDate").getValue(String.class);
-                String location = snapshot.child("location").getValue(String.class);
+            String startDate = snapshot.child("startDate").getValue(String.class);
+            String endDate = snapshot.child("endDate").getValue(String.class);
+            String location = snapshot.child("location").getValue(String.class);
 
-                if (startDate != null) {
-                    startDates.add(startDate);
-                }
+            if (startDate != null) {
+                startDates.add(startDate);
+            }
 
-                if (endDate != null) {
-                    endDates.add(endDate);
-                }
+            if (endDate != null) {
+                endDates.add(endDate);
+            }
 
-                if (location != null) {
-                    locations.add(location);
-                }
+            if (location != null) {
+                locations.add(location);
+            }
 
         }
     }
