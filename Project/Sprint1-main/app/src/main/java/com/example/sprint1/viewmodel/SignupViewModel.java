@@ -99,7 +99,7 @@ public class SignupViewModel extends ViewModel {
     }
 
     // Method to check whether inputs are formatted correctly
-    private boolean checkInput(String input) {
+    public boolean checkInput(String input) {
         return input != null && !input.isEmpty() && !input.contains(" ");
     }
 
