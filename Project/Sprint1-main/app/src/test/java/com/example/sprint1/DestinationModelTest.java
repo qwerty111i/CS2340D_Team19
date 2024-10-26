@@ -11,6 +11,7 @@ import org.junit.Test;
 //@RunWith(RobolectricTestRunner.class)
 //@Config(manifest = "src/main/AndroidManifest.xml", sdk = 28)
 public class DestinationModelTest {
+    // Michael Zuo
     @Test
     public void dest_travel_check() {
         DestinationModel dmm = new DestinationModel();
@@ -25,6 +26,7 @@ public class DestinationModelTest {
         Assert.assertEquals(dmm.getDateError(), "Invalid Dates!");
     }
 
+    // Michael Zuo
     @Test
     public void dest_vacation_check() {
         DestinationModel dmm = new DestinationModel();
