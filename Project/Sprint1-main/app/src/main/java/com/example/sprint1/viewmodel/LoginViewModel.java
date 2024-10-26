@@ -44,7 +44,7 @@ public class LoginViewModel extends ViewModel {
     // Checks if username and password are valid
     public void signInValidation() {
         boolean valid = true;
-        email.setValue(null);
+        emailError.setValue(null);
         passwordError.setValue(null);
 
         // Username Error
