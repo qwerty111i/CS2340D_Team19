@@ -29,8 +29,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class DestinationsActivity extends AppCompatActivity {
 
@@ -44,6 +48,7 @@ public class DestinationsActivity extends AppCompatActivity {
     private List<String> startDates = new ArrayList<>();
     private List<String> endDates = new ArrayList<>();
     private List<String> locations = new ArrayList<>();
+    private List<String> days = new ArrayList<>();
 
     private String currentEmail;
 
@@ -99,13 +104,12 @@ public class DestinationsActivity extends AppCompatActivity {
 
         //connect adapter to Recycler View
         RecyclerView recyclerView = findViewById(R.id.logRecycler);
-        adapter = new TravelAdapter(locations);
+        adapter = new TravelAdapter(locations, days);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         //Pulling data for log entries from Firebase
         getTravelDetails(currentEmail);
-
 
     }
 
@@ -149,6 +153,9 @@ public class DestinationsActivity extends AppCompatActivity {
                 Log.d("Firebase", "End Dates: " + endDates);
                 Log.d("Firebase", "Locations:" + locations);
 
+                //Add days of travel to each location to days list
+                getAllDuration(startDates, endDates);
+
                 //Notify adapter when data has changed
                 adapter.notifyDataSetChanged();
 
@@ -183,6 +190,32 @@ public class DestinationsActivity extends AppCompatActivity {
                 }
 
         }
+    }
+
+    private void getAllDuration(List<String> startDates, List<String> endDates){
+        for (int i = 0; i < startDates.size(); i++ ){
+            String start = startDates.get(i);
+            String end = endDates.get(i);
+
+            //Define date format
+            SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yy");
+
+            try {
+                //Parse strings to Date objects
+                Date startDate = formatter.parse(start);
+                Date endDate = formatter.parse(end);
+
+                long durationInMillis = Math.abs(endDate.getTime() - startDate.getTime());
+
+                int durationInDays = (int) TimeUnit.DAYS.convert(durationInMillis, TimeUnit.MILLISECONDS);
+
+                days.add(durationInDays + " days");
+            } catch (ParseException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        Log.d("Duration", "getAllDuration: " + days);
+
     }
 
     public void navigationBar(ActivityDestinationsBinding binding) {

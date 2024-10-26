@@ -13,16 +13,15 @@ import com.example.sprint1.R;
 import java.util.ArrayList;
 import java.util.List;
 
-
+//Adapts travel details to be shown on the Desination Screens UI
 public class TravelAdapter extends RecyclerView.Adapter<TravelAdapter.ViewHolder> {
     //Context context;
     List<String> locations;
-   // List<String> days;
+    List<String> days;
 
-    public TravelAdapter(List<String> locations) {
-        //this.context = context;
+    public TravelAdapter(List<String> locations, List<String> days) {
         this.locations = locations;
-       // this.days = days;
+        this.days = days;
 
     }
 
@@ -40,7 +39,7 @@ public class TravelAdapter extends RecyclerView.Adapter<TravelAdapter.ViewHolder
     public void onBindViewHolder(@NonNull TravelAdapter.ViewHolder holder, int position) {
         //assigns values to each rows
         holder.tvDestination.setText(locations.get(position));
-        //holder.tvDays.setText(days.get(position));
+        holder.tvDays.setText(days.get(position));
 
 
 
@@ -61,7 +60,7 @@ public class TravelAdapter extends RecyclerView.Adapter<TravelAdapter.ViewHolder
             super(itemView);
 
             tvDestination = itemView.findViewById(R.id.log_destination_text);
-           // tvDays = itemView.findViewById(R.id.log_days);
+            tvDays = itemView.findViewById(R.id.log_days);
         }
     }
 
