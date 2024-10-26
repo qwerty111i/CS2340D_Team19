@@ -2,17 +2,6 @@ package com.example.sprint1;
 
 import org.junit.Assert;
 import org.junit.Test;
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
-import androidx.lifecycle.Observer;
-
-import com.example.sprint1.viewmodel.LoginViewModel;
-
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.mockito.Mockito;
-
-import static org.junit.Assert.*;
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -21,7 +10,7 @@ import static org.junit.Assert.*;
  */
 //@RunWith(RobolectricTestRunner.class)
 //@Config(manifest = "src/main/AndroidManifest.xml", sdk = 28)
-public class SprintTwoTests {
+public class DestinationModelTest {
     @Test
     public void dest_travel_check() {
         DestinationModel dmm = new DestinationModel();
@@ -53,5 +42,16 @@ public class SprintTwoTests {
 
         dmm.calculateVacationTime("102", "", "10/30/31");
         Assert.assertEquals(dmm.getDurationError(), null);
+
+        dmm.calculateVacationTime("1", "", "");
+        Assert.assertEquals(dmm.getStartDateError(), "Invalid Start Date!");
+        Assert.assertEquals(dmm.getEndDateError(), "Invalid End Date!");
+
+        dmm.calculateVacationTime("", "", "");
+        Assert.assertEquals(dmm.getStartDateError(), "Invalid Start Date!");
+        Assert.assertEquals(dmm.getEndDateError(), "Invalid End Date!");
+        Assert.assertEquals(dmm.getDurationError(), "Invalid Duration!");
     }
+
+
 }
