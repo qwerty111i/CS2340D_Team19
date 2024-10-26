@@ -1,17 +1,15 @@
 package com.example.sprint1;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.example.sprint1.viewmodel.SignupViewModel;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
-import org.junit.Before;
 import org.junit.Test;
-import org.junit.jupiter.api.BeforeEach;
 
 //Leila's Tests
 
-public class SignUpViewModelTests {
+public class CheckInputTests {
 
     private SignupViewModel signupViewModelInstance = new SignupViewModel(true);
 
