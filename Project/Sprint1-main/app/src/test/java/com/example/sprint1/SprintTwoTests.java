@@ -54,4 +54,6 @@ public class SprintTwoTests {
         dmm.calculateVacationTime("102", "", "10/30/31");
         Assert.assertEquals(dmm.getDurationError(), null);
     }
+
+
 }
