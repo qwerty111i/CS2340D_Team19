@@ -53,6 +53,15 @@ public class SprintTwoTests {
 
         dmm.calculateVacationTime("102", "", "10/30/31");
         Assert.assertEquals(dmm.getDurationError(), null);
+
+        dmm.calculateVacationTime("1", "", "");
+        Assert.assertEquals(dmm.getStartDateError(), "Invalid Start Date!");
+        Assert.assertEquals(dmm.getEndDateError(), "Invalid End Date!");
+
+        dmm.calculateVacationTime("", "", "");
+        Assert.assertEquals(dmm.getStartDateError(), "Invalid Start Date!");
+        Assert.assertEquals(dmm.getEndDateError(), "Invalid End Date!");
+        Assert.assertEquals(dmm.getDurationError(), "Invalid Duration!");
     }
 
 
