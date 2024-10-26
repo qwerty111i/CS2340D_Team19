@@ -7,9 +7,13 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.sprint1.model.VacationTime;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import androidx.lifecycle.LiveData;
@@ -22,6 +26,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 
 public class LogisticsViewModel extends ViewModel {
@@ -32,18 +37,79 @@ public class LogisticsViewModel extends ViewModel {
     private final DatabaseReference databaseReference;
 
     private final MutableLiveData<List<String>> notesLiveData = new MutableLiveData<>();
+    private final MutableLiveData<List<VacationTime>> vacationTimesLiveData = new MutableLiveData<>();
+
     private List<String> notesList = new ArrayList<>();
     private final DatabaseReference notesRef;
+
+    public void calculatePlannedTime() {
+        vacationTimesLiveData.observeForever(vacationTimes -> {
+            int totalPlannedTime = 0;
+
+            for (VacationTime vacationTime : vacationTimes) {
+                totalPlannedTime += vacationTime.getDuration(); // Assuming duration is in days
+            }
+
+            plannedTime.setValue(totalPlannedTime); // Set the calculated planned time
+        });
+    }
+
+    public void calculateAllocatedTime() {
+        vacationTimesLiveData.observeForever(vacationTimes -> {
+            if (vacationTimes == null || vacationTimes.isEmpty()) {
+                allottedTime.setValue(0); // No vacation times, so allocated time is 0
+                return;
+            }
+
+            SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yy");
+            Date earliestStartDate = null;
+            Date latestEndDate = null;
+
+            for (VacationTime vacationTime : vacationTimes) {
+                try {
+                    Date startDate = null;
+                    try {
+                        startDate = formatter.parse(vacationTime.getStartDate());
+                    } catch (ParseException e) {
+                        throw new RuntimeException(e);
+                    }
+                    Date endDate = formatter.parse(vacationTime.getEndDate());
+
+                    // Update earliest start date
+                    if (earliestStartDate == null || startDate.before(earliestStartDate)) {
+                        earliestStartDate = startDate;
+                    }
+
+                    // Update latest end date
+                    if (latestEndDate == null || endDate.after(latestEndDate)) {
+                        latestEndDate = endDate;
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace(); // Handle parse exception
+                }
+            }
+
+            // Calculate the difference in days
+            if (earliestStartDate != null && latestEndDate != null) {
+                long diffInMillis = latestEndDate.getTime() - earliestStartDate.getTime();
+                int allocatedDays = (int) TimeUnit.DAYS.convert(diffInMillis, TimeUnit.MILLISECONDS);
+                allottedTime.setValue(allocatedDays);
+            } else {
+                allottedTime.setValue(0); // No valid dates found
+            }
+        });
+    }
 
     public LiveData<Integer> getAllottedTime() {
         return allottedTime;
     }
-    public  LiveData<Integer> getPlannedTime() {
+    public LiveData<Integer> getPlannedTime() {
         return plannedTime;
     }
 
     public LogisticsViewModel() {
-
+        allottedTime = new MutableLiveData<>(0);
+        plannedTime = new MutableLiveData<>(0);
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         notesRef = FirebaseDatabase.getInstance().getReference("users").child(userId).child("notes");
         retrieveNotes();
@@ -127,6 +193,7 @@ public class LogisticsViewModel extends ViewModel {
             }
         });
     }
+
 
     public LiveData<List<String>> getUsersLiveData() {
         return usersLiveData;
