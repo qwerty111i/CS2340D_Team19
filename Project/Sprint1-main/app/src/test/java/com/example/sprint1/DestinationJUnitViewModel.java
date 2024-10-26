@@ -6,7 +6,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-public class DestinationMockModel {
+public class DestinationJUnitViewModel {
 
     private String location;
     private String startDate;
