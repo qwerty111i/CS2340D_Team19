@@ -29,7 +29,7 @@
             android:exported="false" />
         <activity
             android:name=".view.LoginActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".view.TravelActivity"
             android:exported="false" />
