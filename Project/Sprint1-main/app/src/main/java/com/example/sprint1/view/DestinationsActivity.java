@@ -142,6 +142,7 @@ public class DestinationsActivity extends AppCompatActivity {
                 locations.clear();
                 startDates.clear();
                 endDates.clear();
+                days.clear();
 
                 for(DataSnapshot travelSnapshot : snapshot.getChildren()){
                     addTravelToLists(travelSnapshot.child("travelDetails"));
@@ -192,7 +193,7 @@ public class DestinationsActivity extends AppCompatActivity {
         }
     }
 
-    private void getAllDuration(List<String> startDates, List<String> endDates){
+    public void getAllDuration(List<String> startDates, List<String> endDates){
         for (int i = 0; i < startDates.size(); i++ ){
             String start = startDates.get(i);
             String end = endDates.get(i);
