@@ -23,9 +23,7 @@ public class TravelAdapter extends RecyclerView.Adapter<TravelAdapter.ViewHolder
         //this.context = context;
         this.locations = locations;
        // this.days = days;
-
     }
-
     @NonNull
     @Override
     public TravelAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -42,8 +40,6 @@ public class TravelAdapter extends RecyclerView.Adapter<TravelAdapter.ViewHolder
         holder.tvDestination.setText(locations.get(position));
         //holder.tvDays.setText(days.get(position));
 
-
-
     }
 
     @Override
@@ -52,14 +48,10 @@ public class TravelAdapter extends RecyclerView.Adapter<TravelAdapter.ViewHolder
         return locations.size();
     }
 
-
     public static class ViewHolder extends RecyclerView.ViewHolder{
         TextView tvDestination, tvDays;
-
-
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-
             tvDestination = itemView.findViewById(R.id.log_destination_text);
            // tvDays = itemView.findViewById(R.id.log_days);
         }

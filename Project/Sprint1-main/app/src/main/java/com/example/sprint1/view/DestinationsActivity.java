@@ -130,8 +130,6 @@ public class DestinationsActivity extends AppCompatActivity {
 
     private void getTravelDetails(String email) {
         DatabaseReference travelDetailsRef = travelDatabase.child("users");
-
-
         travelDetailsRef.orderByChild("email").equalTo(email).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -143,8 +141,6 @@ public class DestinationsActivity extends AppCompatActivity {
                 for(DataSnapshot travelSnapshot : snapshot.getChildren()){
                     addTravelToLists(travelSnapshot.child("travelDetails"));
                 }
-
-
                 //verify data retrieval
                 Log.d("Firebase", "Start Dates: " + startDates);
                 Log.d("Firebase", "End Dates: " + endDates);
@@ -154,8 +150,6 @@ public class DestinationsActivity extends AppCompatActivity {
                 adapter.notifyDataSetChanged();
 
             }
-
-
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
                     Log.d("Firebase", "Error retrieving data");
@@ -186,6 +180,7 @@ public class DestinationsActivity extends AppCompatActivity {
 
         }
     }
+
 
     public void navigationBar(ActivityDestinationsBinding binding) {
         ImageButton btnLogistics = binding.btnLogistics;

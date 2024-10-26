@@ -11,11 +11,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.sprint1.R;
 import com.example.sprint1.model.User;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
@@ -52,6 +54,7 @@ public class LogisticsActivity extends AppCompatActivity {
         Button btnAlloted = findViewById(R.id.alloted_vs_planned);
         Button notesButton = findViewById(R.id.button_notes);
         notesButton.setOnClickListener(v -> showNotesDialog());
+        loadInvitedUsers();
 
 
 
@@ -94,7 +97,7 @@ public class LogisticsActivity extends AppCompatActivity {
 
         tvInvitedUsers = findViewById(R.id.tv_invited_users);
         Button inviteButton = findViewById(R.id.button_invite);
-        inviteButton.setOnClickListener(view -> onInviteButtonClick(view));
+        inviteButton.setOnClickListener(this::onInviteButtonClick);
 
         logisticsViewModel = new ViewModelProvider(this).get(LogisticsViewModel.class);
 
@@ -102,7 +105,7 @@ public class LogisticsActivity extends AppCompatActivity {
         logisticsViewModel.getUsersLiveData().observe(this, new Observer<List<String>>() {
             @Override
             public void onChanged(List<String> users) {
-                //displayUsers(users);
+
             }
         });
     }
@@ -160,31 +163,98 @@ public class LogisticsActivity extends AppCompatActivity {
 
     // Handle inviting selected users
     private void inviteUsers(ArrayList<String> selectedUsers) {
-        // Create a StringBuilder to append the invited users' names
         StringBuilder invitedEmails = new StringBuilder(tvInvitedUsers.getText().toString()); // Get existing text
 
         // Check if there are already invited users
         if (invitedEmails.toString().trim().isEmpty()) {
-            invitedEmails.append("Invited Users:\n"); // Add a header if this is the first invite
+            invitedEmails.append("Invited Users:\n");
             invitedEmails.append("\n");
         }
 
-        // Append the selected users and notify them
         for (String user : selectedUsers) {
             if (!invitedEmails.toString().contains(user)) { // Check to avoid duplicates
                 invitedEmails.append(user).append("\n");
             }
         }
-
         // Update the TextView with the invited users' emails
         tvInvitedUsers.setText(invitedEmails.toString());
 
-        // Optionally show a toast message
         Toast.makeText(LogisticsActivity.this, "Users invited (locally)!", Toast.LENGTH_SHORT).show();
+
+        String inviterId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference userReference = FirebaseDatabase.getInstance().getReference("users");
+
+        for (String invitedUserEmail : selectedUsers) {
+            //directly use the email to store the invitation
+            userReference.orderByChild("email").equalTo(invitedUserEmail).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot.exists()) {
+                        for (DataSnapshot userSnapshot : snapshot.getChildren()) {
+                            String invitedUserId = userSnapshot.getKey();
+
+
+                            String invitedUserEmail = userSnapshot.child("email").getValue(String.class); // Get the email of the invited user
+                            if (invitedUserEmail != null) {
+
+                                userReference.child(inviterId).child("invitedUsers").child(invitedUserEmail.replace(".", ",")).setValue(true);
+                            }
+                            // Copy travel details to the invited user
+                            userReference.child(inviterId).child("travelDetails").addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot travelDetailsSnapshot) {
+                                    for (DataSnapshot travelDetail : travelDetailsSnapshot.getChildren()) {
+                                        // Copy travel detail to the invited user using email
+                                        userReference.child(invitedUserId).child("travelDetails").push().setValue(travelDetail.getValue());
+                                    }
+                                }
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+                                    Log.d("Firebase", "Error retrieving travel details");
+                                }
+                            });
+                        }
+                    } else {
+                        Log.d("Firebase", "User with email " + invitedUserEmail + " not found.");
+                    }
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Log.d("Firebase", "Error retrieving user ID from email");
+                }
+            });
+        }
+    }
+
+    private void loadInvitedUsers() {
+        String inviterId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference userReference = FirebaseDatabase.getInstance().getReference("users");
+
+        userReference.child(inviterId).child("invitedUsers").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                StringBuilder invitedUsers = new StringBuilder("Invited Users:\n");
+
+
+                for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                    String invitedUserKey = userSnapshot.getKey();
+                    if (invitedUserKey != null) {
+
+                        String invitedUserEmail = invitedUserKey.replace(",", ".");
+                        invitedUsers.append(invitedUserEmail).append("\n");
+                    }
+                }
+                // Update the TextView with the invited users' emails
+                tvInvitedUsers.setText(invitedUsers.toString());
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.d("LogisticsActivity", "Error retrieving invited users: " + databaseError.getMessage());
+            }
+        });
     }
 
 
-    // Display the invited user emails on the LogisticsActivity page
     private void displayInvitedUsers(ArrayList<String> invitedEmails) {
         StringBuilder emailsDisplay = new StringBuilder("Invited Users:\n");
         for (String email : invitedEmails) {
@@ -192,7 +262,6 @@ public class LogisticsActivity extends AppCompatActivity {
         }
         tvInvitedUsers.setText(emailsDisplay.toString());
     }
-
 
 
 
@@ -215,7 +284,6 @@ public class LogisticsActivity extends AppCompatActivity {
             }
         });
         builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
-
         builder.show();
     }
 
