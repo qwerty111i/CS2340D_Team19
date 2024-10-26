@@ -7,7 +7,7 @@ import static org.junit.Assert.assertFalse;
 
 import org.junit.Test;
 
-//Leila's Tests
+//Tests done by Leila Kazemzadeh
 
 public class CheckInputTests {
 
@@ -15,7 +15,7 @@ public class CheckInputTests {
 
     @Test
     public void testCheckInputWithValidInput(){
-        String validInput = "validinput";
+        String validInput = "validInput";
         boolean inputResult = signupViewModelInstance.checkInput(validInput);
         assertTrue(inputResult); // Valid input is expected to return true
     }
