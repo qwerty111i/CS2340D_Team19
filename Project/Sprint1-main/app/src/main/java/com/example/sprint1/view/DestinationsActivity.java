@@ -48,7 +48,7 @@ public class DestinationsActivity extends AppCompatActivity {
     private List<String> startDates = new ArrayList<>();
     private List<String> endDates = new ArrayList<>();
     private List<String> locations = new ArrayList<>();
-    private List<String> days = new ArrayList<>();
+    public List<String> days = new ArrayList<>();
 
     private String currentEmail;
 

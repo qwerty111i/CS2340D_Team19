@@ -1,5 +1,7 @@
 package com.example.sprint1.viewmodel;
 
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -10,10 +12,13 @@ import com.example.sprint1.model.VacationTime;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import java.util.Calendar;
+import java.util.concurrent.TimeUnit;
 
 public class DestinationsViewModel extends ViewModel {
     private MutableLiveData<String> location = new MutableLiveData<>();
@@ -245,6 +250,9 @@ public class DestinationsViewModel extends ViewModel {
         // Uses the Singleton implemented user Database to store information
         UserModel.getInstance().storeVacation(vtime);
     }
+
+
+
 
     public LiveData<Boolean> areInputsValid() {
         return validInputs;
