@@ -11,10 +11,10 @@ import com.google.firebase.auth.FirebaseAuthException;
 
 public class LoginViewModel extends ViewModel {
     // Creating the LiveData
-    private MutableLiveData<String> username = new MutableLiveData<>();
+    private MutableLiveData<String> email = new MutableLiveData<>();
     private MutableLiveData<String> password = new MutableLiveData<>();
     private MutableLiveData<Boolean> validInputs = new MutableLiveData<>();
-    private MutableLiveData<String> usernameError = new MutableLiveData<>();
+    private MutableLiveData<String> emailError = new MutableLiveData<>();
     private MutableLiveData<String> passwordError = new MutableLiveData<>();
     private MutableLiveData<String> loginError = new MutableLiveData<>();
 
@@ -27,8 +27,8 @@ public class LoginViewModel extends ViewModel {
     }
 
     // Method to set username to user input
-    public void setUsername(String username) {
-        this.username.setValue(username);
+    public void setEmail(String email) {
+        this.email.setValue(email);
     }
 
     // Method to set password to user input
@@ -39,13 +39,13 @@ public class LoginViewModel extends ViewModel {
     // Checks if username and password are valid
     public void signInValidation() {
         boolean valid = true;
-        usernameError.setValue(null);
+        email.setValue(null);
         passwordError.setValue(null);
 
         // Username Error
-        if (!checkInput(username.getValue())) {
+        if (!checkInput(email.getValue())) {
             valid = false;
-            usernameError.setValue("Invalid Username.");
+            emailError.setValue("Invalid Username.");
         }
 
         // Password Error
@@ -59,7 +59,7 @@ public class LoginViewModel extends ViewModel {
     }
 
     public void login() {
-        mAuth.signInWithEmailAndPassword(username.getValue(),
+        mAuth.signInWithEmailAndPassword(email.getValue(),
                 password.getValue()).addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         // Retrieve the userid of logged-in user
@@ -75,9 +75,9 @@ public class LoginViewModel extends ViewModel {
                         FirebaseAuthException authException = (FirebaseAuthException) exception;
                         String errorCode = authException.getErrorCode();
                         if (errorCode.equals("ERROR_INVALID_EMAIL")) {
-                            usernameError.setValue("The email address is invalid.");
+                            emailError.setValue("The email address is invalid.");
                         } else {
-                            usernameError.setValue("Invalid email or password");
+                            emailError.setValue("Invalid email or password");
                             passwordError.setValue("Invalid email or password");
                         }
                     }
@@ -93,8 +93,8 @@ public class LoginViewModel extends ViewModel {
         return validInputs;
     }
 
-    public LiveData<String> getUsernameError() {
-        return usernameError;
+    public LiveData<String> getEmailError() {
+        return emailError;
     }
 
     public LiveData<String> getPasswordError() {
