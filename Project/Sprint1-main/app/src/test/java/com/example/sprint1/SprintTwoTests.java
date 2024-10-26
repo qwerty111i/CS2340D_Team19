@@ -24,7 +24,7 @@ import static org.junit.Assert.*;
 public class SprintTwoTests {
     @Test
     public void dest_travel_check() {
-        DestinationMockModel dmm = new DestinationMockModel();
+        DestinationModel dmm = new DestinationModel();
         dmm.setTravelDetails("", "10/28/31", "10/29/31");
         Assert.assertEquals(dmm.getLocationError(), "Invalid Location Input!");
 
@@ -38,7 +38,7 @@ public class SprintTwoTests {
 
     @Test
     public void dest_vacation_check() {
-        DestinationMockModel dmm = new DestinationMockModel();
+        DestinationModel dmm = new DestinationModel();
         dmm.calculateVacationTime("32", "10/28/31", "10/29/31");
         Assert.assertEquals(dmm.getDurationError(), "Duration isn't correctly calculated!");
 

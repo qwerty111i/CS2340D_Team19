@@ -14,6 +14,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
         android:layout_marginTop="30dp"
         android:textSize="30sp"
         android:textStyle="bold"
@@ -22,65 +23,71 @@
     <LinearLayout
         android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="horizontal"
         android:layout_alignParentBottom="true"
-        android:background="@color/white"
+        android:background="@color/black"
         android:padding="8dp"
         app:layout_constraintBottom_toBottomOf="parent">
 
-        <ImageButton
+        <Button
             android:id="@+id/btn_logistics"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:src="@drawable/ic_logistics"
+            android:backgroundTint="@color/modern_blue"
+            android:drawableTop="@drawable/logistics"
+            app:cornerRadius="10dp"
             android:contentDescription="Logistics Screen" />
 
-        <ImageButton
+        <Button
             android:id="@+id/btn_dest"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:src="@drawable/ic_dest"
+            android:backgroundTint="@color/modern_blue"
+            android:src="@drawable/destination"
+            app:cornerRadius="10dp"
             android:contentDescription="Destination" />
 
-        <ImageButton
+        <Button
             android:id="@+id/btn_dining"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:src="@drawable/ic_dining"
+            android:backgroundTint="@color/modern_blue"
+            android:src="@drawable/dining"
+            app:cornerRadius="10dp"
             android:contentDescription="Dining Establishments" />
 
-        <ImageButton
+        <Button
             android:id="@+id/btn_accom"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="#ABA2A2"
-            android:src="@drawable/ic_accommodation"
+            android:backgroundTint="@color/modern_blue"
+            android:src="@drawable/accomodation"
+            app:cornerRadius="10dp"
             android:contentDescription="Accomodations" />
 
-        <ImageButton
+        <Button
             android:id="@+id/btn_transport"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:src="@drawable/ic_transport"
+            android:backgroundTint="@color/modern_blue"
+            android:src="@drawable/transportation"
+            app:cornerRadius="10dp"
             android:contentDescription="Transportation" />
 
-        <ImageButton
+        <Button
             android:id="@+id/btn_travel"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:src="@drawable/ic_travel"
+            android:backgroundTint="@color/modern_blue"
+            android:src="@drawable/travel"
+            app:cornerRadius="10dp"
             android:contentDescription="Travel Community" />
     </LinearLayout>
 
