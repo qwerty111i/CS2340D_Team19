@@ -63,7 +63,4 @@ public class LogisticsViewModel extends ViewModel {
         return usersLiveData;
     }
 
-
-
-
 }
