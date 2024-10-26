@@ -1,20 +1,18 @@
 package com.example.sprint1;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-//import org.robolectric.RobolectricTestRunner;
-//import org.robolectric.annotation.Config;
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
+import androidx.lifecycle.Observer;
+
+import com.example.sprint1.viewmodel.LoginViewModel;
+
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.mockito.Mockito;
 
 import static org.junit.Assert.*;
-
-//import android.os.Looper;
-//import static org.mockito.Mockito.mock;
-//import static org.mockito.Mockito.when;
-
-import com.example.sprint1.view.LoginActivity;
-import com.example.sprint1.viewmodel.DestinationsViewModel;
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -24,18 +22,6 @@ import com.example.sprint1.viewmodel.DestinationsViewModel;
 //@RunWith(RobolectricTestRunner.class)
 //@Config(manifest = "src/main/AndroidManifest.xml", sdk = 28)
 public class SprintTwoTests {
-    // Adwaith
-    @Test
-    public void login_whitespace_check() {
-
-    }
-
-    // Adwaith
-    @Test
-    public void login_invalidUser_check() {
-        
-    }
-
     @Test
     public void dest_travel_check() {
         DestinationMockModel dmm = new DestinationMockModel();
