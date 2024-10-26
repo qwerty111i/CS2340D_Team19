@@ -13,11 +13,14 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.sprint1.BR;
 import com.example.sprint1.R;
 import com.example.sprint1.databinding.ActivityDestinationsBinding;
 import com.example.sprint1.viewmodel.DestinationsViewModel;
+import com.example.sprint1.viewmodel.TravelAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -38,15 +41,17 @@ public class DestinationsActivity extends AppCompatActivity {
 
 
     //Create local lists for data pulled from Firebase
-    List<String> startDates = new ArrayList<>();
-    List<String> endDates = new ArrayList<>();
-    List<String> locations = new ArrayList<>();
+    private List<String> startDates = new ArrayList<>();
+    private List<String> endDates = new ArrayList<>();
+    private List<String> locations = new ArrayList<>();
 
     private String currentEmail;
 
     //Initialize Firebase
-    FirebaseDatabase database = FirebaseDatabase.getInstance();
-    DatabaseReference travel_details_ref = database.getReference();
+    private FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private DatabaseReference travelDatabase = database.getReference();
+
+    private TravelAdapter adapter;
 
 
     @Override
@@ -73,10 +78,11 @@ public class DestinationsActivity extends AppCompatActivity {
         });
 
 
+
         //Get currently logged in user
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        if(currentUser != null){
+        if (currentUser != null) {
             currentEmail = currentUser.getEmail();
             Log.d("UserEmail", "User email: " + currentEmail);
         }
@@ -90,8 +96,16 @@ public class DestinationsActivity extends AppCompatActivity {
         // Calculate Vacation Time Feature
         calculateVacation(binding);
 
+
+        //connect adapter to Recycler View
+        RecyclerView recyclerView = findViewById(R.id.logRecycler);
+        adapter = new TravelAdapter(locations);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
         //Pulling data for log entries from Firebase
         getTravelDetails(currentEmail);
+
 
     }
 
@@ -114,50 +128,61 @@ public class DestinationsActivity extends AppCompatActivity {
     }
 
 
-    private void getTravelDetails(String email){
-        DatabaseReference travelDetailsRef = travel_details_ref.child("users");
+    private void getTravelDetails(String email) {
+        DatabaseReference travelDetailsRef = travelDatabase.child("users");
+
 
         travelDetailsRef.orderByChild("email").equalTo(email).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                //clear lists to avoid duplication
+                locations.clear();
+                startDates.clear();
+                endDates.clear();
+
                 for(DataSnapshot travelSnapshot : snapshot.getChildren()){
                     addTravelToLists(travelSnapshot.child("travelDetails"));
                 }
+
 
                 //verify data retrieval
                 Log.d("Firebase", "Start Dates: " + startDates);
                 Log.d("Firebase", "End Dates: " + endDates);
                 Log.d("Firebase", "Locations:" + locations);
 
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.d("Firebase", "Error retrieving data");
+                //Notify adapter when data has changed
+                adapter.notifyDataSetChanged();
 
             }
-        });
+
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Log.d("Firebase", "Error retrieving data");
+
+                }
+            });
     }
 
-    private void addTravelToLists(DataSnapshot travelDetailsSnapshot){
+    private void addTravelToLists(DataSnapshot travelDetailsSnapshot) {
         //Loop through each travel detail
-        for(DataSnapshot snapshot : travelDetailsSnapshot.getChildren()){
+        for (DataSnapshot snapshot : travelDetailsSnapshot.getChildren()) {
 
-                String startDate = snapshot.child("startDate").getValue(String.class);
-                String endDate = snapshot.child("endDate").getValue(String.class);
-                String location = snapshot.child("location").getValue(String.class);
+            String startDate = snapshot.child("startDate").getValue(String.class);
+            String endDate = snapshot.child("endDate").getValue(String.class);
+            String location = snapshot.child("location").getValue(String.class);
 
-                if (startDate != null) {
-                    startDates.add(startDate);
-                }
+            if (startDate != null) {
+                startDates.add(startDate);
+            }
 
-                if (endDate != null) {
-                    endDates.add(endDate);
-                }
+            if (endDate != null) {
+                endDates.add(endDate);
+            }
 
-                if (location != null) {
-                    locations.add(location);
-                }
+            if (location != null) {
+                locations.add(location);
+            }
 
         }
     }

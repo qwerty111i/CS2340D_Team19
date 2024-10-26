@@ -126,10 +126,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Invited Users:"
-        android:padding="100dp"
+        android:padding="50dp"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="@id/username3"
         app:layout_constraintTop_toTopOf="@id/username3"/>
+
+    <TextView
+        android:id="@+id/tv_notes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Notes:"
+        android:padding="50dp"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="@id/username3"
+        app:layout_constraintTop_toBottomOf="@id/tv_invited_users" />
 
     <Button
         android:id="@+id/button_notes"
