@@ -2,17 +2,6 @@ package com.example.sprint1;
 
 import org.junit.Assert;
 import org.junit.Test;
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
-import androidx.lifecycle.Observer;
-
-import com.example.sprint1.viewmodel.LoginViewModel;
-
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.mockito.Mockito;
-
-import static org.junit.Assert.*;
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -21,10 +10,10 @@ import static org.junit.Assert.*;
  */
 //@RunWith(RobolectricTestRunner.class)
 //@Config(manifest = "src/main/AndroidManifest.xml", sdk = 28)
-public class SprintTwoTests {
+public class DestinationModelTest {
     @Test
     public void dest_travel_check() {
-        DestinationMockModel dmm = new DestinationMockModel();
+        DestinationModel dmm = new DestinationModel();
         dmm.setTravelDetails("", "10/28/31", "10/29/31");
         Assert.assertEquals(dmm.getLocationError(), "Invalid Location Input!");
 
@@ -38,7 +27,7 @@ public class SprintTwoTests {
 
     @Test
     public void dest_vacation_check() {
-        DestinationMockModel dmm = new DestinationMockModel();
+        DestinationModel dmm = new DestinationModel();
         dmm.calculateVacationTime("32", "10/28/31", "10/29/31");
         Assert.assertEquals(dmm.getDurationError(), "Duration isn't correctly calculated!");
 

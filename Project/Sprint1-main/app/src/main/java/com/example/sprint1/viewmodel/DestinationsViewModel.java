@@ -114,7 +114,7 @@ public class DestinationsViewModel extends ViewModel {
                 endDateError.setValue(null);
                 validCalcInputs.setValue(true);
 
-                toastMessage.setValue("Your calculated duration is " + dur + ".");
+                toastMessage.setValue("Your calculated duration is " + dur + " days.");
             } catch (ParseException e) {
                 // This should not occur since we have already validated the date formats
             }
