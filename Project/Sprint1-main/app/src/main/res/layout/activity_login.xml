@@ -43,10 +43,10 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/rectangleCard"
-            app:layout_constraintBottom_toTopOf="@id/usernameLayout"/>
+            app:layout_constraintBottom_toTopOf="@id/emailLayout"/>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/usernameLayout"
+            android:id="@+id/emailLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="40dp"
@@ -56,7 +56,7 @@
             app:boxStrokeWidthFocused="3dp"
             app:startIconDrawable="@drawable/user"
             app:startIconTint="@color/white"
-            android:hint="@string/user_label"
+            android:hint="Enter Email or Username"
             android:textColorHint="@color/white"
             app:hintTextColor="@color/white"
             app:errorEnabled="true"
@@ -71,7 +71,7 @@
             app:layout_constraintBottom_toTopOf="@id/passwordLayout">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/username"
+                android:id="@+id/email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/poppins_regular"
@@ -104,7 +104,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintWidth_percent="0.6"
-            app:layout_constraintTop_toBottomOf="@id/usernameLayout"
+            app:layout_constraintTop_toBottomOf="@id/emailLayout"
             app:layout_constraintBottom_toTopOf="@id/signIn">
 
             <com.google.android.material.textfield.TextInputEditText
