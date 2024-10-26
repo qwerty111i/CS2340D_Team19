@@ -26,6 +26,11 @@ public class LoginViewModel extends ViewModel {
         userModel = UserModel.getInstance();
     }
 
+    // Testing constructor
+    public LoginViewModel(Boolean test) {
+
+    }
+
     // Method to set username to user input
     public void setEmail(String email) {
         this.email.setValue(email);
