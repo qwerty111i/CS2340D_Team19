@@ -13,7 +13,7 @@ import org.junit.jupiter.api.BeforeEach;
 
 public class SignUpViewModelTests {
 
-    private SignupViewModel signupViewModelInstance = new SignupViewModel(1);
+    private SignupViewModel signupViewModelInstance = new SignupViewModel(true);
 
     @Test
     public void testCheckInputWithValidInput(){
@@ -24,7 +24,7 @@ public class SignUpViewModelTests {
 
 
     @Test
-    public  void testCheckInputwithNull(){
+    public  void testCheckInputWithNull(){
         String nullInput = null;
         boolean inputResult = signupViewModelInstance.checkInput(nullInput);
         assertFalse(inputResult); // Null input is expected to return false

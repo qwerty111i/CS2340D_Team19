@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-
 import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 
@@ -34,6 +33,7 @@ public class DestinationsViewModel extends ViewModel {
     private MutableLiveData<String> duration = new MutableLiveData<>();
     private MutableLiveData<String> startVacationDate = new MutableLiveData<>();
     private MutableLiveData<String> endVacationDate = new MutableLiveData<>();
+    private MutableLiveData<String> toastMessage = new MutableLiveData<>();
 
     public void setTravelDetails(String location, String startDate, String endDate) {
         // Sets the values of the MutableLiveData
@@ -113,6 +113,8 @@ public class DestinationsViewModel extends ViewModel {
                 durationError.setValue(null);
                 endDateError.setValue(null);
                 validCalcInputs.setValue(true);
+
+                toastMessage.setValue("Your calculated duration is " + dur + ".");
             } catch (ParseException e) {
                 // This should not occur since we have already validated the date formats
             }
@@ -126,10 +128,13 @@ public class DestinationsViewModel extends ViewModel {
                 Date end = calendar.getTime();
                 this.endVacationDate.setValue(formatter.format(end));
                 this.startVacationDate.setValue(startDate);
+                this.duration.setValue(duration);
                 startDateError.setValue(null);
                 durationError.setValue(null);
                 endDateError.setValue(null);
                 validCalcInputs.setValue(true);
+
+                toastMessage.setValue("Your calculated End Date is " + formatter.format(end) + ".");
             } catch (ParseException e) {
                 // This should not occur since we have already validated the date formats
             }
@@ -143,10 +148,14 @@ public class DestinationsViewModel extends ViewModel {
                 Date start = calendar.getTime();
                 this.startVacationDate.setValue(formatter.format(start));
                 this.endVacationDate.setValue(endDate);
+                this.duration.setValue(duration);
                 startDateError.setValue(null);
                 durationError.setValue(null);
                 endDateError.setValue(null);
                 validCalcInputs.setValue(true);
+
+                toastMessage.setValue(
+                        "Your calculated Start Date is " + formatter.format(start) + ".");
             } catch (ParseException e) {
                 // This should not occur since we have already validated the date formats
             }
@@ -165,10 +174,13 @@ public class DestinationsViewModel extends ViewModel {
                 } else { //valid case
                     this.startVacationDate.setValue(startDate);
                     this.endVacationDate.setValue(endDate);
+                    this.duration.setValue(duration);
                     startDateError.setValue(null);
                     durationError.setValue(null);
                     endDateError.setValue(null);
                     validCalcInputs.setValue(true);
+
+                    toastMessage.setValue("All values are valid!");
                 }
             } catch (ParseException e) {
                 // This should not occur since we have already validated the date formats
@@ -245,7 +257,8 @@ public class DestinationsViewModel extends ViewModel {
         // Creates a new VacationTime object, storing all the data
         VacationTime vtime = new VacationTime(
                 startVacationDate.getValue(),
-                endVacationDate.getValue());
+                endVacationDate.getValue(),
+                Integer.parseInt(duration.getValue()));
 
         // Uses the Singleton implemented user Database to store information
         UserModel.getInstance().storeVacation(vtime);
@@ -300,5 +313,9 @@ public class DestinationsViewModel extends ViewModel {
 
     public LiveData<String> getEndVacationDate() {
         return endVacationDate;
+    }
+
+    public LiveData<String> getToastMessage() {
+        return toastMessage;
     }
 }

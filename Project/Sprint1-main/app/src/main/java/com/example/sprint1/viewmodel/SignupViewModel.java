@@ -13,7 +13,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class SignupViewModel extends ViewModel {
     // Creating the LiveData
-    private  MutableLiveData<String> username = new MutableLiveData<>();
+    private MutableLiveData<String> username = new MutableLiveData<>();
     private MutableLiveData<String> password = new MutableLiveData<>();
     private MutableLiveData<Boolean> validInputs = new MutableLiveData<>();
     private MutableLiveData<String> usernameError = new MutableLiveData<>();
@@ -29,8 +29,9 @@ public class SignupViewModel extends ViewModel {
         userModel = UserModel.getInstance();
     }
 
-    public SignupViewModel(int i){
-        //for testing without touching Firebase
+    // Testing constructor
+    public SignupViewModel(Boolean test) {
+
     }
 
     // Method to set username to user input
