@@ -58,6 +58,7 @@ public class LogisticsViewModel extends ViewModel {
         fetchUsers();
         fetchInvitedUsers();
         retrieveNotes();
+        fetchVacationTimes();
     }
 
     public void calculatePlannedTime(List<VacationTime> vacationTimes) {
