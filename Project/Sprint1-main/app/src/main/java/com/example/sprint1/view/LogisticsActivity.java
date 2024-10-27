@@ -1,5 +1,7 @@
 package com.example.sprint1.view;
 
+import static com.example.sprint1.BR.viewModel;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -15,6 +17,14 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.sprint1.R;
+
+import com.example.sprint1.model.User;
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.utils.ColorTemplate;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import java.util.ArrayList;
@@ -24,6 +34,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import com.example.sprint1.viewmodel.LogisticsViewModel;
 import java.util.List;
+import java.util.Objects;
 
 
 public class LogisticsActivity extends AppCompatActivity {
@@ -80,8 +91,8 @@ public class LogisticsActivity extends AppCompatActivity {
 
         // Button click listeners
         btnAlloted.setOnClickListener(v -> {
-            Intent intent = new Intent(LogisticsActivity.this, LogisticsChart.class);
-            startActivity(intent);
+            LogisticsChart logisticsChart = new LogisticsChart();
+            logisticsChart.show(getSupportFragmentManager(), "LogisticsChart");
         });
 
         btnLogistics.setOnClickListener(v -> {
