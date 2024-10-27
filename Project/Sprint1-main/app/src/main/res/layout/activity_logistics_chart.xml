@@ -5,143 +5,15 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#80000000"
     tools:context=".view.LogisticsChart">
-
-    <TextView
-        android:id="@+id/travel_community_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Logistics chart"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="30dp"
-        android:textSize="30sp"
-        android:textStyle="bold"
-        android:fontFamily="@font/merriweather_black"/>
-
-    <Button
-        android:id="@+id/alloted_vs_planned"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:text="alloted vs planned"
-        android:textSize="23sp"
-        android:fontFamily="@font/poppins_regular"
-        app:backgroundTint="@color/modern_blue"
-        app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Medium"
-        app:layout_constraintWidth_percent="0.78"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHeight_percent="0.08"
-        app:layout_constraintTop_toBottomOf="@id/travel_community_text"
-        />
-
-
-    <TextView
-        android:id="@+id/contributors"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Contributors"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:layout_marginTop="30dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/alloted_vs_planned" />
-
-    <View
-        android:id="@+id/entry_card1"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:background="@drawable/entry_rectangle_card"
-        app:layout_constraintTop_toBottomOf="@id/contributors" />
-
-    <TextView
-        android:id="@+id/username1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="username1"
-        android:textColor="@color/white"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:layout_marginTop="15dp"
-        app:layout_constraintStart_toStartOf="@id/entry_card1"
-        app:layout_constraintTop_toTopOf="@id/entry_card1"
-        android:paddingStart="15dp"
-        android:gravity="center" />
-
-    <View
-        android:id="@+id/entry_card2"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:background="@drawable/entry_rectangle_card"
-        app:layout_constraintTop_toBottomOf="@id/entry_card1" />
-
-    <TextView
-        android:id="@+id/username2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="username2"
-        android:textSize="18sp"
-        android:textColor="@color/white"
-        android:textStyle="bold"
-        android:layout_marginTop="15dp"
-        app:layout_constraintStart_toStartOf="@id/entry_card2"
-        app:layout_constraintTop_toTopOf="@id/entry_card2"
-        android:paddingStart="15dp"
-        android:gravity="center" />
-
-    <View
-        android:id="@+id/entry_card3"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:background="@drawable/entry_rectangle_card"
-        app:layout_constraintTop_toBottomOf="@id/entry_card2" />
-
-    <TextView
-        android:id="@+id/username3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="username3"
-        android:textColor="@color/white"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:layout_marginTop="15dp"
-        app:layout_constraintStart_toStartOf="@id/entry_card3"
-        app:layout_constraintTop_toTopOf="@id/entry_card3"
-        android:paddingStart="15dp"
-        android:gravity="center" />
 
     <com.github.mikephil.charting.charts.PieChart
         android:id="@+id/pieChart"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
         android:layout_marginTop="55dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.495"
-        app:layout_constraintStart_toStartOf="@id/entry_card3"
-        app:layout_constraintTop_toTopOf="@id/entry_card3" />
-
-    <Button
-        android:id="@+id/button_edit"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:layout_marginStart="15dp"
-        android:layout_marginBottom="60dp"
-        android:backgroundTint="@color/modern_blue"
-        android:text="pencil"
-        android:textColor="@color/white"
-        android:textSize="15sp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:cornerRadius="10dp"/>
 
@@ -160,70 +32,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:cornerRadius="10dp"
         />
-
-    <LinearLayout
-        android:id="@+id/bottom_navigation"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_alignParentBottom="true"
-        android:background="@color/white"
-        android:padding="8dp"
-        app:layout_constraintBottom_toBottomOf="parent">
-
-        <ImageButton
-            android:id="@+id/btn_logistics"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="#ABA2A2"
-            android:src="@drawable/ic_logistics"
-            android:contentDescription="Logistics Screen" />
-
-        <ImageButton
-            android:id="@+id/btn_dest"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:src="@drawable/ic_dest"
-            android:contentDescription="Destination" />
-
-        <ImageButton
-            android:id="@+id/btn_dining"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:src="@drawable/ic_dining"
-            android:contentDescription="Dining Establishments" />
-
-        <ImageButton
-            android:id="@+id/btn_accom"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:src="@drawable/ic_accommodation"
-            android:contentDescription="Accomodations" />
-
-        <ImageButton
-            android:id="@+id/btn_transport"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:src="@drawable/ic_transport"
-            android:contentDescription="Transportation" />
-
-        <ImageButton
-            android:id="@+id/btn_travel"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:src="@drawable/ic_travel"
-            android:contentDescription="Travel Community" />
-    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

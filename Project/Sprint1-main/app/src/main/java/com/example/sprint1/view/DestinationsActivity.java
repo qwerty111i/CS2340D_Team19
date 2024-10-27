@@ -3,8 +3,10 @@ package com.example.sprint1.view;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -21,6 +23,7 @@ import com.example.sprint1.R;
 import com.example.sprint1.databinding.ActivityDestinationsBinding;
 import com.example.sprint1.viewmodel.DestinationsViewModel;
 import com.example.sprint1.viewmodel.TravelAdapter;
+import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -37,7 +40,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class DestinationsActivity extends AppCompatActivity {
-
+    private TabLayout tabLayout;
     private DestinationsViewModel viewModel;
     private Button logTravelBtn;
     private Button vacationBtn;
@@ -76,14 +79,6 @@ public class DestinationsActivity extends AppCompatActivity {
         binding.setVariable(BR.viewModel, viewModel);
         binding.setLifecycleOwner(this);
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.destinations), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
-
-
-
         //Get currently logged in user
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -93,7 +88,8 @@ public class DestinationsActivity extends AppCompatActivity {
         }
 
         // Add navigation bar
-        navigationBar(binding);
+        tabLayout = findViewById(R.id.tab_navigation);
+        navigation();
 
         // Log Travel Feature
         logTravel(binding);
@@ -103,7 +99,7 @@ public class DestinationsActivity extends AppCompatActivity {
 
 
         //connect adapter to Recycler View
-        RecyclerView recyclerView = findViewById(R.id.logRecycler);
+        RecyclerView recyclerView = binding.logRecycler;
         adapter = new TravelAdapter(locations, days);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -219,42 +215,62 @@ public class DestinationsActivity extends AppCompatActivity {
 
     }
 
-    public void navigationBar(ActivityDestinationsBinding binding) {
-        ImageButton btnLogistics = binding.btnLogistics;
-        ImageButton btnAccom = binding.btnAccom;
-        ImageButton btnDest = binding.btnDest;
-        ImageButton btnDining = binding.btnDining;
-        ImageButton btnTransport = binding.btnTransport;
-        ImageButton btnTravel = binding.btnTravel;
+    private void navigation() {
+        boolean checkSelected = false;
+        int[] navIcons = {
+                R.drawable.logistics,
+                R.drawable.destination,
+                R.drawable.dining,
+                R.drawable.accommodation,
+                R.drawable.transport,
+                R.drawable.travel };
 
-        btnLogistics.setOnClickListener(v -> {
-            Intent intent = new Intent(DestinationsActivity.this, LogisticsActivity.class);
-            startActivity(intent);
-        });
+        for (int i = 0; i < navIcons.length; i++) {
+            TabLayout.Tab tab = tabLayout.newTab();
 
-        btnDest.setOnClickListener(v -> {
-            Intent intent = new Intent(DestinationsActivity.this, DestinationsActivity.class);
-            startActivity(intent);
-        });
+            checkSelected = i == 1;
 
-        btnDining.setOnClickListener(v -> {
-            Intent intent = new Intent(DestinationsActivity.this, DiningActivity.class);
-            startActivity(intent);
-        });
+            tab.setIcon(navIcons[i]);
+            tabLayout.addTab(tab, checkSelected);
+        }
 
-        btnAccom.setOnClickListener(v -> {
-            Intent intent = new Intent(DestinationsActivity.this, AccommodationsActivity.class);
-            startActivity(intent);
-        });
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            public void onTabSelected(TabLayout.Tab tab) {
+                Intent intent;
+                int id = tab.getPosition();
 
-        btnTravel.setOnClickListener(v -> {
-            Intent intent = new Intent(DestinationsActivity.this, TravelActivity.class);
-            startActivity(intent);
-        });
+                if (id == 0) {
+                    intent = new Intent(DestinationsActivity.this, LogisticsActivity.class);
+                    startActivity(intent);
+                } else if (id == 2) {
+                    intent = new Intent(DestinationsActivity.this, DiningActivity.class);
+                    startActivity(intent);
+                } else if (id == 3) {
+                    intent = new Intent(DestinationsActivity.this, AccommodationsActivity.class);
+                    startActivity(intent);
+                } else if (id == 4) {
+                    intent = new Intent(DestinationsActivity.this, TransportationActivity.class);
+                    startActivity(intent);
+                } else if (id == 5) {
+                    intent = new Intent(DestinationsActivity.this, TravelActivity.class);
+                    startActivity(intent);
+                }
 
-        btnTransport.setOnClickListener(v -> {
-            Intent intent = new Intent(DestinationsActivity.this, TransportationActivity.class);
-            startActivity(intent);
+                View tabView = tab.getCustomView();
+                if (tabView != null) {
+                    ImageView tabIcon = tabView.findViewById(R.id.tab_navigation);
+                    tabIcon.setColorFilter(getResources().getColor(R.color.light_modern_purple));
+                }
+            }
+
+            public void onTabUnselected(TabLayout.Tab tab) {
+                View tabView = tab.getCustomView();
+                if (tabView != null) {
+                    ImageView tabIcon = tabView.findViewById(R.id.tab_navigation);
+                    tabIcon.clearColorFilter();
+                }
+            }
+            public void onTabReselected(TabLayout.Tab tab) {}
         });
-    }
+    };
 }

@@ -1,22 +1,27 @@
 package com.example.sprint1.view;
 
+import com.example.sprint1.databinding.ActivityLogisticsChartBinding;
 import com.example.sprint1.viewmodel.LogisticsViewModel;
+
+import androidx.core.content.res.ResourcesCompat;
+import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
 
-import android.content.Intent;
+import android.app.Dialog;
+import android.graphics.Color;
+import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageButton;
-
-import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+import android.view.ViewGroup;
 
 import com.example.sprint1.R;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
@@ -24,95 +29,91 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-public class LogisticsChart extends AppCompatActivity {
+public class LogisticsChart extends DialogFragment {
+    private ActivityLogisticsChartBinding binding;
+    private LogisticsViewModel viewModel;
+
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_logistics_chart);
-
-        LogisticsViewModel viewModel = new ViewModelProvider(this).get(LogisticsViewModel.class);
-
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
-        drawGraph(viewModel);
-
-        ImageButton btnLogistics = findViewById(R.id.btn_logistics);
-        ImageButton btnAccom = findViewById(R.id.btn_accom);
-        ImageButton btnDest = findViewById(R.id.btn_dest);
-        ImageButton btnDining = findViewById(R.id.btn_dining);
-        ImageButton btnTransport = findViewById(R.id.btn_transport);
-        ImageButton btnTravel = findViewById(R.id.btn_travel);
-
-        btnLogistics.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(LogisticsChart.this, LogisticsActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        btnDest.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(LogisticsChart.this, DestinationsActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        btnDining.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(LogisticsChart.this, DiningActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        btnAccom.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(LogisticsChart.this, AccommodationsActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        btnTravel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(LogisticsChart.this, TravelActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        btnTransport.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(LogisticsChart.this, TransportationActivity.class);
-                startActivity(intent);
-            }
-        });
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        // Inflate the dialog layout
+        binding = ActivityLogisticsChartBinding.inflate(inflater, container, false);
+        return binding.getRoot();
     }
-    /*
-     * Add Logistics ViewModel?
-     * Add allotted entry
-     * (Allotted trip time is the total time that the user has to schedule trips in.)
-     * Add planned entry
 
-     */
+    @Override
+    public void onStart() {
+        super.onStart();
+        viewModel = new ViewModelProvider(this).get(LogisticsViewModel.class);
+        Dialog dialog = getDialog();
+        viewModel.getAllottedTime().observe(getViewLifecycleOwner(), allottedTime -> drawGraph(viewModel));
+        viewModel.getPlannedTime().observe(getViewLifecycleOwner(), plannedTime -> drawGraph(viewModel));
+        if (dialog != null && dialog.getWindow() != null) {
+            // Sets the background color of the dialog as transparent
+            // Necessary in order to achieve rounded corners
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+            // Gets the metrics of the current display
+            DisplayMetrics metrics = new DisplayMetrics();
+            getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
+
+            // Sets the values of width and height based on the device's screen
+            int width = (int) (metrics.widthPixels * 0.9);
+            int height = (int) (metrics.heightPixels * 0.6);
+
+            // Sets the dialog size
+            dialog.getWindow().setLayout(width, height); // Set desired size here
+        }
+    }
+
     public void drawGraph(LogisticsViewModel viewModel) {
-        PieChart pieChart = findViewById(R.id.pieChart);
+        PieChart pieChart = binding.pieChart;
         List<PieEntry> entries = new ArrayList<>();
-        entries.add(new PieEntry(viewModel.getAllottedTime().getValue(), "Alloted Time"));
-        entries.add(new PieEntry(viewModel.getPlannedTime().getValue(), "Planned Time"));
-        PieDataSet dataSet = new PieDataSet(entries, "Allotted v. Planned");
+
+        Integer allottedTimeValue = viewModel.getAllottedTime().getValue();
+        Integer plannedTimeValue = viewModel.getPlannedTime().getValue();
+
+        // Log the retrieved values
+        Log.d("LogisticsChart", "Allotted Time: " + allottedTimeValue);
+        Log.d("LogisticsChart", "Planned Time: " + plannedTimeValue);
+
+
+        // Use the ViewModel to get data
+        entries.add(new PieEntry(allottedTimeValue, "Allotted Time"));
+        entries.add(new PieEntry(plannedTimeValue, "Planned Time"));
+
+        PieDataSet dataSet = new PieDataSet(entries, null);
         dataSet.setColors(ColorTemplate.MATERIAL_COLORS);
         PieData data = new PieData(dataSet);
+
+        data.setValueTextColor(Color.WHITE);
+        pieChart.setCenterTextColor(Color.WHITE);
+        pieChart.getLegend().setTextColor(Color.WHITE);
+
+        pieChart.getLegend().setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
+        pieChart.getLegend().setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
+        pieChart.getLegend().setOrientation(Legend.LegendOrientation.HORIZONTAL);
+        pieChart.getLegend().setDrawInside(false);
+        pieChart.getLegend().setTypeface(ResourcesCompat.getFont(getContext(), R.font.poppins_regular));
+        pieChart.getLegend().setTextSize(30f);
+        pieChart.getLegend().setWordWrapEnabled(true);
+
+        pieChart.setEntryLabelTextSize(20f);
+        dataSet.setValueTextSize(15f);
+        pieChart.setEntryLabelColor(Color.parseColor("#6A0DAD"));
+        dataSet.setValueTextColor(Color.BLACK);
+        pieChart.setEntryLabelTypeface(ResourcesCompat.getFont(getContext(), R.font.poppins_regular));
+
+
+        pieChart.setDrawHoleEnabled(true);
+        pieChart.setHoleRadius(50f);
+        pieChart.setHoleColor(Color.parseColor("#FF6F61"));
+
         pieChart.setData(data);
+        pieChart.getDescription().setEnabled(false);
         pieChart.setUsePercentValues(true);
-        pieChart.invalidate();
+        pieChart.invalidate(); // Refresh the chart
     }
 }
