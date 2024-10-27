@@ -81,6 +81,7 @@
         app:cornerRadius="10dp"
     />
 
+
     <!-- LinearLayout to hold dynamic invited user cards -->
     <LinearLayout
         android:id="@+id/invited_users_container"
