@@ -91,7 +91,7 @@ public class LoginViewModel extends ViewModel {
         }
         Log.d("EmailtoUse", emailToUse);
 
-            mAuth.signInWithEmailAndPassword(emailToUse,
+        mAuth.signInWithEmailAndPassword(emailToUse,
                 password.getValue()).addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         // Retrieve the userid of logged-in user
