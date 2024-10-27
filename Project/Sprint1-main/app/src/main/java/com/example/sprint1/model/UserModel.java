@@ -2,8 +2,14 @@ package com.example.sprint1.model;
 
 import android.util.Log;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class UserModel {
     // Creates an instance of the DatabaseReference
@@ -12,11 +18,13 @@ public class UserModel {
     // Creates a static instance
     private static UserModel instance;
     private String userId;
+    private Map<String, String> userMap;
 
     // Private constructor
     private UserModel() {
         // Uses the DatabaseReference to point to the "users" node in Firebase
         database = FirebaseDatabase.getInstance().getReference("users");
+        userMap = new HashMap<>();
     }
 
     // Uses the Singleton design pattern to get instance
@@ -36,6 +44,7 @@ public class UserModel {
         // Stores the user data in the database under the node "users"
         if (userId != null) {
             database.child(userId).setValue(user);
+            userMap.put(user.getUsername(), user.getEmail());
         } else {
             // Handle case where userId is not set
             Log.e("UserModel", "UserId is not set, cannot store user.");
@@ -58,5 +67,28 @@ public class UserModel {
         } else {
             Log.e("UserModel", "UserId is not set, cannot store vacation.");
         }
+    }
+    public void loadUserMap() {
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("users");
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                for (DataSnapshot userSnapshot : snapshot.getChildren()) {
+                    String username = userSnapshot.child("username").getValue(String.class);
+                    String email = userSnapshot.child("email").getValue(String.class);
+                    if (username != null && email != null) {
+                        userMap.put(username, email);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Handle errors
+            }
+        });
+    }
+    public String getEmailByUsername(String username) {
+        return userMap.get(username);
     }
 }
