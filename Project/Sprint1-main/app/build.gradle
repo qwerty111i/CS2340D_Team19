@@ -45,9 +45,14 @@ dependencies {
     implementation libs.firebase.auth
     implementation libs.navigation.fragment
     implementation libs.navigation.ui
+    implementation libs.core
     testImplementation libs.junit
+    testImplementation libs.mockito.core
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
+    testImplementation libs.core.testing
+    testImplementation libs.robolectric
+    testImplementation libs.firebase.auth.v2310
     implementation 'androidx.recyclerview:recyclerview:1.3.0'
     implementation 'com.google.firebase:firebase-database:20.2.1'
     }

@@ -5,6 +5,10 @@ public class User {
     private String username;
 
     public User(String email) {
+        this(email, null);
+    }
+
+    public User(String email, String username){
         this.email = email;
         this.username = username;
     }
