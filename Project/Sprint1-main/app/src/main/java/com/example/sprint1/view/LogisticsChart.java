@@ -103,10 +103,10 @@ public class LogisticsChart extends DialogFragment {
 
         pieChart.setEntryLabelTextSize(20f);
         dataSet.setValueTextSize(15f);
-        pieChart.setEntryLabelColor(Color.parseColor("#6A0DAD"));
+        pieChart.setEntryLabelColor(Color.parseColor("#FFFFFF"));
         dataSet.setValueTextColor(Color.BLACK);
         pieChart.setEntryLabelTypeface(
-                ResourcesCompat.getFont(getContext(), R.font.poppins_regular));
+                ResourcesCompat.getFont(getContext(), R.font.poppins_bold));
 
 
         pieChart.setDrawHoleEnabled(true);

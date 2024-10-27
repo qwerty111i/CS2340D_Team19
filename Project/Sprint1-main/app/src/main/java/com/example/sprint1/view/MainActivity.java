@@ -7,13 +7,8 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-
 import com.example.sprint1.R;
 
 public class MainActivity extends AppCompatActivity {
@@ -26,7 +21,8 @@ public class MainActivity extends AppCompatActivity {
 
         byte[] lastFrameData = getIntent().getByteArrayExtra("splash_background");
         if (lastFrameData != null) {
-            Bitmap lastFrameBitmap = BitmapFactory.decodeByteArray(lastFrameData, 0, lastFrameData.length);
+            Bitmap lastFrameBitmap = BitmapFactory.decodeByteArray(
+                    lastFrameData, 0, lastFrameData.length);
             getWindow().setBackgroundDrawable(new BitmapDrawable(getResources(), lastFrameBitmap));
         }
 
