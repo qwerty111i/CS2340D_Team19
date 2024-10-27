@@ -28,7 +28,7 @@
         android:id="@+id/alloted_vs_planned"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:text="alloted vs planned"
+        android:text="Allotted vs. Planned"
         android:textSize="23sp"
         android:fontFamily="@font/poppins_regular"
         app:backgroundTint="@color/modern_blue"
