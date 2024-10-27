@@ -15,22 +15,8 @@
         android:layout_marginTop="55dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:cornerRadius="10dp"/>
-
-
-    <Button
-        android:id="@+id/button_users"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:layout_marginBottom="60dp"
-        android:layout_marginEnd="15dp"
-        android:backgroundTint="@color/modern_blue"
-        android:text="human"
-        android:textColor="@color/white"
-        android:textSize="15sp"
+        app:layout_constraintBottom_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:cornerRadius="10dp"
-        />
+        app:cornerRadius="10dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
