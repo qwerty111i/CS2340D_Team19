@@ -67,7 +67,6 @@ public class LogisticsViewModel extends ViewModel {
                 Date startDate = formatter.parse(vacationTime.getStartDate());
                 Date endDate = formatter.parse(vacationTime.getEndDate());
 
-
                 if (earliestStartDate == null || startDate.before(earliestStartDate)) {
                     earliestStartDate = startDate;
                 }
@@ -76,7 +75,7 @@ public class LogisticsViewModel extends ViewModel {
                     latestEndDate = endDate;
                 }
             } catch (ParseException e) {
-                e.printStackTrace();
+                Log.e("LogisticsViewModel", "Date parsing error", e);
             }
         }
 
@@ -84,8 +83,10 @@ public class LogisticsViewModel extends ViewModel {
             long diffInMillis = latestEndDate.getTime() - earliestStartDate.getTime();
             int allocatedDays = (int) TimeUnit.DAYS.convert(diffInMillis, TimeUnit.MILLISECONDS);
             allottedTime.setValue(allocatedDays);
+            Log.d("LogisticsViewModel", "Allocated time = " + allocatedDays);
         } else {
             allottedTime.setValue(0);
+            Log.d("LogisticsViewModel", "No valid date range found for allocation");
         }
     }
 
@@ -111,7 +112,8 @@ public class LogisticsViewModel extends ViewModel {
     }
 
     private void fetchVacationTimes() {
-        DatabaseReference vacationTimesRef = FirebaseDatabase.getInstance().getReference("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("vacationTimes");
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference vacationTimesRef = FirebaseDatabase.getInstance().getReference("users").child(userId).child("vacations");
 
         vacationTimesRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -121,6 +123,9 @@ public class LogisticsViewModel extends ViewModel {
                     VacationTime vacationTime = vacationSnapshot.getValue(VacationTime.class);
                     if (vacationTime != null) {
                         vacationTimes.add(vacationTime);
+                        Log.d("LogisticsViewModel", "Retrieved VacationTime: " + vacationTime.getDuration() + ", Start: " + vacationTime.getStartDate() + ", End: " + vacationTime.getEndDate());
+                    } else {
+                        Log.d("LogisticsViewModel", "VacationTime is null for snapshot: " + vacationSnapshot);
                     }
                 }
                 vacationTimesLiveData.setValue(vacationTimes);
