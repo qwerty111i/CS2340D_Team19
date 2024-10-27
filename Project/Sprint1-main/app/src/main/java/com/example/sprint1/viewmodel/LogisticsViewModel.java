@@ -7,9 +7,13 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.sprint1.model.VacationTime;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import androidx.lifecycle.LiveData;
@@ -22,6 +26,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 
 public class LogisticsViewModel extends ViewModel {
@@ -32,18 +37,68 @@ public class LogisticsViewModel extends ViewModel {
     private final DatabaseReference databaseReference;
 
     private final MutableLiveData<List<String>> notesLiveData = new MutableLiveData<>();
+    private final MutableLiveData<List<VacationTime>> vacationTimesLiveData = new MutableLiveData<>();
+
     private List<String> notesList = new ArrayList<>();
     private final DatabaseReference notesRef;
+
+    public void calculatePlannedTime(List<VacationTime> vacationTimes) {
+        int totalPlannedTime = 0;
+
+        for (VacationTime vacationTime : vacationTimes) {
+            totalPlannedTime += vacationTime.getDuration();
+        }
+
+        plannedTime.setValue(totalPlannedTime);
+    }
+
+    public void calculateAllocatedTime(List<VacationTime> vacationTimes) {
+        if (vacationTimes == null || vacationTimes.isEmpty()) {
+            allottedTime.setValue(0);
+            return;
+        }
+
+        SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yy");
+        Date earliestStartDate = null;
+        Date latestEndDate = null;
+
+        for (VacationTime vacationTime : vacationTimes) {
+            try {
+                Date startDate = formatter.parse(vacationTime.getStartDate());
+                Date endDate = formatter.parse(vacationTime.getEndDate());
+
+
+                if (earliestStartDate == null || startDate.before(earliestStartDate)) {
+                    earliestStartDate = startDate;
+                }
+
+                if (latestEndDate == null || endDate.after(latestEndDate)) {
+                    latestEndDate = endDate;
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (earliestStartDate != null && latestEndDate != null) {
+            long diffInMillis = latestEndDate.getTime() - earliestStartDate.getTime();
+            int allocatedDays = (int) TimeUnit.DAYS.convert(diffInMillis, TimeUnit.MILLISECONDS);
+            allottedTime.setValue(allocatedDays);
+        } else {
+            allottedTime.setValue(0);
+        }
+    }
 
     public LiveData<Integer> getAllottedTime() {
         return allottedTime;
     }
-    public  LiveData<Integer> getPlannedTime() {
+    public LiveData<Integer> getPlannedTime() {
         return plannedTime;
     }
 
     public LogisticsViewModel() {
-
+        allottedTime = new MutableLiveData<>(0);
+        plannedTime = new MutableLiveData<>(0);
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         notesRef = FirebaseDatabase.getInstance().getReference("users").child(userId).child("notes");
         retrieveNotes();
@@ -52,6 +107,32 @@ public class LogisticsViewModel extends ViewModel {
         fetchUsers();
 
 
+        fetchVacationTimes();
+    }
+
+    private void fetchVacationTimes() {
+        DatabaseReference vacationTimesRef = FirebaseDatabase.getInstance().getReference("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("vacationTimes");
+
+        vacationTimesRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                List<VacationTime> vacationTimes = new ArrayList<>();
+                for (DataSnapshot vacationSnapshot : snapshot.getChildren()) {
+                    VacationTime vacationTime = vacationSnapshot.getValue(VacationTime.class);
+                    if (vacationTime != null) {
+                        vacationTimes.add(vacationTime);
+                    }
+                }
+                vacationTimesLiveData.setValue(vacationTimes);
+                calculateAllocatedTime(vacationTimes);
+                calculatePlannedTime(vacationTimes);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                Log.e("Firebase", "Error fetching vacation times", error.toException());
+            }
+        });
     }
     public void addNote(String note) {
         notesList.add(note);
@@ -127,6 +208,7 @@ public class LogisticsViewModel extends ViewModel {
             }
         });
     }
+
 
     public LiveData<List<String>> getUsersLiveData() {
         return usersLiveData;
