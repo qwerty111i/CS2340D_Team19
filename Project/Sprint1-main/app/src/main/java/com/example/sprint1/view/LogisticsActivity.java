@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -16,7 +16,10 @@ import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.sprint1.BR;
 import com.example.sprint1.R;
+import com.example.sprint1.databinding.ActivityLogisticsBinding;
+import com.google.android.material.tabs.TabLayout;
 
 import com.example.sprint1.model.User;
 import com.github.mikephil.charting.charts.PieChart;
@@ -38,10 +41,13 @@ import java.util.Objects;
 
 
 public class LogisticsActivity extends AppCompatActivity {
+    private TabLayout tabLayout;
 
+
+    private LogisticsViewModel viewModel;
+    private TextView notesTextView;
     //private DatabaseReference databaseReference;
     //private TextView tvInvitedUsers;
-    private LogisticsViewModel logisticsViewModel;
     //private TextView notesTextView;
     //private List<String> startDates = new ArrayList<>();
     //private List<String> endDates = new ArrayList<>();
@@ -51,33 +57,40 @@ public class LogisticsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_logistics);
+
+        // Inflating the layout
+        ActivityLogisticsBinding binding =
+                ActivityLogisticsBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
+        // Creating the ViewModel
+        viewModel = new ViewModelProvider(this).get(LogisticsViewModel.class);
+
+        // Binding the ViewModel
+        binding.setVariable(BR.viewModel, viewModel);
+        binding.setLifecycleOwner(this);
 
         // Initialize UI elements
-        ImageButton btnLogistics = findViewById(R.id.btn_logistics);
-        ImageButton btnAccom = findViewById(R.id.btn_accom);
-        ImageButton btnDest = findViewById(R.id.btn_dest);
-        ImageButton btnDining = findViewById(R.id.btn_dining);
-        ImageButton btnTransport = findViewById(R.id.btn_transport);
-        ImageButton btnTravel = findViewById(R.id.btn_travel);
         Button btnAlloted = findViewById(R.id.alloted_vs_planned);
-        ImageButton notesButton = findViewById(R.id.button_notes);
+        Button notesButton = findViewById(R.id.button_notes);
         notesButton.setOnClickListener(v -> showNotesDialog());
+
         //loadInvitedUsers();
         //retrieveNotesFromDatabase();
-        logisticsViewModel = new ViewModelProvider(this).get(LogisticsViewModel.class);
+        viewModel.retrieveNotes();
 
         // Find the TextView in your layout
         //notesTextView = findViewById(R.id.tv_notes);
 
         // Observe the notesLiveData from the ViewModel
 
-        logisticsViewModel.retrieveNotes();
 
-        logisticsViewModel = new ViewModelProvider(this).get(LogisticsViewModel.class);
+        viewModel.retrieveNotes();
+
+        viewModel = new ViewModelProvider(this).get(LogisticsViewModel.class);
 
         // Observe invited users LiveData
-        logisticsViewModel.getInvitedUsersLiveData().observe(this, invitedUsers -> {
+        viewModel.getInvitedUsersLiveData().observe(this, invitedUsers -> {
             loadInvitedUsers(invitedUsers);
             LinearLayout invitedUsersContainer = findViewById(R.id.invited_users_container);
             invitedUsersContainer.removeAllViews(); // Clear previous views
@@ -87,58 +100,31 @@ public class LogisticsActivity extends AppCompatActivity {
             }
         });
 
-
-
         // Button click listeners
         btnAlloted.setOnClickListener(v -> {
             LogisticsChart logisticsChart = new LogisticsChart();
             logisticsChart.show(getSupportFragmentManager(), "LogisticsChart");
         });
 
-        btnLogistics.setOnClickListener(v -> {
-            Intent intent = new Intent(LogisticsActivity.this, LogisticsActivity.class);
-            startActivity(intent);
-        });
-
-        btnDest.setOnClickListener(v -> {
-            Intent intent = new Intent(LogisticsActivity.this, DestinationsActivity.class);
-            startActivity(intent);
-        });
-
-        btnDining.setOnClickListener(v -> {
-            Intent intent = new Intent(LogisticsActivity.this, DiningActivity.class);
-            startActivity(intent);
-        });
-
-        btnAccom.setOnClickListener(v -> {
-            Intent intent = new Intent(LogisticsActivity.this, AccommodationsActivity.class);
-            startActivity(intent);
-        });
-
-        btnTravel.setOnClickListener(v -> {
-            Intent intent = new Intent(LogisticsActivity.this, TravelActivity.class);
-            startActivity(intent);
-        });
-
-        btnTransport.setOnClickListener(v -> {
-            Intent intent = new Intent(LogisticsActivity.this, TransportationActivity.class);
-            startActivity(intent);
-        });
+        // navigation
+        tabLayout = binding.tabNavigation;
+        navigation();
 
 
-        ImageButton inviteButton = findViewById(R.id.button_invite);
+        //tvInvitedUsers = findViewById(R.id.tv_invited_users);
+        Button inviteButton = binding.buttonInvite;
+
         inviteButton.setOnClickListener(this::onInviteButtonClick);
-
-        logisticsViewModel = new ViewModelProvider(this).get(LogisticsViewModel.class);
-
+        
         // Observe changes in the users list
-        logisticsViewModel.getUsersLiveData().observe(this, new Observer<List<String>>() {
+        viewModel.getUsersLiveData().observe(this, new Observer<List<String>>() {
             @Override
             public void onChanged(List<String> users) {
 
             }
         });
     }
+
     private View createInvitedUserCard(String email) {
         // Create a new LinearLayout as a container
         LinearLayout cardLayout = new LinearLayout(this);
@@ -166,9 +152,10 @@ public class LogisticsActivity extends AppCompatActivity {
         return cardLayout;
     }
 
+
     public void onInviteButtonClick(View view) {
         // Observe the LiveData
-        logisticsViewModel.getUsersLiveData().observe(this, users -> {
+        viewModel.getUsersLiveData().observe(this, users -> {
             if (users != null && !users.isEmpty()) {
                 showInviteDialog(users);
             } else {
@@ -203,7 +190,7 @@ public class LogisticsActivity extends AppCompatActivity {
                     selectedUsers.add(filteredUserList.get(i));
                 }
             }
-            logisticsViewModel.inviteUsers(selectedUsers, LogisticsActivity.this);
+            viewModel.inviteUsers(selectedUsers, LogisticsActivity.this);
         });
 
         builder.setNegativeButton("Cancel", (dialog, id) -> dialog.dismiss());
@@ -245,23 +232,27 @@ public class LogisticsActivity extends AppCompatActivity {
         layout.addView(notesContainer);
 
 
-        logisticsViewModel.getNotesLiveData().observe(this, notes -> {
-            notesContainer.removeAllViews();
+        // Observe notes LiveData
+        viewModel.getNotesLiveData().observe(this, notes -> {
+            notesContainer.removeAllViews(); // Clear existing views
+
             for (String note : notes) {
                 appendNoteToContainer(notesContainer, note);
             }
         });
 
         // Retrieve notes from Firebase
-        logisticsViewModel.retrieveNotes();
+        viewModel.retrieveNotes(); // Make sure to call this to populate the list initially
+        viewModel.retrieveNotes();
 
         builder.setView(layout);
 
         builder.setPositiveButton("Save", (dialog, which) -> {
             String note = input.getText().toString();
             if (!note.isEmpty()) {
-                logisticsViewModel.addNote(note);
-                //logisticsViewModel.saveNoteToFirebase(note);
+                viewModel.addNote(note);
+                //logisticsViewModel.saveNoteToFirebase(note); // Call this to save to Firebase
+
             } else {
                 Toast.makeText(this, "Note cannot be empty", Toast.LENGTH_SHORT).show();
             }
@@ -286,8 +277,8 @@ public class LogisticsActivity extends AppCompatActivity {
                     .setTitle("Delete Note")
                     .setMessage("Are you sure you want to delete this note?")
                     .setPositiveButton("Yes", (dialog, which) -> {
-                        logisticsViewModel.removeNote(note); // Remove note from ViewModel
-                        logisticsViewModel.removeNoteFromFirebase(note); // Remove from Firebase
+                        viewModel.removeNote(note); // Remove note from ViewModel
+                        viewModel.removeNoteFromFirebase(note); // Remove from Firebase
                         notesContainer.removeView(noteTextView); // Remove from UI
                     })
                     .setNegativeButton("No", null)
@@ -297,6 +288,65 @@ public class LogisticsActivity extends AppCompatActivity {
 
         notesContainer.addView(noteTextView);
     }
+
+    private void navigation() {
+        boolean checkSelected = false;
+        int[] navIcons = {
+                R.drawable.logistics,
+                R.drawable.destination,
+                R.drawable.dining,
+                R.drawable.accommodation,
+                R.drawable.transport,
+                R.drawable.travel };
+
+        for (int i = 0; i < navIcons.length; i++) {
+            TabLayout.Tab tab = tabLayout.newTab();
+
+            checkSelected = i == 0;
+
+            tab.setIcon(navIcons[i]);
+            tabLayout.addTab(tab, checkSelected);
+        }
+
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            public void onTabSelected(TabLayout.Tab tab) {
+                Intent intent;
+                int id = tab.getPosition();
+
+                if (id == 1) {
+                    intent = new Intent(LogisticsActivity.this, DestinationsActivity.class);
+                    startActivity(intent);
+                } else if (id == 2) {
+                    intent = new Intent(LogisticsActivity.this, DiningActivity.class);
+                    startActivity(intent);
+                } else if (id == 3) {
+                    intent = new Intent(LogisticsActivity.this, AccommodationsActivity.class);
+                    startActivity(intent);
+                } else if (id == 4) {
+                    intent = new Intent(LogisticsActivity.this, TransportationActivity.class);
+                    startActivity(intent);
+                } else if (id == 5) {
+                    intent = new Intent(LogisticsActivity.this, TravelActivity.class);
+                    startActivity(intent);
+                }
+
+                View tabView = tab.getCustomView();
+                if (tabView != null) {
+                    ImageView tabIcon = tabView.findViewById(R.id.tab_navigation);
+                    tabIcon.setColorFilter(getResources().getColor(R.color.light_modern_purple));
+                }
+            }
+
+            public void onTabUnselected(TabLayout.Tab tab) {
+                View tabView = tab.getCustomView();
+                if (tabView != null) {
+                    ImageView tabIcon = tabView.findViewById(R.id.tab_navigation);
+                    tabIcon.clearColorFilter();
+                }
+            }
+            public void onTabReselected(TabLayout.Tab tab) {}
+        });
+    };
 }
 
 

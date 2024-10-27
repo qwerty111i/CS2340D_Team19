@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.SplashPageMain"
+    tools:context=".view.MainActivity"
     android:background="@drawable/log_in_background">
 
     <TextView
@@ -27,7 +27,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Wander Sync"
-        android:fontFamily="@font/merriweather_black"
+        android:fontFamily="@font/poppins_bold"
         android:textSize="40sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/start"
@@ -40,6 +40,7 @@
         android:id="@+id/start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
         android:text="Start"
         android:textSize="23sp"
         android:fontFamily="@font/poppins_regular"

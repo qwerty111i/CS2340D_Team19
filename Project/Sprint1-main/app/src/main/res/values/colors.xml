@@ -14,4 +14,7 @@
     <!-- Snackbar colors -->
     <color name="snackbar_background">#323232</color>
     <color name="snackbar_action_text">#FF4081</color>
+
+    <!-- Tab colors -->
+    <color name="tab_indicator">#FF5722</color>
 </resources>
