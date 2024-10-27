@@ -29,22 +29,33 @@ public class UsernameTest {
 
     // Matthew
     @Test
-    public void validEmailUsernamePassword() {
+    public void noUsername() {
         viewModel.signInValidation();
         viewModel.setEmail("ad@min.com");
-        viewModel.setUsername("admin");
+        viewModel.setUsername("");
         viewModel.setPassword("123456");
         viewModel.signInValidation();
         assertNull(viewModel.getEmailError().getValue());
         assertNull(viewModel.getUsernameError().getValue());
         assertNull(viewModel.getPasswordError().getValue());
-
+    }
+    public void validUsername() {
         viewModel.signInValidation();
-        viewModel.setEmail("a d@min.com");
+        viewModel.setEmail("ad@min.com");
+        viewModel.setUsername("nonsense");
+        viewModel.setPassword("123456");
+        viewModel.signInValidation();
+        assertNull(viewModel.getEmailError().getValue());
+        assertNull(viewModel.getUsernameError().getValue());
+        assertNull(viewModel.getPasswordError().getValue());
+    }
+    public void invalidUsername(){
+        viewModel.signInValidation();
+        viewModel.setEmail("ad@min.com");
         viewModel.setUsername("  ");
         viewModel.setPassword("123456");
         viewModel.signInValidation();
-        assertEquals("Cannot contain Whitespace!", viewModel.getEmailError().getValue());
+        assertNull(viewModel.getEmailError().getValue());
         assertEquals("Username cannot contain whitespace!", viewModel.getUsernameError().getValue());
         assertNull(viewModel.getPasswordError().getValue());
 
