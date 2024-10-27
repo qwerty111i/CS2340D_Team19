@@ -98,6 +98,7 @@ public class LogisticsActivity extends AppCompatActivity {
             }
         });
     }
+
     private View createInvitedUserCard(String email) {
         // Create a new LinearLayout as a container
         LinearLayout cardLayout = new LinearLayout(this);

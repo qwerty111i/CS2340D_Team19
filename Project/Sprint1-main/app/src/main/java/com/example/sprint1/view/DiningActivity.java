@@ -23,11 +23,6 @@ public class DiningActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_dining);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.dining), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
 
         // Add navigation bar
         tabLayout = findViewById(R.id.tab_navigation);

@@ -25,6 +25,7 @@
         android:id="@+id/tab_navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingBottom="20dp"
         android:background="@color/cardview_dark_background"
         app:tabMode="fixed"
         app:tabIconTint="@color/tab_color"

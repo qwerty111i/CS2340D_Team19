@@ -79,14 +79,6 @@ public class DestinationsActivity extends AppCompatActivity {
         binding.setVariable(BR.viewModel, viewModel);
         binding.setLifecycleOwner(this);
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.destinations), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
-
-
-
         //Get currently logged in user
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
