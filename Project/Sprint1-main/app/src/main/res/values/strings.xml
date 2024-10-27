@@ -1,23 +1,39 @@
 <resources>
     <string name="app_name">Sprint1</string>
 
+    <!-- String resources for Main page -->
+    <string name="main_sign_in_btn">Sign In</string>
+    <string name="main_sign_up_btn">Sign Up</string>
+    <string name="main_quit_btn">Quit</string>
+
     <!-- String resources for Login page -->
     <string name="login_title">Log In</string>
     <string name="user_label">Enter Email</string>
     <string name="password_label">Enter Password</string>
     <string name="sign_up_text">Don\'t have an account?</string>
+    <string name="login_hint">Enter Email or Username</string>
 
     <!-- String resources for Signup Page -->
     <string name="signup_title">Sign Up</string>
     <string name="user_creation_label">Enter Email</string>
     <string name="password_creation_label">Enter Password</string>
     <string name="sign_in_text">Already have an account?</string>
+    <string name="sign_up_hint">Enter Username (Optional)</string>
 
     <!-- Shared resources for Login/Signup Page -->
     <string name="sign_in_button">Sign In</string>
     <string name="sign_up_button">Sign Up</string>
 
+    <!-- String resources for Logistics Page -->
+    <string name="logistics_title">Logistics</string>
+    <string name="allotted_vs_planned_btn">Allotted vs. Planned</string>
+    <string name="contributor_title">Contributors: </string>
+    <string name="invited_user_card">Invited User</string>
+    <string name="notes_description">Add Notes</string>
+    <string name="invite_description">Invite Button</string>
+
     <!-- String resources for Destinations Page -->
+    <string name="destination_title">Destinations</string>
     <string name="log_travel_btn">Log Travel</string>
     <string name="log_travel_title">Log Travel</string>
     <string name="travel_location">Travel Location</string>
@@ -26,12 +42,19 @@
     <string name="date_view">Select Date</string>
     <string name="end_date">End Date</string>
     <string name="log_travel_submit">Submit</string>
+    <string name="vacation_time_title">Calculate Vacation Time</string>
+    <string name="vacation_duration">Duration (in days): </string>
+    <string name="vacation_duration_hint">Enter Duration (in days)</string>
+    <string name="vacation_duration_button">Calculate</string>
 
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
+
+    <!-- String resources for Accommodations Page -->
+    <string name="accommodations_title">Accommodations Screen</string>
 
     <string name="lorem_ipsum">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris

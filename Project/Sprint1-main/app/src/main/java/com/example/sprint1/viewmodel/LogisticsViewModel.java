@@ -3,7 +3,6 @@ package com.example.sprint1.viewmodel;
 import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -17,18 +16,14 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
-
-import com.example.sprint1.model.TravelDetails;
-
 import java.util.concurrent.TimeUnit;
 
-
+import com.example.sprint1.model.TravelDetails;
 
 public class LogisticsViewModel extends ViewModel {
     private MutableLiveData<Integer> allottedTime;
@@ -37,17 +32,30 @@ public class LogisticsViewModel extends ViewModel {
     private final MutableLiveData<List<String>> usersLiveData = new MutableLiveData<>();
     private final MutableLiveData<List<String>> notesLiveData = new MutableLiveData<>();
     private final MutableLiveData<List<String>> invitedUsersLiveData = new MutableLiveData<>();
-    private List<String> invitedUsersList = new ArrayList<>();
+    private List<String> invitedUsersList;
     private final DatabaseReference databaseReference;
-
-
     private final MutableLiveData<List<VacationTime>> vacationTimesLiveData =
             new MutableLiveData<>();
-
-
     private List<String> notesList = new ArrayList<>();
-    //private List<String> invitedUsersList;
     private final DatabaseReference notesRef;
+
+    public LiveData<Integer> getAllottedTime() {
+        return allottedTime;
+    }
+    public  LiveData<Integer> getPlannedTime() {
+        return plannedTime;
+    }
+
+    public LogisticsViewModel() {
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        notesRef = FirebaseDatabase.getInstance().
+                getReference("users").child(userId).child("notes");
+        invitedUsersList = new ArrayList<>();
+        databaseReference = FirebaseDatabase.getInstance().getReference("users");
+        fetchUsers();
+        fetchInvitedUsers();
+        retrieveNotes();
+    }
 
     public void calculatePlannedTime(List<VacationTime> vacationTimes) {
         int totalPlannedTime = 0;
@@ -97,29 +105,6 @@ public class LogisticsViewModel extends ViewModel {
         }
     }
 
-    public LiveData<Integer> getAllottedTime() {
-        return allottedTime;
-    }
-    public LiveData<Integer> getPlannedTime() {
-        return plannedTime;
-    }
-
-    public LogisticsViewModel() {
-        allottedTime = new MutableLiveData<>(0);
-        plannedTime = new MutableLiveData<>(0);
-        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        notesRef = FirebaseDatabase.getInstance().
-                getReference("users").child(userId).child("notes");
-        invitedUsersList = new ArrayList<>();
-        databaseReference = FirebaseDatabase.getInstance().getReference("users");
-        fetchUsers();
-        fetchInvitedUsers();
-        retrieveNotes();
-
-
-        fetchVacationTimes();
-    }
-
     private void fetchVacationTimes() {
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         DatabaseReference vacationTimesRef = FirebaseDatabase.getInstance().
@@ -153,17 +138,16 @@ public class LogisticsViewModel extends ViewModel {
             }
         });
     }
+
     public void addNote(String note) {
         if (note == null || note.trim().isEmpty()) {
             Log.d("LogisticsViewModel", "Attempted to add an empty note, ignoring.");
             return;
         }
-
         notesList.add(note);
         notesLiveData.setValue(notesList);
         saveNoteToFirebase(note);
     }
-
 
     public void removeNote(String note) {
         notesList.remove(note);
@@ -171,7 +155,7 @@ public class LogisticsViewModel extends ViewModel {
         removeNoteFromFirebase(note);
 
         if (note.contains("-->")) {
-            // Extract the inviter's email (assumes the note ends with " --> inviterEmail")
+            // Extract the inviters email (assumes the note ends with " --> inviterEmail")
             String[] parts = note.split("-->");
             if (parts.length == 2) {
                 String inviterEmail = parts[1].trim();
@@ -180,7 +164,47 @@ public class LogisticsViewModel extends ViewModel {
                 removeNoteFromInviter(inviterEmail, parts[0].trim());
             }
         }
+    }
 
+    private void removeNoteFromInviter(String inviterEmail, String originalNote) {
+        // Locate the inviter based on their email in the database
+        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference("users");
+        usersRef.orderByChild("email").equalTo(inviterEmail).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    for (DataSnapshot inviterSnapshot : snapshot.getChildren()) {
+                        // Get the inviter's user ID
+                        String inviterId = inviterSnapshot.getKey();
+                        if (inviterId != null) {
+
+                            DatabaseReference inviterNotesRef = usersRef.child(inviterId).child("notes");
+
+                            // Call the inviter's ViewModel method to remove the note
+                            inviterNotesRef.orderByValue().equalTo(originalNote).addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot snapshot) {
+                                    for (DataSnapshot noteSnapshot : snapshot.getChildren()) {
+                                        noteSnapshot.getRef().removeValue();
+                                    }
+                                }
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+                                    Log.e("Firebase", "Error removing note from inviter", error.toException());
+                                }
+                            });
+                        }
+                    }
+                } else {
+                    Log.e("Firebase", "Inviter not found based on email: " + inviterEmail);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("Firebase", "Error finding inviter", error.toException());
+            }
+        });
     }
 
     public void retrieveNotes() {
@@ -205,60 +229,13 @@ public class LogisticsViewModel extends ViewModel {
         });
     }
 
-    private void removeNoteFromInviter(String inviterEmail, String originalNote) {
-        // Locate the inviter based on their email in the database
-        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference("users");
-        usersRef.orderByChild("email").equalTo(inviterEmail).
-                addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if (snapshot.exists()) {
-                            for (DataSnapshot inviterSnapshot : snapshot.getChildren()) {
-                                // Get the inviter's user ID
-                                String inviterId = inviterSnapshot.getKey();
-                                if (inviterId != null) {
-
-                                    DatabaseReference inviterNotesRef = usersRef.child(inviterId).
-                                            child("notes");
-
-                                    // Call the inviter's ViewModel method to remove the note
-                                    inviterNotesRef.orderByValue().equalTo(originalNote).
-                                        addListenerForSingleValueEvent(
-                                            new ValueEventListener() {
-                                                @Override
-                                                public void onDataChange(DataSnapshot s) {
-                                                    for (DataSnapshot ns : s.getChildren()) {
-                                                        ns.getRef().removeValue();
-                                                    }
-                                                }
-                                                @Override
-                                                public void onCancelled(DatabaseError error) {
-                                                    Log.e("Firebase",
-                                                            "Error removing note from inviter",
-                                                            error.toException());
-                                                    }
-                                            });
-                                }
-                            }
-                        } else {
-                            Log.e("Firebase", "Inviter not found based on email: " + inviterEmail);
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        Log.e("Firebase", "Error finding inviter", error.toException());
-                    }
-                });
-    }
-
     public void saveNoteToFirebase(String note) {
         notesRef.push().setValue(note); // Push new note to Firebase
     }
 
     public void removeNoteFromFirebase(String note) {
         notesRef.orderByValue().equalTo(note).addListenerForSingleValueEvent(
-                new ValueEventListener() {
+            new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot snapshot) {
                     for (DataSnapshot noteSnapshot : snapshot.getChildren()) {
@@ -290,21 +267,9 @@ public class LogisticsViewModel extends ViewModel {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                Log.e("Firebase", "Error in fetching users", databaseError.toException());
             }
         });
-    }
-
-
-    public LiveData<List<String>> getUsersLiveData() {
-        return usersLiveData;
-    }
-    public LiveData<List<String>> getNotesLiveData() {
-        return notesLiveData;
-    }
-
-    public LiveData<List<String>> getInvitedUsersLiveData() {
-        return invitedUsersLiveData;
     }
 
     public void fetchInvitedUsers() {
@@ -405,10 +370,10 @@ public class LogisticsViewModel extends ViewModel {
                                                         public void onDataChange(@NonNull DataSnapshot travelDetailsSnapshot) {
                                                             for (DataSnapshot travelDetailSnapshot : travelDetailsSnapshot.getChildren()) {
                                                                 TravelDetails value = travelDetailSnapshot.getValue(TravelDetails.class);
-                                                                String marker = "-->";
+                                                                String marker = "(Shared by ";
                                                                 if (value != null && !value.getLocation().contains(marker)) {
                                                                     // Add the inviter's email to the location
-                                                                    value.setLocation(value.getLocation() + " --> " + inviterEmail);
+                                                                    value.setLocation(value.getLocation() + "\n" + "(Shared by " + inviterEmail + ")");
 
                                                                     // Save the modified travel detail to the invited user's "travelDetails" node
                                                                     userReference.child(invitedUserId).child("travelDetails")
@@ -446,5 +411,16 @@ public class LogisticsViewModel extends ViewModel {
                 });
             }
         }
+    }
+
+    public LiveData<List<String>> getUsersLiveData() {
+        return usersLiveData;
+    }
+    public LiveData<List<String>> getNotesLiveData() {
+        return notesLiveData;
+    }
+
+    public LiveData<List<String>> getInvitedUsersLiveData() {
+        return invitedUsersLiveData;
     }
 }

@@ -1,7 +1,5 @@
 package com.example.sprint1.view;
 
-import static com.example.sprint1.BR.viewModel;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -11,38 +9,24 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.example.sprint1.BR;
 import com.example.sprint1.R;
 import com.example.sprint1.databinding.ActivityLogisticsBinding;
 import com.google.android.material.tabs.TabLayout;
-
 import com.google.firebase.auth.FirebaseAuth;
 import java.util.ArrayList;
-
+import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import com.example.sprint1.viewmodel.LogisticsViewModel;
 import java.util.List;
 
-
 public class LogisticsActivity extends AppCompatActivity {
     private TabLayout tabLayout;
-
-
     private LogisticsViewModel viewModel;
-    private TextView notesTextView;
-    //private DatabaseReference databaseReference;
-    //private TextView tvInvitedUsers;
-    //private TextView notesTextView;
-    //private List<String> startDates = new ArrayList<>();
-    //private List<String> endDates = new ArrayList<>();
-    //private List<String> locations = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,8 +34,7 @@ public class LogisticsActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
 
         // Inflating the layout
-        ActivityLogisticsBinding binding =
-                ActivityLogisticsBinding.inflate(getLayoutInflater());
+        ActivityLogisticsBinding binding = ActivityLogisticsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         // Creating the ViewModel
@@ -62,28 +45,14 @@ public class LogisticsActivity extends AppCompatActivity {
         binding.setLifecycleOwner(this);
 
         // Initialize UI elements
-        Button btnAlloted = findViewById(R.id.alloted_vs_planned);
-        Button notesButton = findViewById(R.id.button_notes);
-        notesButton.setOnClickListener(v -> showNotesDialog());
-
-        //loadInvitedUsers();
-        //retrieveNotesFromDatabase();
-        viewModel.retrieveNotes();
-
-        // Find the TextView in your layout
-        //notesTextView = findViewById(R.id.tv_notes);
-
-        // Observe the notesLiveData from the ViewModel
-
-
-        viewModel.retrieveNotes();
-
-        viewModel = new ViewModelProvider(this).get(LogisticsViewModel.class);
+        Button btnAllotted = binding.allottedVsPlanned;
+        Button inviteButton = binding.buttonInvite;
+        Button notesButton = binding.buttonNotes;
 
         // Observe invited users LiveData
         viewModel.getInvitedUsersLiveData().observe(this, invitedUsers -> {
-            loadInvitedUsers(invitedUsers);
-            LinearLayout invitedUsersContainer = findViewById(R.id.invited_users_container);
+            loadInvitedUsers(invitedUsers, binding);
+            LinearLayout invitedUsersContainer = binding.invitedUsersContainer;
             invitedUsersContainer.removeAllViews(); // Clear previous views
             for (String email : invitedUsers) {
                 View invitedUserCard = createInvitedUserCard(email);
@@ -92,28 +61,19 @@ public class LogisticsActivity extends AppCompatActivity {
         });
 
         // Button click listeners
-        btnAlloted.setOnClickListener(v -> {
+        btnAllotted.setOnClickListener(v -> {
             LogisticsChart logisticsChart = new LogisticsChart();
             logisticsChart.show(getSupportFragmentManager(), "LogisticsChart");
         });
 
-        // navigation
-        tabLayout = binding.tabNavigation;
-        navigation();
-
-
-        //tvInvitedUsers = findViewById(R.id.tv_invited_users);
-        Button inviteButton = binding.buttonInvite;
+        notesButton.setOnClickListener(v -> showNotesDialog());
+        viewModel.retrieveNotes();
 
         inviteButton.setOnClickListener(this::onInviteButtonClick);
-        
-        // Observe changes in the users list
-        viewModel.getUsersLiveData().observe(this, new Observer<List<String>>() {
-            @Override
-            public void onChanged(List<String> users) {
 
-            }
-        });
+        // Navigation bar
+        tabLayout = binding.tabNavigation;
+        navigation();
     }
 
     private View createInvitedUserCard(String email) {
@@ -134,7 +94,7 @@ public class LogisticsActivity extends AppCompatActivity {
         emailTextView.setText(email);
         emailTextView.setTextSize(18);
         emailTextView.setTypeface(ResourcesCompat.getFont(this, R.font.poppins_regular));
-        emailTextView.setTextColor(getResources().getColor(R.color.white));
+        emailTextView.setTextColor(ContextCompat.getColor(this, R.color.white));
         emailTextView.setPadding(30, 25, 0, 0);
 
         // Add the email TextView to the card layout
@@ -191,10 +151,8 @@ public class LogisticsActivity extends AppCompatActivity {
         dialog.show();
     }
 
-
-
-    private void loadInvitedUsers(List<String> invitedUsers) {
-        LinearLayout invitedUsersContainer = findViewById(R.id.invited_users_container);
+    private void loadInvitedUsers(List<String> invitedUsers, ActivityLogisticsBinding binding) {
+        LinearLayout invitedUsersContainer = binding.invitedUsersContainer;
         invitedUsersContainer.removeAllViews(); // Clear previous views
 
         for (String invitedUserEmail : invitedUsers) {
@@ -202,7 +160,6 @@ public class LogisticsActivity extends AppCompatActivity {
             invitedUsersContainer.addView(invitedUserCard);
         }
     }
-
 
     //NOTES PART
     private void showNotesDialog() {
@@ -223,7 +180,6 @@ public class LogisticsActivity extends AppCompatActivity {
         notesContainer.setOrientation(LinearLayout.VERTICAL);
         layout.addView(notesContainer);
 
-
         // Observe notes LiveData
         viewModel.getNotesLiveData().observe(this, notes -> {
             notesContainer.removeAllViews(); // Clear existing views
@@ -235,16 +191,12 @@ public class LogisticsActivity extends AppCompatActivity {
 
         // Retrieve notes from Firebase
         viewModel.retrieveNotes(); // Make sure to call this to populate the list initially
-        viewModel.retrieveNotes();
-
         builder.setView(layout);
 
         builder.setPositiveButton("Save", (dialog, which) -> {
             String note = input.getText().toString();
             if (!note.isEmpty()) {
                 viewModel.addNote(note);
-                //logisticsViewModel.saveNoteToFirebase(note); // Call this to save to Firebase
-
             } else {
                 Toast.makeText(this, "Note cannot be empty", Toast.LENGTH_SHORT).show();
             }
@@ -254,14 +206,12 @@ public class LogisticsActivity extends AppCompatActivity {
         builder.show();
     }
 
-
-
     private void appendNoteToContainer(LinearLayout notesContainer, String note) {
         TextView noteTextView = new TextView(this);
         noteTextView.setText(note);
         noteTextView.setPadding(20, 10, 20, 10);
         noteTextView.setTextSize(16);
-        noteTextView.setTextColor(getResources().getColor(R.color.black));
+        noteTextView.setTextColor(ContextCompat.getColor(this, R.color.black));
 
         // Add a long-click listener to remove the note
         noteTextView.setOnLongClickListener(v -> {
@@ -277,19 +227,18 @@ public class LogisticsActivity extends AppCompatActivity {
                     .show();
             return true;
         });
-
         notesContainer.addView(noteTextView);
     }
 
     private void navigation() {
         boolean checkSelected = false;
         int[] navIcons = {
-            R.drawable.logistics,
-            R.drawable.destination,
-            R.drawable.dining,
-            R.drawable.accommodation,
-            R.drawable.transport,
-            R.drawable.travel };
+                R.drawable.logistics,
+                R.drawable.destination,
+                R.drawable.dining,
+                R.drawable.accommodation,
+                R.drawable.transport,
+                R.drawable.travel };
 
         for (int i = 0; i < navIcons.length; i++) {
             TabLayout.Tab tab = tabLayout.newTab();
@@ -340,6 +289,3 @@ public class LogisticsActivity extends AppCompatActivity {
         });
     };
 }
-
-
-

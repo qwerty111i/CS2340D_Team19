@@ -89,7 +89,7 @@
             app:boxStrokeWidthFocused="3dp"
             app:startIconDrawable="@drawable/user"
             app:startIconTint="@color/white"
-            android:hint="Enter Username (Optional)"
+            android:hint="@string/sign_up_hint"
             android:textColorHint="@color/white"
             app:hintTextColor="@color/white"
             app:errorEnabled="true"

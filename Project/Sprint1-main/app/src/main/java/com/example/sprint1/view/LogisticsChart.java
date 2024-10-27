@@ -33,7 +33,6 @@ public class LogisticsChart extends DialogFragment {
     private ActivityLogisticsChartBinding binding;
     private LogisticsViewModel viewModel;
 
-
     @Override
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {

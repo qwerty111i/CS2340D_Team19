@@ -22,7 +22,7 @@
             android:id="@+id/logistics_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Logistics"
+            android:text="@string/logistics_title"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -33,11 +33,11 @@
             android:fontFamily="@font/poppins_bold" />
 
         <Button
-            android:id="@+id/alloted_vs_planned"
+            android:id="@+id/allotted_vs_planned"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginTop="20dp"
-            android:text="Allotted vs Planned"
+            android:text="@string/allotted_vs_planned_btn"
             android:textSize="23sp"
             android:fontFamily="@font/poppins_regular"
             app:backgroundTint="@color/modern_blue"
@@ -52,14 +52,26 @@
             android:id="@+id/contributors"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Contributors"
+            android:text="@string/contributor_title"
             android:textSize="20sp"
             android:fontFamily="@font/poppins_bold"
             android:textColor="@color/black"
             android:layout_marginTop="30dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/alloted_vs_planned" />
+            app:layout_constraintTop_toBottomOf="@id/allotted_vs_planned" />
+
+        <!-- LinearLayout to hold dynamic invited user cards -->
+        <LinearLayout
+            android:id="@+id/invited_users_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:text="@string/invited_user_card"
+            android:layout_marginTop="20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/contributors" />
 
         <Button
             android:id="@+id/button_notes"
@@ -69,11 +81,10 @@
             android:layout_marginBottom="60dp"
             android:backgroundTint="@color/modern_blue"
             android:drawableTop="@drawable/add_notes"
-            android:contentDescription="add notes"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:contentDescription="@string/notes_description"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/tab_navigation"
             app:cornerRadius="10dp" />
-
 
         <Button
             android:id="@+id/button_invite"
@@ -83,22 +94,10 @@
             android:layout_marginEnd="15dp"
             android:backgroundTint="@color/modern_blue"
             android:drawableTop="@drawable/people_invite"
-            android:contentDescription="Invite Button"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:contentDescription="@string/invite_description"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/tab_navigation"
             app:cornerRadius="10dp" />
-
-        <!-- LinearLayout to hold dynamic invited user cards -->
-        <LinearLayout
-            android:id="@+id/invited_users_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:text="Invited User"
-            android:layout_marginTop="20dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/contributors" />
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tab_navigation"
