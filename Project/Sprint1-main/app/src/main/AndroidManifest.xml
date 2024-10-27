@@ -22,7 +22,7 @@
             android:name=".view.LogTravelDialog"
             android:exported="false" />
         <activity
-            android:name=".view.SplashPageMain"
+            android:name=".view.MainActivity"
             android:exported="false" />
         <activity
             android:name=".view.SignupActivity"
@@ -47,10 +47,10 @@
             android:exported="true" />
         <activity
             android:name=".view.LogisticsActivity"
-            android:exported="false"
+            android:exported="true"
             android:theme="@style/Theme.Sprint1" />
         <activity
-            android:name=".view.SplashPage"
+            android:name=".view.SplashActivity"
             android:exported="true"
             android:theme="@style/Theme.Design.NoActionBar">
             <intent-filter>
@@ -60,5 +60,4 @@
             </intent-filter>
         </activity>
     </application>
-
 </manifest>

@@ -177,7 +177,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="#ABA2A2"
-            android:src="@drawable/ic_logistics"
+            android:src="@drawable/logistics"
             android:contentDescription="Logistics Screen" />
 
         <ImageButton
@@ -186,7 +186,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@android:color/transparent"
-            android:src="@drawable/ic_dest"
+            android:src="@drawable/destination"
             android:contentDescription="Destination" />
 
         <ImageButton
@@ -195,7 +195,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@android:color/transparent"
-            android:src="@drawable/ic_dining"
+            android:src="@drawable/dining"
             android:contentDescription="Dining Establishments" />
 
         <ImageButton
@@ -204,7 +204,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@android:color/transparent"
-            android:src="@drawable/ic_accommodation"
+            android:src="@drawable/accommodation"
             android:contentDescription="Accomodations" />
 
         <ImageButton
@@ -213,7 +213,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@android:color/transparent"
-            android:src="@drawable/ic_transport"
+            android:src="@drawable/transport"
             android:contentDescription="Transportation" />
 
         <ImageButton
@@ -222,7 +222,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@android:color/transparent"
-            android:src="@drawable/ic_travel"
+            android:src="@drawable/travel"
             android:contentDescription="Travel Community" />
     </LinearLayout>
 
