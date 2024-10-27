@@ -3,37 +3,19 @@ package com.example.sprint1.viewmodel;
 import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-
-import com.example.sprint1.model.VacationTime;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
-import java.util.List;
-
 import com.example.sprint1.model.TravelDetails;
-
-import java.util.concurrent.TimeUnit;
-
-
 
 public class LogisticsViewModel extends ViewModel {
     private MutableLiveData<Integer> allottedTime;
@@ -42,76 +24,20 @@ public class LogisticsViewModel extends ViewModel {
     private final MutableLiveData<List<String>> usersLiveData = new MutableLiveData<>();
     private final MutableLiveData<List<String>> notesLiveData = new MutableLiveData<>();
     private final MutableLiveData<List<String>> invitedUsersLiveData = new MutableLiveData<>();
-    private List<String> invitedUsersList = new ArrayList<>();
+    private List<String> invitedUsersList;
     private final DatabaseReference databaseReference;
 
-
-    private final MutableLiveData<List<String>> notesLiveData = new MutableLiveData<>();
-    private final MutableLiveData<List<VacationTime>> vacationTimesLiveData = new MutableLiveData<>();
-
-
     private List<String> notesList = new ArrayList<>();
-    //private List<String> invitedUsersList;
     private final DatabaseReference notesRef;
-
-    public void calculatePlannedTime(List<VacationTime> vacationTimes) {
-        int totalPlannedTime = 0;
-
-        for (VacationTime vacationTime : vacationTimes) {
-            totalPlannedTime += vacationTime.getDuration();
-        }
-
-        plannedTime.setValue(totalPlannedTime);
-    }
-
-    public void calculateAllocatedTime(List<VacationTime> vacationTimes) {
-        if (vacationTimes == null || vacationTimes.isEmpty()) {
-            allottedTime.setValue(0);
-            return;
-        }
-
-        SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yy");
-        Date earliestStartDate = null;
-        Date latestEndDate = null;
-
-        for (VacationTime vacationTime : vacationTimes) {
-            try {
-                Date startDate = formatter.parse(vacationTime.getStartDate());
-                Date endDate = formatter.parse(vacationTime.getEndDate());
-
-                if (earliestStartDate == null || startDate.before(earliestStartDate)) {
-                    earliestStartDate = startDate;
-                }
-
-                if (latestEndDate == null || endDate.after(latestEndDate)) {
-                    latestEndDate = endDate;
-                }
-            } catch (ParseException e) {
-                Log.e("LogisticsViewModel", "Date parsing error", e);
-            }
-        }
-
-        if (earliestStartDate != null && latestEndDate != null) {
-            long diffInMillis = latestEndDate.getTime() - earliestStartDate.getTime();
-            int allocatedDays = (int) TimeUnit.DAYS.convert(diffInMillis, TimeUnit.MILLISECONDS);
-            allottedTime.setValue(allocatedDays);
-            Log.d("LogisticsViewModel", "Allocated time = " + allocatedDays);
-        } else {
-            allottedTime.setValue(0);
-            Log.d("LogisticsViewModel", "No valid date range found for allocation");
-        }
-    }
 
     public LiveData<Integer> getAllottedTime() {
         return allottedTime;
     }
-    public LiveData<Integer> getPlannedTime() {
+    public  LiveData<Integer> getPlannedTime() {
         return plannedTime;
     }
 
     public LogisticsViewModel() {
-        allottedTime = new MutableLiveData<>(0);
-        plannedTime = new MutableLiveData<>(0);
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         notesRef = FirebaseDatabase.getInstance().getReference("users").child(userId).child("notes");
         invitedUsersList = new ArrayList<>();
@@ -119,50 +45,17 @@ public class LogisticsViewModel extends ViewModel {
         fetchUsers();
         fetchInvitedUsers();
         retrieveNotes();
-
-
-        fetchVacationTimes();
     }
 
-    private void fetchVacationTimes() {
-        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DatabaseReference vacationTimesRef = FirebaseDatabase.getInstance().getReference("users").child(userId).child("vacations");
-
-        vacationTimesRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                List<VacationTime> vacationTimes = new ArrayList<>();
-                for (DataSnapshot vacationSnapshot : snapshot.getChildren()) {
-                    VacationTime vacationTime = vacationSnapshot.getValue(VacationTime.class);
-                    if (vacationTime != null) {
-                        vacationTimes.add(vacationTime);
-                        Log.d("LogisticsViewModel", "Retrieved VacationTime: " + vacationTime.getDuration() + ", Start: " + vacationTime.getStartDate() + ", End: " + vacationTime.getEndDate());
-                    } else {
-                        Log.d("LogisticsViewModel", "VacationTime is null for snapshot: " + vacationSnapshot);
-                    }
-                }
-                vacationTimesLiveData.setValue(vacationTimes);
-                calculateAllocatedTime(vacationTimes);
-                calculatePlannedTime(vacationTimes);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError error) {
-                Log.e("Firebase", "Error fetching vacation times", error.toException());
-            }
-        });
-    }
     public void addNote(String note) {
         if (note == null || note.trim().isEmpty()) {
             Log.d("LogisticsViewModel", "Attempted to add an empty note, ignoring.");
             return;
         }
-
         notesList.add(note);
         notesLiveData.setValue(notesList);
         saveNoteToFirebase(note);
     }
-
 
     public void removeNote(String note) {
         notesList.remove(note);
@@ -170,7 +63,7 @@ public class LogisticsViewModel extends ViewModel {
         removeNoteFromFirebase(note);
 
         if (note.contains("-->")) {
-            // Extract the inviter's email (assumes the note ends with " --> inviterEmail")
+            // Extract the inviters email (assumes the note ends with " --> inviterEmail")
             String[] parts = note.split("-->");
             if (parts.length == 2) {
                 String inviterEmail = parts[1].trim();
@@ -179,7 +72,6 @@ public class LogisticsViewModel extends ViewModel {
                 RemoveNoteFromInviter(inviterEmail, parts[0].trim());
             }
         }
-
     }
 
     public void retrieveNotes() {
@@ -215,7 +107,6 @@ public class LogisticsViewModel extends ViewModel {
                         // Get the inviter's user ID
                         String inviterId = inviterSnapshot.getKey();
                         if (inviterId != null) {
-
                             DatabaseReference inviterNotesRef = usersRef.child(inviterId).child("notes");
 
                             // Call the inviter's ViewModel method to remove the note
@@ -281,21 +172,9 @@ public class LogisticsViewModel extends ViewModel {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                Log.e("Firebase", "Error in fetching users", databaseError.toException());
             }
         });
-    }
-
-
-    public LiveData<List<String>> getUsersLiveData() {
-        return usersLiveData;
-    }
-    public LiveData<List<String>> getNotesLiveData() {
-        return notesLiveData;
-    }
-
-    public LiveData<List<String>> getInvitedUsersLiveData() {
-        return invitedUsersLiveData;
     }
 
     public void fetchInvitedUsers() {
@@ -390,10 +269,10 @@ public class LogisticsViewModel extends ViewModel {
                                                         public void onDataChange(@NonNull DataSnapshot travelDetailsSnapshot) {
                                                             for (DataSnapshot travelDetailSnapshot : travelDetailsSnapshot.getChildren()) {
                                                                 TravelDetails value = travelDetailSnapshot.getValue(TravelDetails.class);
-                                                                String marker = "-->";
+                                                                String marker = "(Shared by ";
                                                                 if (value != null && !value.getLocation().contains(marker)) {
                                                                     // Add the inviter's email to the location
-                                                                    value.setLocation(value.getLocation() + " --> " + inviterEmail);
+                                                                    value.setLocation(value.getLocation() + "\n" + "(Shared by " + inviterEmail + ")");
 
                                                                     // Save the modified travel detail to the invited user's "travelDetails" node
                                                                     userReference.child(invitedUserId).child("travelDetails")
@@ -431,5 +310,16 @@ public class LogisticsViewModel extends ViewModel {
                 });
             }
         }
+    }
+
+    public LiveData<List<String>> getUsersLiveData() {
+        return usersLiveData;
+    }
+    public LiveData<List<String>> getNotesLiveData() {
+        return notesLiveData;
+    }
+
+    public LiveData<List<String>> getInvitedUsersLiveData() {
+        return invitedUsersLiveData;
     }
 }
