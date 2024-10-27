@@ -18,7 +18,7 @@ public class User {
     }
 
     public String getUsername() {
-        return username;
+        return username != null ? username : "";
     }
 
     public void setEmail(String email) {

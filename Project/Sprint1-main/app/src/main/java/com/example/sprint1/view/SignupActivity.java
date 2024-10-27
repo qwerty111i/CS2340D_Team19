@@ -24,8 +24,10 @@ import com.google.firebase.FirebaseApp;
 public class SignupActivity extends AppCompatActivity {
 
     private TextInputLayout email;
+    private TextInputLayout username;
     private TextInputLayout password;
     private TextInputEditText emailText;
+    private TextInputEditText usernameText;
     private TextInputEditText passwordText;
     private Button signUp;
     private Button signIn;
@@ -69,8 +71,10 @@ public class SignupActivity extends AppCompatActivity {
     private void listeners(ActivitySignupBinding binding) {
         // Linking components from XML to activity
         email = binding.emailLayout;
+        username = binding.usernameLayout;
         password = binding.passwordLayout;
         emailText = binding.email;
+        usernameText = binding.username;
         passwordText = binding.password;
         signUp = binding.signUp;
         signIn = binding.signIn;
@@ -79,6 +83,7 @@ public class SignupActivity extends AppCompatActivity {
         signUp.setOnClickListener(v -> {
             // Setting values in the viewModel
             viewModel.setEmail(email.getEditText().getText().toString());
+            viewModel.setUsername(username.getEditText().getText().toString());
             viewModel.setPassword(password.getEditText().getText().toString());
 
             // Calling the validation function in viewModel
@@ -115,6 +120,14 @@ public class SignupActivity extends AppCompatActivity {
                 email.setError(errorMessage);
             } else {
                 email.setError(null);
+            }
+        });
+
+        viewModel.getUsernameError().observe(this, errorMessage -> {
+            if (errorMessage != null) {
+                username.setError(errorMessage);
+            } else {
+                username.setError(null);
             }
         });
 
@@ -172,6 +185,15 @@ public class SignupActivity extends AppCompatActivity {
             public void afterTextChanged(android.text.Editable s) {
                 // Sets error to null if field is edited
                 email.setError(null);
+            }
+        });
+        username.getEditText().addTextChangedListener(new android.text.TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+            public void onTextChanged(CharSequence s, int start, int before, int count) { }
+            public void afterTextChanged(android.text.Editable s) {
+                // Sets error to null if field is edited
+                username.setError(null);
             }
         });
 
