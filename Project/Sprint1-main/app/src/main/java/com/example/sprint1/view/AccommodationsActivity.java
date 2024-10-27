@@ -2,26 +2,13 @@ package com.example.sprint1.view;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.view.menu.MenuBuilder;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-import androidx.viewpager.widget.ViewPager;
 
 import com.example.sprint1.R;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.tabs.TabLayout;
 
 public class AccommodationsActivity extends AppCompatActivity {
@@ -42,12 +29,8 @@ public class AccommodationsActivity extends AppCompatActivity {
     private void navigation() {
         boolean checkSelected = false;
         int[] navIcons = {
-                R.drawable.logistics,
-                R.drawable.destination,
-                R.drawable.dining,
-                R.drawable.accommodation,
-                R.drawable.transport,
-                R.drawable.travel };
+            R.drawable.logistics, R.drawable.destination, R.drawable.dining,
+            R.drawable.accommodation, R.drawable.transport, R.drawable.travel };
 
         for (int i = 0; i < navIcons.length; i++) {
             TabLayout.Tab tab = tabLayout.newTab();
@@ -94,7 +77,7 @@ public class AccommodationsActivity extends AppCompatActivity {
                     tabIcon.clearColorFilter();
                 }
             }
-            public void onTabReselected(TabLayout.Tab tab) {}
+            public void onTabReselected(TabLayout.Tab tab) { }
         });
     };
 }

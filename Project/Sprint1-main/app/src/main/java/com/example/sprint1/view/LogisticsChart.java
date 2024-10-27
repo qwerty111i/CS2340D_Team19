@@ -10,7 +10,6 @@ import androidx.lifecycle.ViewModelProvider;
 
 import android.app.Dialog;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -29,7 +28,6 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class LogisticsChart extends DialogFragment {
     private ActivityLogisticsChartBinding binding;
@@ -37,7 +35,8 @@ public class LogisticsChart extends DialogFragment {
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater,
+                             ViewGroup container, Bundle savedInstanceState) {
         // Inflate the dialog layout
         binding = ActivityLogisticsChartBinding.inflate(inflater, container, false);
         return binding.getRoot();
@@ -48,8 +47,10 @@ public class LogisticsChart extends DialogFragment {
         super.onStart();
         viewModel = new ViewModelProvider(this).get(LogisticsViewModel.class);
         Dialog dialog = getDialog();
-        viewModel.getAllottedTime().observe(getViewLifecycleOwner(), allottedTime -> drawGraph(viewModel));
-        viewModel.getPlannedTime().observe(getViewLifecycleOwner(), plannedTime -> drawGraph(viewModel));
+        viewModel.getAllottedTime().observe(
+                getViewLifecycleOwner(), allottedTime -> drawGraph(viewModel));
+        viewModel.getPlannedTime().observe(
+                getViewLifecycleOwner(), plannedTime -> drawGraph(viewModel));
         if (dialog != null && dialog.getWindow() != null) {
             // Sets the background color of the dialog as transparent
             // Necessary in order to achieve rounded corners
@@ -96,7 +97,8 @@ public class LogisticsChart extends DialogFragment {
         pieChart.getLegend().setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
         pieChart.getLegend().setOrientation(Legend.LegendOrientation.HORIZONTAL);
         pieChart.getLegend().setDrawInside(false);
-        pieChart.getLegend().setTypeface(ResourcesCompat.getFont(getContext(), R.font.poppins_regular));
+        pieChart.getLegend().setTypeface(ResourcesCompat.getFont(
+                getContext(), R.font.poppins_regular));
         pieChart.getLegend().setTextSize(30f);
         pieChart.getLegend().setWordWrapEnabled(true);
 
@@ -104,7 +106,8 @@ public class LogisticsChart extends DialogFragment {
         dataSet.setValueTextSize(15f);
         pieChart.setEntryLabelColor(Color.parseColor("#6A0DAD"));
         dataSet.setValueTextColor(Color.BLACK);
-        pieChart.setEntryLabelTypeface(ResourcesCompat.getFont(getContext(), R.font.poppins_regular));
+        pieChart.setEntryLabelTypeface(
+                ResourcesCompat.getFont(getContext(), R.font.poppins_regular));
 
 
         pieChart.setDrawHoleEnabled(true);

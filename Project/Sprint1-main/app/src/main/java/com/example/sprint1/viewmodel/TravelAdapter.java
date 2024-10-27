@@ -3,21 +3,19 @@ package com.example.sprint1.viewmodel;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import com.example.sprint1.R;
 
-import java.util.ArrayList;
 import java.util.List;
 
 //Adapts travel details to be shown on the Desination Screens UI
 public class TravelAdapter extends RecyclerView.Adapter<TravelAdapter.ViewHolder> {
     //Context context;
-    List<String> locations;
-    List<String> days;
+    private List<String> locations;
+    private List<String> days;
 
     public TravelAdapter(List<String> locations, List<String> days) {
         this.locations = locations;
@@ -28,8 +26,9 @@ public class TravelAdapter extends RecyclerView.Adapter<TravelAdapter.ViewHolder
     @NonNull
     @Override
     public TravelAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-       //Inflates layout and creates design of each row
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.log_item_layout, parent,false);
+        //Inflates layout and creates design of each row
+        View view = LayoutInflater.from(parent.getContext()).
+                inflate(R.layout.log_item_layout, parent, false);
 
 
         return new TravelAdapter.ViewHolder(view);
@@ -52,8 +51,9 @@ public class TravelAdapter extends RecyclerView.Adapter<TravelAdapter.ViewHolder
     }
 
 
-    public static class ViewHolder extends RecyclerView.ViewHolder{
-        TextView tvDestination, tvDays;
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        private TextView tvDestination;
+        private TextView tvDays;
 
 
         public ViewHolder(@NonNull View itemView) {
