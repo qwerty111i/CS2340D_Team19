@@ -21,15 +21,7 @@ import com.example.sprint1.R;
 import com.example.sprint1.databinding.ActivityLogisticsBinding;
 import com.google.android.material.tabs.TabLayout;
 
-import com.example.sprint1.model.User;
-import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.data.PieData;
-import com.github.mikephil.charting.data.PieDataSet;
-import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.utils.ColorTemplate;
-
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
 import java.util.ArrayList;
 
 import androidx.core.content.res.ResourcesCompat;
@@ -37,7 +29,6 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import com.example.sprint1.viewmodel.LogisticsViewModel;
 import java.util.List;
-import java.util.Objects;
 
 
 public class LogisticsActivity extends AppCompatActivity {
@@ -159,7 +150,8 @@ public class LogisticsActivity extends AppCompatActivity {
             if (users != null && !users.isEmpty()) {
                 showInviteDialog(users);
             } else {
-                Toast.makeText(LogisticsActivity.this, "No users found to invite", Toast.LENGTH_SHORT).show();
+                Toast.makeText(LogisticsActivity.this,
+                        "No users found to invite", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -292,12 +284,12 @@ public class LogisticsActivity extends AppCompatActivity {
     private void navigation() {
         boolean checkSelected = false;
         int[] navIcons = {
-                R.drawable.logistics,
-                R.drawable.destination,
-                R.drawable.dining,
-                R.drawable.accommodation,
-                R.drawable.transport,
-                R.drawable.travel };
+            R.drawable.logistics,
+            R.drawable.destination,
+            R.drawable.dining,
+            R.drawable.accommodation,
+            R.drawable.transport,
+            R.drawable.travel };
 
         for (int i = 0; i < navIcons.length; i++) {
             TabLayout.Tab tab = tabLayout.newTab();
@@ -344,7 +336,7 @@ public class LogisticsActivity extends AppCompatActivity {
                     tabIcon.clearColorFilter();
                 }
             }
-            public void onTabReselected(TabLayout.Tab tab) {}
+            public void onTabReselected(TabLayout.Tab tab) { }
         });
     };
 }

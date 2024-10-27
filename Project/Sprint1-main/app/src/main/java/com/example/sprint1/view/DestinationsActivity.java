@@ -127,66 +127,67 @@ public class DestinationsActivity extends AppCompatActivity {
     private void getTravelDetails(String email) {
         DatabaseReference travelDetailsRef = databaseRef.child("users");
 
-        travelDetailsRef.orderByChild("email").equalTo(email).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                //clear lists to avoid duplication
-                locations.clear();
-                startDates.clear();
-                endDates.clear();
-                days.clear();
+        travelDetailsRef.orderByChild("email").equalTo(email).addValueEventListener(
+                new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    //clear lists to avoid duplication
+                    locations.clear();
+                    startDates.clear();
+                    endDates.clear();
+                    days.clear();
 
-                for(DataSnapshot travelSnapshot : snapshot.getChildren()){
-                    addTravelToLists(travelSnapshot.child("travelDetails"));
+                    for (DataSnapshot travelSnapshot : snapshot.getChildren()) {
+                        addTravelToLists(travelSnapshot.child("travelDetails"));
+                    }
+
+
+                    //verify data retrieval
+                    Log.d("Firebase", "Start Dates: " + startDates);
+                    Log.d("Firebase", "End Dates: " + endDates);
+                    Log.d("Firebase", "Locations:" + locations);
+
+                    //Add days of travel to each location to days list
+                    getAllDuration(startDates, endDates);
+
+                    //Notify adapter when data has changed
+                    adapter.notifyDataSetChanged();
+
                 }
 
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Log.d("Firebase", "Error retrieving data");
 
-                //verify data retrieval
-                Log.d("Firebase", "Start Dates: " + startDates);
-                Log.d("Firebase", "End Dates: " + endDates);
-                Log.d("Firebase", "Locations:" + locations);
-
-                //Add days of travel to each location to days list
-                getAllDuration(startDates, endDates);
-
-                //Notify adapter when data has changed
-                adapter.notifyDataSetChanged();
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.d("Firebase", "Error retrieving data");
-
-            }
-        });
+                }
+            });
     }
 
-    private void addTravelToLists(DataSnapshot travelDetailsSnapshot){
+    private void addTravelToLists(DataSnapshot travelDetailsSnapshot) {
         //Loop through each travel detail
-        for(DataSnapshot snapshot : travelDetailsSnapshot.getChildren()){
+        for (DataSnapshot snapshot : travelDetailsSnapshot.getChildren()) {
 
-                String startDate = snapshot.child("startDate").getValue(String.class);
-                String endDate = snapshot.child("endDate").getValue(String.class);
-                String location = snapshot.child("location").getValue(String.class);
+            String startDate = snapshot.child("startDate").getValue(String.class);
+            String endDate = snapshot.child("endDate").getValue(String.class);
+            String location = snapshot.child("location").getValue(String.class);
 
-                if (startDate != null) {
-                    startDates.add(startDate);
-                }
+            if (startDate != null) {
+                startDates.add(startDate);
+            }
 
-                if (endDate != null) {
-                    endDates.add(endDate);
-                }
+            if (endDate != null) {
+                endDates.add(endDate);
+            }
 
-                if (location != null) {
-                    locations.add(location);
-                }
+            if (location != null) {
+                locations.add(location);
+            }
 
         }
     }
 
-    public void getAllDuration(List<String> startDates, List<String> endDates){
-        for (int i = 0; i < startDates.size(); i++ ){
+    public void getAllDuration(List<String> startDates, List<String> endDates) {
+        for (int i = 0; i < startDates.size(); i++) {
             String start = startDates.get(i);
             String end = endDates.get(i);
 
@@ -200,7 +201,8 @@ public class DestinationsActivity extends AppCompatActivity {
 
                 long durationInMillis = Math.abs(endDate.getTime() - startDate.getTime());
 
-                int durationInDays = (int) TimeUnit.DAYS.convert(durationInMillis, TimeUnit.MILLISECONDS);
+                int durationInDays = (int)
+                        TimeUnit.DAYS.convert(durationInMillis, TimeUnit.MILLISECONDS);
 
                 days.add(durationInDays + " days");
             } catch (ParseException e) {
@@ -214,12 +216,12 @@ public class DestinationsActivity extends AppCompatActivity {
     private void navigation() {
         boolean checkSelected = false;
         int[] navIcons = {
-                R.drawable.logistics,
-                R.drawable.destination,
-                R.drawable.dining,
-                R.drawable.accommodation,
-                R.drawable.transport,
-                R.drawable.travel };
+            R.drawable.logistics,
+            R.drawable.destination,
+            R.drawable.dining,
+            R.drawable.accommodation,
+            R.drawable.transport,
+            R.drawable.travel };
 
         for (int i = 0; i < navIcons.length; i++) {
             TabLayout.Tab tab = tabLayout.newTab();
@@ -266,7 +268,7 @@ public class DestinationsActivity extends AppCompatActivity {
                     tabIcon.clearColorFilter();
                 }
             }
-            public void onTabReselected(TabLayout.Tab tab) {}
+            public void onTabReselected(TabLayout.Tab tab) { }
         });
     };
 }
