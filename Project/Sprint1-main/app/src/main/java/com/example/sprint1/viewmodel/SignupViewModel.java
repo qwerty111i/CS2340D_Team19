@@ -61,7 +61,8 @@ public class SignupViewModel extends ViewModel {
             valid = false;
             emailError.setValue("Cannot contain Whitespace!");
         }
-        if (username.getValue() != null && !username.getValue().isEmpty() && !checkInput(username.getValue())) {
+        if (username.getValue() != null && !username.getValue().isEmpty()
+                && !checkInput(username.getValue())) {
             valid = false;
             usernameError.setValue("Username cannot contain whitespace!");
         }
