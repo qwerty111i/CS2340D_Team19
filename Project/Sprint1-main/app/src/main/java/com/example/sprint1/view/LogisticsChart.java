@@ -3,12 +3,14 @@ package com.example.sprint1.view;
 import com.example.sprint1.databinding.ActivityLogisticsChartBinding;
 import com.example.sprint1.viewmodel.LogisticsViewModel;
 
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
 
 import android.app.Dialog;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -18,6 +20,7 @@ import android.view.ViewGroup;
 
 import com.example.sprint1.R;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
@@ -32,17 +35,19 @@ public class LogisticsChart extends DialogFragment {
     private LogisticsViewModel viewModel;
 
 
-    public View onCreateView(
-            LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate the binding for the dialog layout
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        // Inflate the dialog layout
         binding = ActivityLogisticsChartBinding.inflate(inflater, container, false);
 
-        // Creating the ViewModel
+        // Set up the ViewModel
         viewModel = new ViewModelProvider(this).get(LogisticsViewModel.class);
 
-        // Binding the ViewModel
-        binding.setVariable();
-        binding.setLifecycleOwner(this);
+        drawGraph(viewModel);
+
+        // Observe data changes to update the chart when data changes
+        viewModel.getAllottedTime().observe(getViewLifecycleOwner(), allottedTime -> drawGraph(viewModel));
+        viewModel.getPlannedTime().observe(getViewLifecycleOwner(), plannedTime -> drawGraph(viewModel));
 
         return binding.getRoot();
     }
@@ -70,19 +75,36 @@ public class LogisticsChart extends DialogFragment {
         }
     }
 
-    public void drawGraph(View view) {
-        PieChart pieChart = view.findViewById(R.id.pieChart);
+    public void drawGraph(LogisticsViewModel viewModel) {
+        PieChart pieChart = binding.pieChart;
         List<PieEntry> entries = new ArrayList<>();
+
 
         // Use the ViewModel to get data
         entries.add(new PieEntry(Objects.requireNonNullElse(viewModel.getAllottedTime().getValue(), 0), "Allotted Time"));
         entries.add(new PieEntry(Objects.requireNonNullElse(viewModel.getPlannedTime().getValue(), 0), "Planned Time"));
 
-        PieDataSet dataSet = new PieDataSet(entries, "Allotted vs. Planned");
+        PieDataSet dataSet = new PieDataSet(entries, null);
         dataSet.setColors(ColorTemplate.MATERIAL_COLORS);
         PieData data = new PieData(dataSet);
 
+        data.setValueTextColor(Color.WHITE);
+        pieChart.setCenterTextColor(Color.WHITE);
+        pieChart.getLegend().setTextColor(Color.WHITE);
+
+        pieChart.getLegend().setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
+        pieChart.getLegend().setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
+        pieChart.getLegend().setOrientation(Legend.LegendOrientation.HORIZONTAL);
+        pieChart.getLegend().setDrawInside(false);
+        pieChart.getLegend().setTypeface(ResourcesCompat.getFont(getContext(), R.font.poppins_regular)); // Set the center text font
+        pieChart.getLegend().setTextSize(30f);
+        pieChart.getLegend().setWordWrapEnabled(true);
+
+        pieChart.setDrawHoleEnabled(true);
+        pieChart.setHoleRadius(105f);
+
         pieChart.setData(data);
+        pieChart.getDescription().setEnabled(false);
         pieChart.setUsePercentValues(true);
         pieChart.invalidate(); // Refresh the chart
     }
