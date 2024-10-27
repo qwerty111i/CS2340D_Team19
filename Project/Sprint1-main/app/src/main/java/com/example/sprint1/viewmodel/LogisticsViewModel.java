@@ -42,62 +42,51 @@ public class LogisticsViewModel extends ViewModel {
     private List<String> notesList = new ArrayList<>();
     private final DatabaseReference notesRef;
 
-    public void calculatePlannedTime() {
-        vacationTimesLiveData.observeForever(vacationTimes -> {
-            int totalPlannedTime = 0;
+    public void calculatePlannedTime(List<VacationTime> vacationTimes) {
+        int totalPlannedTime = 0;
 
-            for (VacationTime vacationTime : vacationTimes) {
-                totalPlannedTime += vacationTime.getDuration(); // Assuming duration is in days
-            }
+        for (VacationTime vacationTime : vacationTimes) {
+            totalPlannedTime += vacationTime.getDuration();
+        }
 
-            plannedTime.setValue(totalPlannedTime); // Set the calculated planned time
-        });
+        plannedTime.setValue(totalPlannedTime);
     }
 
-    public void calculateAllocatedTime() {
-        vacationTimesLiveData.observeForever(vacationTimes -> {
-            if (vacationTimes == null || vacationTimes.isEmpty()) {
-                allottedTime.setValue(0); // No vacation times, so allocated time is 0
-                return;
-            }
+    public void calculateAllocatedTime(List<VacationTime> vacationTimes) {
+        if (vacationTimes == null || vacationTimes.isEmpty()) {
+            allottedTime.setValue(0);
+            return;
+        }
 
-            SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yy");
-            Date earliestStartDate = null;
-            Date latestEndDate = null;
+        SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yy");
+        Date earliestStartDate = null;
+        Date latestEndDate = null;
 
-            for (VacationTime vacationTime : vacationTimes) {
-                try {
-                    Date startDate = null;
-                    try {
-                        startDate = formatter.parse(vacationTime.getStartDate());
-                    } catch (ParseException e) {
-                        throw new RuntimeException(e);
-                    }
-                    Date endDate = formatter.parse(vacationTime.getEndDate());
+        for (VacationTime vacationTime : vacationTimes) {
+            try {
+                Date startDate = formatter.parse(vacationTime.getStartDate());
+                Date endDate = formatter.parse(vacationTime.getEndDate());
 
-                    // Update earliest start date
-                    if (earliestStartDate == null || startDate.before(earliestStartDate)) {
-                        earliestStartDate = startDate;
-                    }
 
-                    // Update latest end date
-                    if (latestEndDate == null || endDate.after(latestEndDate)) {
-                        latestEndDate = endDate;
-                    }
-                } catch (ParseException e) {
-                    e.printStackTrace(); // Handle parse exception
+                if (earliestStartDate == null || startDate.before(earliestStartDate)) {
+                    earliestStartDate = startDate;
                 }
-            }
 
-            // Calculate the difference in days
-            if (earliestStartDate != null && latestEndDate != null) {
-                long diffInMillis = latestEndDate.getTime() - earliestStartDate.getTime();
-                int allocatedDays = (int) TimeUnit.DAYS.convert(diffInMillis, TimeUnit.MILLISECONDS);
-                allottedTime.setValue(allocatedDays);
-            } else {
-                allottedTime.setValue(0); // No valid dates found
+                if (latestEndDate == null || endDate.after(latestEndDate)) {
+                    latestEndDate = endDate;
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
             }
-        });
+        }
+
+        if (earliestStartDate != null && latestEndDate != null) {
+            long diffInMillis = latestEndDate.getTime() - earliestStartDate.getTime();
+            int allocatedDays = (int) TimeUnit.DAYS.convert(diffInMillis, TimeUnit.MILLISECONDS);
+            allottedTime.setValue(allocatedDays);
+        } else {
+            allottedTime.setValue(0);
+        }
     }
 
     public LiveData<Integer> getAllottedTime() {
@@ -118,6 +107,32 @@ public class LogisticsViewModel extends ViewModel {
         fetchUsers();
 
 
+        fetchVacationTimes();
+    }
+
+    private void fetchVacationTimes() {
+        DatabaseReference vacationTimesRef = FirebaseDatabase.getInstance().getReference("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("vacationTimes");
+
+        vacationTimesRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                List<VacationTime> vacationTimes = new ArrayList<>();
+                for (DataSnapshot vacationSnapshot : snapshot.getChildren()) {
+                    VacationTime vacationTime = vacationSnapshot.getValue(VacationTime.class);
+                    if (vacationTime != null) {
+                        vacationTimes.add(vacationTime);
+                    }
+                }
+                vacationTimesLiveData.setValue(vacationTimes);
+                calculateAllocatedTime(vacationTimes);
+                calculatePlannedTime(vacationTimes);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                Log.e("Firebase", "Error fetching vacation times", error.toException());
+            }
+        });
     }
     public void addNote(String note) {
         notesList.add(note);

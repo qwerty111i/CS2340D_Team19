@@ -14,6 +14,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,24 +40,16 @@ public class LogisticsChart extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the dialog layout
         binding = ActivityLogisticsChartBinding.inflate(inflater, container, false);
-
-        // Set up the ViewModel
-        viewModel = new ViewModelProvider(this).get(LogisticsViewModel.class);
-
-        drawGraph(viewModel);
-
-        // Observe data changes to update the chart when data changes
-        viewModel.getAllottedTime().observe(getViewLifecycleOwner(), allottedTime -> drawGraph(viewModel));
-        viewModel.getPlannedTime().observe(getViewLifecycleOwner(), plannedTime -> drawGraph(viewModel));
-
         return binding.getRoot();
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        // Gets the dialog component
+        viewModel = new ViewModelProvider(this).get(LogisticsViewModel.class);
         Dialog dialog = getDialog();
+        viewModel.getAllottedTime().observe(getViewLifecycleOwner(), allottedTime -> drawGraph(viewModel));
+        viewModel.getPlannedTime().observe(getViewLifecycleOwner(), plannedTime -> drawGraph(viewModel));
         if (dialog != null && dialog.getWindow() != null) {
             // Sets the background color of the dialog as transparent
             // Necessary in order to achieve rounded corners
@@ -79,10 +72,17 @@ public class LogisticsChart extends DialogFragment {
         PieChart pieChart = binding.pieChart;
         List<PieEntry> entries = new ArrayList<>();
 
+        Integer allottedTimeValue = viewModel.getAllottedTime().getValue();
+        Integer plannedTimeValue = viewModel.getPlannedTime().getValue();
+
+        // Log the retrieved values
+        Log.d("LogisticsChart", "Allotted Time: " + allottedTimeValue);
+        Log.d("LogisticsChart", "Planned Time: " + plannedTimeValue);
+
 
         // Use the ViewModel to get data
-        entries.add(new PieEntry(Objects.requireNonNullElse(viewModel.getAllottedTime().getValue(), 0), "Allotted Time"));
-        entries.add(new PieEntry(Objects.requireNonNullElse(viewModel.getPlannedTime().getValue(), 0), "Planned Time"));
+        entries.add(new PieEntry(allottedTimeValue, "Allotted Time"));
+        entries.add(new PieEntry(plannedTimeValue, "Planned Time"));
 
         PieDataSet dataSet = new PieDataSet(entries, null);
         dataSet.setColors(ColorTemplate.MATERIAL_COLORS);
@@ -96,7 +96,7 @@ public class LogisticsChart extends DialogFragment {
         pieChart.getLegend().setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
         pieChart.getLegend().setOrientation(Legend.LegendOrientation.HORIZONTAL);
         pieChart.getLegend().setDrawInside(false);
-        pieChart.getLegend().setTypeface(ResourcesCompat.getFont(getContext(), R.font.poppins_regular)); // Set the center text font
+        pieChart.getLegend().setTypeface(ResourcesCompat.getFont(getContext(), R.font.poppins_regular));
         pieChart.getLegend().setTextSize(30f);
         pieChart.getLegend().setWordWrapEnabled(true);
 
