@@ -173,43 +173,51 @@ public class LogisticsViewModel extends ViewModel {
     private void removeNoteFromInviter(String inviterEmail, String originalNote) {
         // Locate the inviter based on their email in the database
         DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference("users");
-        usersRef.orderByChild("email").equalTo(inviterEmail).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
+        usersRef.orderByChild("email").
+                equalTo(inviterEmail).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    for (DataSnapshot inviterSnapshot : snapshot.getChildren()) {
-                        // Get the inviter's user ID
-                        String inviterId = inviterSnapshot.getKey();
-                        if (inviterId != null) {
-
-                            DatabaseReference inviterNotesRef = usersRef.child(inviterId).child("notes");
-
-                            // Call the inviter's ViewModel method to remove the note
-                            inviterNotesRef.orderByValue().equalTo(originalNote).addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot snapshot) {
-                                    for (DataSnapshot noteSnapshot : snapshot.getChildren()) {
-                                        noteSnapshot.getRef().removeValue();
-                                    }
+                        if (snapshot.exists()) {
+                            for (DataSnapshot inviterSnapshot : snapshot.getChildren()) {
+                                // Get the inviter's user ID
+                                String inviterId = inviterSnapshot.getKey();
+                                if (inviterId != null) {
+                                    DatabaseReference inviterNotesRef =
+                                            usersRef.child(inviterId).child("notes");
+                                    // Call the separate method to remove the note
+                                    removeInviterNote(inviterNotesRef, originalNote);
                                 }
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError error) {
-                                    Log.e("Firebase", "Error removing note from inviter", error.toException());
-                                }
-                            });
+                            }
+                        } else {
+                            Log.e("Firebase", "Inviter not found based on email: " + inviterEmail);
+                        }
+                        }
+
+                        @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Log.e("Firebase", "Error finding inviter", error.toException());
+                    }
+                });
+    }
+
+    private void removeInviterNote(DatabaseReference inviterNotesRef, String originalNote) {
+        inviterNotesRef.orderByValue().equalTo(originalNote).
+                addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot snapshot) {
+                        for (DataSnapshot noteSnapshot : snapshot.getChildren()) {
+                            noteSnapshot.getRef().removeValue();
                         }
                     }
-                } else {
-                    Log.e("Firebase", "Inviter not found based on email: " + inviterEmail);
-                }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.e("Firebase", "Error finding inviter", error.toException());
-            }
-        });
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            Log.e("Firebase", "Error removing from inviter", error.toException());
+                        }
+                    });
     }
+
+
 
     public void retrieveNotes() {
         notesRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -300,6 +308,82 @@ public class LogisticsViewModel extends ViewModel {
                 });
     }
 
+    private void shareNotesWithInvitedUser(String inviterId, String inviterEmail,
+                                           String invitedUserId, DatabaseReference userReference) {
+        userReference.child(inviterId).child("notes")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot notesSnapshot) {
+                        for (DataSnapshot noteSnapshot : notesSnapshot.getChildren()) {
+                            String noteContent = noteSnapshot.getValue(String.class);
+                            String marker = "-->";
+                            if (noteContent != null && !noteContent.contains(marker)) {
+                                noteContent = noteContent + " -->  " + inviterEmail;
+                                userReference.child(invitedUserId).child("notes").
+                                        push().setValue(noteContent);
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Log.d("Firebase", "Error retrieving notes");
+                    }
+                });
+    }
+    private void shareTravelDetailsWithInvitedUser(String inviterId, String inviterEmail, String
+            invitedUserId, DatabaseReference userReference) {
+        userReference.child(inviterId).child("travelDetails")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot travelDetailsSnapshot) {
+                        for (DataSnapshot travelDetailSnapshot
+                               : travelDetailsSnapshot.getChildren()) {
+                            TravelDetails value = travelDetailSnapshot.
+                                    getValue(TravelDetails.class);
+                            String marker = "(Shared by ";
+                            if (value != null && !value.getLocation().contains(marker)) {
+                                value.setLocation(value.getLocation() + "\n"
+                                        + "(Shared by " + inviterEmail + ")");
+                                userReference.child(invitedUserId).child("travelDetails")
+                                        .push().setValue(value);
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Log.d("Firebase", "Error retrieving travel details");
+                    }
+                });
+    }
+    private void fetchAndShareUserData(String inviterId, String invitedUserId,
+            DatabaseReference userReference) {
+        userReference.child(inviterId).
+                child("email").addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot emailSnapshot) {
+                        String inviterEmail = emailSnapshot.getValue(String.class);
+                        if (inviterEmail != null && !inviterEmail.isEmpty()) {
+                            // Share notes
+                            shareNotesWithInvitedUser(inviterId, inviterEmail,
+                                    invitedUserId, userReference);
+
+                            // Share travel details
+                            shareTravelDetailsWithInvitedUser(inviterId, inviterEmail,
+                                    invitedUserId, userReference);
+                        } else {
+                            Log.d("Firebase", "Inviter email not found");
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Log.d("Firebase", "Error retrieving inviter email");
+                    }
+                });
+    }
+
     public void inviteUsers(List<String> selectedUsers, Context context) {
         String inviterId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         DatabaseReference userReference = FirebaseDatabase.getInstance().getReference("users");
@@ -309,113 +393,44 @@ public class LogisticsViewModel extends ViewModel {
             if (!alreadyInvited) {
                 invitedUsersList.add(invitedUserEmail);
                 invitedUsersLiveData.setValue(invitedUsersList);
-                userReference.orderByChild("email").equalTo(invitedUserEmail).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if (snapshot.exists()) {
-                            for (DataSnapshot userSnapshot : snapshot.getChildren()) {
-                                String invitedUserId = userSnapshot.getKey();
-                                userReference.child(inviterId).child("invitedUsers")
-                                        .child(invitedUserEmail.
-                                                replace(".", ",")).
-                                        setValue(true);
 
-                                // Share notes with the invited user
-                                userReference.child(inviterId).child("email").addListenerForSingleValueEvent(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot emailSnapshot) {
-                                        String inviterEmail = emailSnapshot.getValue(String.class); // Fetch the inviter's email
+                userReference.orderByChild("email").
+                        equalTo(invitedUserEmail).
+                        addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                if (snapshot.exists()) {
+                                    for (DataSnapshot userSnapshot : snapshot.getChildren()) {
+                                        String invitedUserId = userSnapshot.getKey();
+                                        if (invitedUserId != null) {
+                                            // Add to invited users
+                                            userReference.child(inviterId).child("invitedUsers")
+                                                    .child(invitedUserEmail.
+                                                            replace(".", ",")).setValue(true);
 
-                                        if (inviterEmail != null && !inviterEmail.isEmpty()) {
-                                            userReference.child(inviterId).child("notes")
-                                                    .addListenerForSingleValueEvent(new ValueEventListener() {
-                                                        @Override
-                                                        public void onDataChange(@NonNull DataSnapshot notesSnapshot) {
-                                                            for (DataSnapshot noteSnapshot : notesSnapshot.getChildren()) {
-                                                                // Retrieve the note content
-                                                                String noteContent = noteSnapshot.getValue(String.class);
-                                                                String marker = "-->";
-                                                                if (noteContent != null && !noteContent.contains(marker)) {
-                                                                    // Add the inviter's email to the note content
-                                                                    noteContent = noteContent + " -->  " + inviterEmail;
-
-                                                                    // Copy each note to the invited user's "notes" node
-                                                                    userReference.child(invitedUserId).child("notes")
-                                                                            .push().setValue(noteContent);
-                                                                }
-                                                            }
-                                                        }
-
-                                                        @Override
-                                                        public void onCancelled(@NonNull DatabaseError error) {
-                                                            Log.d("Firebase", "Error retrieving notes");
-                                                        }
-                                                    });
-                                        } else {
-                                            Log.d("Firebase", "Inviter email not found");
+                                            // Fetch and share data
+                                            fetchAndShareUserData(inviterId,
+                                                    invitedUserId, userReference);
                                         }
                                     }
-
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError error) {
-                                        Log.d("Firebase", "Error retrieving inviter email");
-                                    }
-                                });
-
-                                // Share travel details with the invited user
-                                userReference.child(inviterId).child("email").addListenerForSingleValueEvent(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot emailSnapshot) {
-                                        String inviterEmail = emailSnapshot.getValue(String.class);
-                                        if (inviterEmail != null && !inviterEmail.isEmpty()) {
-                                            userReference.child(inviterId).child("travelDetails")
-                                                    .addListenerForSingleValueEvent(new ValueEventListener() {
-                                                        @Override
-                                                        public void onDataChange(@NonNull DataSnapshot travelDetailsSnapshot) {
-                                                            for (DataSnapshot travelDetailSnapshot : travelDetailsSnapshot.getChildren()) {
-                                                                TravelDetails value = travelDetailSnapshot.getValue(TravelDetails.class);
-                                                                String marker = "(Shared by ";
-                                                                if (value != null && !value.getLocation().contains(marker)) {
-                                                                    // Add the inviter's email to the location
-                                                                    value.setLocation(value.getLocation() + "\n" + "(Shared by " + inviterEmail + ")");
-
-                                                                    // Save the modified travel detail to the invited user's "travelDetails" node
-                                                                    userReference.child(invitedUserId).child("travelDetails")
-                                                                            .push().setValue(value);
-                                                                }
-                                                            }
-                                                        }
-
-                                                        @Override
-                                                        public void onCancelled(@NonNull DatabaseError error) {
-                                                            Log.d("Firebase", "Error retrieving travel details");
-                                                        }
-                                                    });
-                                        } else {
-                                            Log.d("Firebase", "Inviter email not found");
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError error) {
-                                        Log.d("Firebase", "Error retrieving inviter email");
-                                    }
-                                });
+                                    Toast.makeText(context, "Users invited!",
+                                            Toast.LENGTH_SHORT).show();
+                                }
                             }
-                        }
 
-
-                        Toast.makeText(context, "Users invited!", Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        Log.d("LogisticsViewModel", "Error finding invited user: " + error.getMessage());
-                    }
-                });
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+                                Log.d("LogisticsViewModel",
+                                        "Error finding invited user: " + error.getMessage());
+                            }
+                        });
             }
         }
     }
+
+
+
+
 
     public LiveData<List<String>> getUsersLiveData() {
         return usersLiveData;

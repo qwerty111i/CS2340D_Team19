@@ -232,13 +232,8 @@ public class LogisticsActivity extends AppCompatActivity {
 
     private void navigation() {
         boolean checkSelected = false;
-        int[] navIcons = {
-                R.drawable.logistics,
-                R.drawable.destination,
-                R.drawable.dining,
-                R.drawable.accommodation,
-                R.drawable.transport,
-                R.drawable.travel };
+        int[] navIcons = {R.drawable.logistics, R.drawable.destination, R.drawable.dining,
+            R.drawable.accommodation, R.drawable.transport, R.drawable.travel };
 
         for (int i = 0; i < navIcons.length; i++) {
             TabLayout.Tab tab = tabLayout.newTab();
