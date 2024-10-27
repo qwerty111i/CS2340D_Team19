@@ -5,15 +5,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -51,13 +47,13 @@ public class DestinationsActivity extends AppCompatActivity {
     private List<String> startDates = new ArrayList<>();
     private List<String> endDates = new ArrayList<>();
     private List<String> locations = new ArrayList<>();
-    public List<String> days = new ArrayList<>();
+    private List<String> days = new ArrayList<>();
 
     private String currentEmail;
 
     //Initialize Firebase
-    FirebaseDatabase database = FirebaseDatabase.getInstance();
-    DatabaseReference travel_details_ref = database.getReference();
+    private FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private DatabaseReference databaseRef = database.getReference();
 
     private TravelAdapter adapter;
 
@@ -82,7 +78,7 @@ public class DestinationsActivity extends AppCompatActivity {
         //Get currently logged in user
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        if(currentUser != null){
+        if (currentUser != null) {
             currentEmail = currentUser.getEmail();
             Log.d("UserEmail", "User email: " + currentEmail);
         }
@@ -128,8 +124,8 @@ public class DestinationsActivity extends AppCompatActivity {
     }
 
 
-    private void getTravelDetails(String email){
-        DatabaseReference travelDetailsRef = travel_details_ref.child("users");
+    private void getTravelDetails(String email) {
+        DatabaseReference travelDetailsRef = databaseRef.child("users");
 
         travelDetailsRef.orderByChild("email").equalTo(email).addValueEventListener(new ValueEventListener() {
             @Override

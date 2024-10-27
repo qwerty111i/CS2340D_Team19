@@ -46,7 +46,6 @@ public class LogisticsViewModel extends ViewModel {
     private final DatabaseReference databaseReference;
 
 
-    private final MutableLiveData<List<String>> notesLiveData = new MutableLiveData<>();
     private final MutableLiveData<List<VacationTime>> vacationTimesLiveData = new MutableLiveData<>();
 
 
