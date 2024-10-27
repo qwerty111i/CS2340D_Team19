@@ -47,6 +47,9 @@ public class LogisticsViewModel extends ViewModel {
     }
 
     public LogisticsViewModel() {
+        allottedTime = new MutableLiveData<>(0);
+        plannedTime = new MutableLiveData<>(0);
+
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         notesRef = FirebaseDatabase.getInstance().
                 getReference("users").child(userId).child("notes");
