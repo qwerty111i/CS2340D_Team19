@@ -15,8 +15,10 @@ public class SignupViewModel extends ViewModel {
     // Creating the LiveData
     private MutableLiveData<String> email = new MutableLiveData<>();
     private MutableLiveData<String> password = new MutableLiveData<>();
+    private MutableLiveData<String> username = new MutableLiveData<>();
     private MutableLiveData<Boolean> validInputs = new MutableLiveData<>();
     private MutableLiveData<String> emailError = new MutableLiveData<>();
+    private MutableLiveData<String> usernameError = new MutableLiveData<>();
     private MutableLiveData<String> passwordError = new MutableLiveData<>();
     private MutableLiveData<String> validationError = new MutableLiveData<>();
 
@@ -33,10 +35,13 @@ public class SignupViewModel extends ViewModel {
     public SignupViewModel(Boolean test) {
 
     }
+    public void setUsername(String username) {
+        this.username.setValue(username);
+    }
 
     // Method to set username to user input
-    public void setEmail(String username) {
-        this.email.setValue(username);
+    public void setEmail(String email) {
+        this.email.setValue(email);
     }
 
     // Method to set password to user input
@@ -48,12 +53,17 @@ public class SignupViewModel extends ViewModel {
     public void signInValidation() {
         boolean valid = true;
         emailError.setValue(null);
+        usernameError.setValue(null);
         passwordError.setValue(null);
 
-        // Username error
+        // Email error
         if (!checkInput(email.getValue())) {
             valid = false;
             emailError.setValue("Cannot contain Whitespace!");
+        }
+        if (username.getValue() != null && !username.getValue().isEmpty() && !checkInput(username.getValue())) {
+            valid = false;
+            usernameError.setValue("Username cannot contain whitespace!");
         }
 
         // Password error
@@ -79,7 +89,14 @@ public class SignupViewModel extends ViewModel {
                         userModel.setUserId(user.getUid());
 
                         // Now store the user data under the correct userId
-                        userModel.storeUser(new User(email.getValue()));
+                        User newUser;
+                        if (username.getValue() != null && !username.getValue().isEmpty()) {
+                            newUser = new User(email.getValue(), username.getValue());
+                        } else {
+                            newUser = new User(email.getValue());
+                        }
+                        userModel.storeUser(newUser);
+                        userModel.loadUserMap();
                         validationError.setValue(null);
                     } else {
                         Exception exception = task.getException();
@@ -109,6 +126,10 @@ public class SignupViewModel extends ViewModel {
 
     public LiveData<String> getEmailError() {
         return emailError;
+    }
+
+    public LiveData<String> getUsernameError() {
+        return usernameError;
     }
 
     public LiveData<String> getPasswordError() {

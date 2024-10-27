@@ -18,7 +18,6 @@ import com.example.sprint1.databinding.ActivityLogisticsBinding;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import java.util.ArrayList;
-
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.lifecycle.ViewModelProvider;
@@ -111,7 +110,8 @@ public class LogisticsActivity extends AppCompatActivity {
             if (users != null && !users.isEmpty()) {
                 showInviteDialog(users);
             } else {
-                Toast.makeText(LogisticsActivity.this, "No users found to invite", Toast.LENGTH_SHORT).show();
+                Toast.makeText(LogisticsActivity.this,
+                        "No users found to invite", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -285,7 +285,7 @@ public class LogisticsActivity extends AppCompatActivity {
                     tabIcon.clearColorFilter();
                 }
             }
-            public void onTabReselected(TabLayout.Tab tab) {}
+            public void onTabReselected(TabLayout.Tab tab) { }
         });
     };
 }
