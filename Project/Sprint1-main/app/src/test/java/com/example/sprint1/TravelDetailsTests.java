@@ -33,4 +33,12 @@ public class TravelDetailsTests {
     public void testingGetEndDate(){
         assertEquals("12/17/25", travelDetails.getEndDate());
     }
+
+    //Sahadev
+    @Test
+    public void testingAllThree() {
+        assertEquals("LA", travelDetails.getLocation());
+        assertEquals("10/13/24", travelDetails.getStartDate());
+        assertEquals("12/17/25", travelDetails.getEndDate());
+    }
 }

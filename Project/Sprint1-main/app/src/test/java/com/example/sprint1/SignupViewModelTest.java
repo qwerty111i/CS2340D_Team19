@@ -3,7 +3,6 @@ package com.example.sprint1;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
-import com.example.sprint1.viewmodel.LoginViewModel;
 import com.example.sprint1.viewmodel.SignupViewModel;
 
 import org.robolectric.RobolectricTestRunner;
@@ -54,5 +53,22 @@ public class SignupViewModelTest {
         viewModel.signInValidation();
         assertEquals("Cannot contain Whitespace!", viewModel.getEmailError().getValue());
         assertEquals("Cannot contain Whitespace!", viewModel.getPasswordError().getValue());
+    }
+
+    //Sahadev
+    @Test
+    public void validPassword() {
+        viewModel.signInValidation();
+        viewModel.setEmail("hello@gmail.com");
+        viewModel.setPassword("hello123");
+        viewModel.signInValidation();
+        assertNull(viewModel.getEmailError().getValue());
+        assertNull(viewModel.getPasswordError().getValue());
+
+        viewModel.signInValidation();
+        viewModel.setEmail("test@gmail.com");
+        viewModel.setPassword("1");
+        viewModel.signInValidation();
+        assertNull(viewModel.getPasswordError().getValue());
     }
 }
