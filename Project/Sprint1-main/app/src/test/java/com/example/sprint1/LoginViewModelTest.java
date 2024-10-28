@@ -43,13 +43,13 @@ public class LoginViewModelTest {
         viewModel.setEmail("s f @gmail.com");
         viewModel.setPassword("asdfasdfds");
         viewModel.signInValidation();
-        assertEquals("Invalid Username.", viewModel.getEmailError().getValue());
+        assertEquals("Invalid Email or Username.", viewModel.getEmailError().getValue());
         assertNull(viewModel.getPasswordError().getValue());
 
         viewModel.setEmail("asdf@ .com");
         viewModel.setPassword(" 3");
         viewModel.signInValidation();
-        assertEquals("Invalid Username.", viewModel.getEmailError().getValue());
+        assertEquals("Invalid Email or Username.", viewModel.getEmailError().getValue());
         assertEquals("Invalid Password.", viewModel.getPasswordError().getValue());
     }
 }
