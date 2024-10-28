@@ -48,6 +48,7 @@ dependencies {
     implementation libs.core
     testImplementation libs.junit
     testImplementation libs.mockito.core
+    testImplementation libs.junit.junit
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
     testImplementation libs.core.testing
