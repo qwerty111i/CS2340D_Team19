@@ -19,16 +19,19 @@ public class TravelDetailsTests {
         travelDetails = new TravelDetails("LA", "10/13/24", "12/17/25");
     }
 
+    //James
     @Test
     public void testingGetLocation(){
         assertEquals("LA", travelDetails.getLocation());
     }
 
+    //James
     @Test
     public void testingGetStartDate(){
         assertEquals("10/13/24", travelDetails.getStartDate());
     }
 
+    //James
     @Test
     public void testingGetEndDate(){
         assertEquals("12/17/25", travelDetails.getEndDate());
