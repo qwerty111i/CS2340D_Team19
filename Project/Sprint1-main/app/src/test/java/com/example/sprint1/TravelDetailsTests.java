@@ -8,7 +8,7 @@ import com.example.sprint1.model.TravelModel;
 import org.junit.Before;
 import org.junit.Test;
 
-//Tests for each of the methods in Travel Details (should I delete?)
+//Tests Done by Leila Kazemzadeh
 
 public class TravelDetailsTests {
 

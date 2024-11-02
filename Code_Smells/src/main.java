@@ -22,6 +22,7 @@ public class main {
         order.sendConfirmationEmail();
 
         order.printOrder();
+
     }
 }
 

@@ -14,18 +14,8 @@ public class Order {
     public double calculateTotalPrice() {
     	double total = 0.0;
     	for (Item item : items) {
-        	double price = item.getPrice();
-        	switch (item.getDiscountType()) {
-            	case PERCENTAGE:
-                	price -= item.getDiscountAmount() * price;
-                	break;
-            	case AMOUNT:
-                	price -= item.getDiscountAmount();
-                	break;
-            	default:
-                	// no discount
-                	break;
-        	}
+        	double price = priceWithDiscount(item); //Replaces the switch statement
+            
         	total += price * item.getQuantity();
        	    if (item instanceof TaxableItem) {
                 TaxableItem taxableItem = (TaxableItem) item;
@@ -40,6 +30,19 @@ public class Order {
         	total *= 0.9; // apply 10% discount for orders over $100
     	}
     	return total;
+    }
+
+    public double priceWithDiscount(Item item) {
+        double price = item.getPrice();
+        if(item.getDiscountType() == DiscountType.PERCENTAGE){
+            price -= item.getDiscountAmount() * price;
+        }
+        else if(item.getDiscountType() == DiscountType.AMOUNT){
+            price -= item.getDiscountAmount();
+        }
+        //otherwise no discount
+        return price;
+
     }
 
     public void sendConfirmationEmail() {
