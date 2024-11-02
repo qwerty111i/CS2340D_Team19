@@ -21,11 +21,15 @@ class Item {
         return productInfo.getQuantity();
     }
 
-    public DiscountType getDiscountType() {
-        return discountType;
-    }
 
-    public double getDiscountAmount() {
-        return discountAmount;
+    //Moved Leila's Method here and made some slight variable based changes to keep it here instead of in Order
+    public double priceWithDiscount() {
+        double price = getPrice();
+        if (discountType == DiscountType.PERCENTAGE) {
+            price -= discountAmount * price;
+        } else if (discountType == DiscountType.AMOUNT) {
+            price -= discountAmount;
+        }
+        return price; // Returns price with discount applied
     }
 }
