@@ -1,28 +1,24 @@
 class Item {
-    private String name;
-    private double price;
-    private int quantity;
+    private ProductInfo productInfo;
     private DiscountType discountType;
     private double discountAmount;
 
-    public Item(String name, double price, int quantity, DiscountType discountType, double discountAmount) {
-        this.name = name;
-        this.price = price;
-        this.quantity = quantity;
+    public Item(ProductInfo productInfo, DiscountType discountType, double discountAmount) {
+        this.productInfo = productInfo;
         this.discountType = discountType;
         this.discountAmount = discountAmount;
     }
 
     public String getName() {
-        return name;
+        return productInfo.getName();
     }
 
     public double getPrice() {
-        return price;
+        return productInfo.getPrice();
     }
 
     public int getQuantity() {
-        return quantity;
+        return productInfo.getQuantity();
     }
 
     public DiscountType getDiscountType() {
