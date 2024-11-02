@@ -6,6 +6,7 @@
     <color name="light_modern_purple">#EADFF6</color>
     <color name="modern_blue">#8792d2</color>
     <color name="muted_red">#eb3a34</color>
+    <color name="golden">#FF9800</color>
 
     <!-- Default color for TextField box stroke -->
     <color name="mtrl_textinput_default_box_stroke_color">#fff</color>
@@ -14,4 +15,7 @@
     <!-- Snackbar colors -->
     <color name="snackbar_background">#323232</color>
     <color name="snackbar_action_text">#FF4081</color>
+
+    <!-- Tab colors -->
+    <color name="tab_indicator">#FF5722</color>
 </resources>

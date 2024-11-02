@@ -1,160 +1,125 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/logistics"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/destination_background"
-    tools:context=".view.LogisticsActivity">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <TextView
-        android:id="@+id/travel_community_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Logistics"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="30dp"
-        android:textSize="30sp"
-        android:textStyle="bold"
-        android:textColor="@color/black"
-        android:fontFamily="@font/merriweather_black"/>
+    <data>
+        <variable
+            name="viewModel"
+            type="com.example.sprint1.viewmodel.LogisticsViewModel" />
+    </data>
 
-
-
-    <Button
-        android:id="@+id/alloted_vs_planned"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:text="alloted vs planned"
-        android:textSize="23sp"
-        android:fontFamily="@font/poppins_regular"
-        app:backgroundTint="@color/modern_blue"
-        app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Medium"
-        app:layout_constraintWidth_percent="0.78"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHeight_percent="0.08"
-        app:layout_constraintTop_toBottomOf="@id/travel_community_text"
-        />
-
-    <TextView
-        android:id="@+id/contributors"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Contributors"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:textColor="@color/black"
-        android:layout_marginTop="30dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/alloted_vs_planned" />
-
-    <ImageButton
-        android:id="@+id/button_notes"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:layout_marginStart="15dp"
-        android:layout_marginBottom="60dp"
-        android:backgroundTint="@color/modern_blue"
-        android:src="@drawable/add_notes"
-        android:contentDescription="add notes"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:cornerRadius="10dp" />
-
-
-    <ImageButton
-        android:id="@+id/button_invite"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:layout_marginBottom="60dp"
-        android:layout_marginEnd="15dp"
-        android:backgroundTint="@color/modern_blue"
-        android:src="@drawable/people_invite"
-        android:contentDescription="Invite Button"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:cornerRadius="10dp"
-    />
-
-    <!-- LinearLayout to hold dynamic invited user cards -->
-    <LinearLayout
-        android:id="@+id/invited_users_container"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/logistics"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:text="Invited User"
-        android:layout_marginTop="20dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/contributors" />
+        android:layout_height="match_parent"
+        android:background="@drawable/logistics_background"
+        tools:context=".view.LogisticsActivity">
 
-    <LinearLayout
-        android:id="@+id/bottom_navigation"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_alignParentBottom="true"
-        android:padding="8dp"
-        app:layout_constraintBottom_toBottomOf="parent">
-
-        <ImageButton
-            android:id="@+id/btn_logistics"
-            android:layout_width="0dp"
+        <TextView
+            android:id="@+id/logistics_title"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="#ABA2A2"
-            android:src="@drawable/ic_logistics"
-            android:contentDescription="Logistics Screen" />
+            android:text="@string/logistics_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="70dp"
+            android:textSize="40sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:fontFamily="@font/poppins_bold" />
 
-        <ImageButton
-            android:id="@+id/btn_dest"
+        <Button
+            android:id="@+id/allotted_vs_planned"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:src="@drawable/ic_dest"
-            android:contentDescription="Destination" />
+            android:layout_height="0dp"
+            android:layout_marginTop="20dp"
+            android:text="@string/allotted_vs_planned_btn"
+            android:textSize="23sp"
+            android:fontFamily="@font/poppins_regular"
+            app:backgroundTint="@color/modern_blue"
+            app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Medium"
+            app:layout_constraintWidth_percent="0.78"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHeight_percent="0.08"
+            app:layout_constraintTop_toBottomOf="@id/logistics_title" />
 
-        <ImageButton
-            android:id="@+id/btn_dining"
-            android:layout_width="0dp"
+        <TextView
+            android:id="@+id/contributors"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:src="@drawable/ic_dining"
-            android:contentDescription="Dining Establishments" />
+            android:text="@string/contributor_title"
+            android:textSize="20sp"
+            android:fontFamily="@font/poppins_bold"
+            android:textColor="@color/black"
+            android:layout_marginTop="30dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/allotted_vs_planned" />
 
-        <ImageButton
-            android:id="@+id/btn_accom"
-            android:layout_width="0dp"
+        <!-- LinearLayout to hold dynamic invited user cards -->
+        <LinearLayout
+            android:id="@+id/invited_users_container"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:src="@drawable/ic_accommodation"
-            android:contentDescription="Accomodations" />
+            android:orientation="vertical"
+            android:text="@string/invited_user_card"
+            android:layout_marginTop="20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/contributors" />
 
-        <ImageButton
-            android:id="@+id/btn_transport"
-            android:layout_width="0dp"
+        <Button
+            android:id="@+id/button_notes"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginBottom="60dp"
+            android:backgroundTint="@color/modern_blue"
+            android:drawableTop="@drawable/add_notes"
+            android:contentDescription="@string/notes_description"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/tab_navigation"
+            app:cornerRadius="10dp" />
+
+        <Button
+            android:id="@+id/button_invite"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginBottom="60dp"
+            android:layout_marginEnd="15dp"
+            android:backgroundTint="@color/modern_blue"
+            android:drawableTop="@drawable/people_invite"
+            android:contentDescription="@string/invite_description"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/tab_navigation"
+            app:cornerRadius="10dp" />
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tab_navigation"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:src="@drawable/ic_transport"
-            android:contentDescription="Transportation" />
+            android:paddingBottom="20dp"
+            android:background="@color/cardview_dark_background"
+            app:tabMode="fixed"
+            app:tabIconTint="@color/tab_color"
+            app:tabIndicatorColor="@color/tab_indicator"
+            app:tabIndicatorHeight="4dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
-        <ImageButton
-            android:id="@+id/btn_travel"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:src="@drawable/ic_travel"
-            android:contentDescription="Travel Community" />
-    </LinearLayout>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintTop_toBottomOf="@id/logistics_title"
+            app:layout_constraintBottom_toTopOf="@id/tab_navigation"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

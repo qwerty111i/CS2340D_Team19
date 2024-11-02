@@ -3,15 +3,13 @@ package com.example.sprint1.view;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,6 +19,7 @@ import com.example.sprint1.R;
 import com.example.sprint1.databinding.ActivityDestinationsBinding;
 import com.example.sprint1.viewmodel.DestinationsViewModel;
 import com.example.sprint1.viewmodel.TravelAdapter;
+import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -37,7 +36,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class DestinationsActivity extends AppCompatActivity {
-
+    private TabLayout tabLayout;
     private DestinationsViewModel viewModel;
     private Button logTravelBtn;
     private Button vacationBtn;
@@ -48,13 +47,13 @@ public class DestinationsActivity extends AppCompatActivity {
     private List<String> startDates = new ArrayList<>();
     private List<String> endDates = new ArrayList<>();
     private List<String> locations = new ArrayList<>();
-    public List<String> days = new ArrayList<>();
+    private List<String> days = new ArrayList<>();
 
     private String currentEmail;
 
     //Initialize Firebase
-    FirebaseDatabase database = FirebaseDatabase.getInstance();
-    DatabaseReference travel_details_ref = database.getReference();
+    private FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private DatabaseReference databaseRef = database.getReference();
 
     private TravelAdapter adapter;
 
@@ -76,24 +75,17 @@ public class DestinationsActivity extends AppCompatActivity {
         binding.setVariable(BR.viewModel, viewModel);
         binding.setLifecycleOwner(this);
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.destinations), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
-
-
-
         //Get currently logged in user
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        if(currentUser != null){
+        if (currentUser != null) {
             currentEmail = currentUser.getEmail();
             Log.d("UserEmail", "User email: " + currentEmail);
         }
 
         // Add navigation bar
-        navigationBar(binding);
+        tabLayout = findViewById(R.id.tab_navigation);
+        navigation();
 
         // Log Travel Feature
         logTravel(binding);
@@ -103,7 +95,7 @@ public class DestinationsActivity extends AppCompatActivity {
 
 
         //connect adapter to Recycler View
-        RecyclerView recyclerView = findViewById(R.id.logRecycler);
+        RecyclerView recyclerView = binding.logRecycler;
         adapter = new TravelAdapter(locations, days);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -132,69 +124,70 @@ public class DestinationsActivity extends AppCompatActivity {
     }
 
 
-    private void getTravelDetails(String email){
-        DatabaseReference travelDetailsRef = travel_details_ref.child("users");
+    private void getTravelDetails(String email) {
+        DatabaseReference travelDetailsRef = databaseRef.child("users");
 
-        travelDetailsRef.orderByChild("email").equalTo(email).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                //clear lists to avoid duplication
-                locations.clear();
-                startDates.clear();
-                endDates.clear();
-                days.clear();
+        travelDetailsRef.orderByChild("email").equalTo(email).addValueEventListener(
+                new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    //clear lists to avoid duplication
+                    locations.clear();
+                    startDates.clear();
+                    endDates.clear();
+                    days.clear();
 
-                for(DataSnapshot travelSnapshot : snapshot.getChildren()){
-                    addTravelToLists(travelSnapshot.child("travelDetails"));
+                    for (DataSnapshot travelSnapshot : snapshot.getChildren()) {
+                        addTravelToLists(travelSnapshot.child("travelDetails"));
+                    }
+
+
+                    //verify data retrieval
+                    Log.d("Firebase", "Start Dates: " + startDates);
+                    Log.d("Firebase", "End Dates: " + endDates);
+                    Log.d("Firebase", "Locations:" + locations);
+
+                    //Add days of travel to each location to days list
+                    getAllDuration(startDates, endDates);
+
+                    //Notify adapter when data has changed
+                    adapter.notifyDataSetChanged();
+
                 }
 
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Log.d("Firebase", "Error retrieving data");
 
-                //verify data retrieval
-                Log.d("Firebase", "Start Dates: " + startDates);
-                Log.d("Firebase", "End Dates: " + endDates);
-                Log.d("Firebase", "Locations:" + locations);
-
-                //Add days of travel to each location to days list
-                getAllDuration(startDates, endDates);
-
-                //Notify adapter when data has changed
-                adapter.notifyDataSetChanged();
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.d("Firebase", "Error retrieving data");
-
-            }
-        });
+                }
+            });
     }
 
-    private void addTravelToLists(DataSnapshot travelDetailsSnapshot){
+    private void addTravelToLists(DataSnapshot travelDetailsSnapshot) {
         //Loop through each travel detail
-        for(DataSnapshot snapshot : travelDetailsSnapshot.getChildren()){
+        for (DataSnapshot snapshot : travelDetailsSnapshot.getChildren()) {
 
-                String startDate = snapshot.child("startDate").getValue(String.class);
-                String endDate = snapshot.child("endDate").getValue(String.class);
-                String location = snapshot.child("location").getValue(String.class);
+            String startDate = snapshot.child("startDate").getValue(String.class);
+            String endDate = snapshot.child("endDate").getValue(String.class);
+            String location = snapshot.child("location").getValue(String.class);
 
-                if (startDate != null) {
-                    startDates.add(startDate);
-                }
+            if (startDate != null) {
+                startDates.add(startDate);
+            }
 
-                if (endDate != null) {
-                    endDates.add(endDate);
-                }
+            if (endDate != null) {
+                endDates.add(endDate);
+            }
 
-                if (location != null) {
-                    locations.add(location);
-                }
+            if (location != null) {
+                locations.add(location);
+            }
 
         }
     }
 
-    public void getAllDuration(List<String> startDates, List<String> endDates){
-        for (int i = 0; i < startDates.size(); i++ ){
+    public void getAllDuration(List<String> startDates, List<String> endDates) {
+        for (int i = 0; i < startDates.size(); i++) {
             String start = startDates.get(i);
             String end = endDates.get(i);
 
@@ -208,7 +201,8 @@ public class DestinationsActivity extends AppCompatActivity {
 
                 long durationInMillis = Math.abs(endDate.getTime() - startDate.getTime());
 
-                int durationInDays = (int) TimeUnit.DAYS.convert(durationInMillis, TimeUnit.MILLISECONDS);
+                int durationInDays = (int)
+                        TimeUnit.DAYS.convert(durationInMillis, TimeUnit.MILLISECONDS);
 
                 days.add(durationInDays + " days");
             } catch (ParseException e) {
@@ -219,42 +213,62 @@ public class DestinationsActivity extends AppCompatActivity {
 
     }
 
-    public void navigationBar(ActivityDestinationsBinding binding) {
-        ImageButton btnLogistics = binding.btnLogistics;
-        ImageButton btnAccom = binding.btnAccom;
-        ImageButton btnDest = binding.btnDest;
-        ImageButton btnDining = binding.btnDining;
-        ImageButton btnTransport = binding.btnTransport;
-        ImageButton btnTravel = binding.btnTravel;
+    private void navigation() {
+        boolean checkSelected = false;
+        int[] navIcons = {
+            R.drawable.logistics,
+            R.drawable.destination,
+            R.drawable.dining,
+            R.drawable.accommodation,
+            R.drawable.transport,
+            R.drawable.travel };
 
-        btnLogistics.setOnClickListener(v -> {
-            Intent intent = new Intent(DestinationsActivity.this, LogisticsActivity.class);
-            startActivity(intent);
-        });
+        for (int i = 0; i < navIcons.length; i++) {
+            TabLayout.Tab tab = tabLayout.newTab();
 
-        btnDest.setOnClickListener(v -> {
-            Intent intent = new Intent(DestinationsActivity.this, DestinationsActivity.class);
-            startActivity(intent);
-        });
+            checkSelected = i == 1;
 
-        btnDining.setOnClickListener(v -> {
-            Intent intent = new Intent(DestinationsActivity.this, DiningActivity.class);
-            startActivity(intent);
-        });
+            tab.setIcon(navIcons[i]);
+            tabLayout.addTab(tab, checkSelected);
+        }
 
-        btnAccom.setOnClickListener(v -> {
-            Intent intent = new Intent(DestinationsActivity.this, AccommodationsActivity.class);
-            startActivity(intent);
-        });
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            public void onTabSelected(TabLayout.Tab tab) {
+                Intent intent;
+                int id = tab.getPosition();
 
-        btnTravel.setOnClickListener(v -> {
-            Intent intent = new Intent(DestinationsActivity.this, TravelActivity.class);
-            startActivity(intent);
-        });
+                if (id == 0) {
+                    intent = new Intent(DestinationsActivity.this, LogisticsActivity.class);
+                    startActivity(intent);
+                } else if (id == 2) {
+                    intent = new Intent(DestinationsActivity.this, DiningActivity.class);
+                    startActivity(intent);
+                } else if (id == 3) {
+                    intent = new Intent(DestinationsActivity.this, AccommodationsActivity.class);
+                    startActivity(intent);
+                } else if (id == 4) {
+                    intent = new Intent(DestinationsActivity.this, TransportationActivity.class);
+                    startActivity(intent);
+                } else if (id == 5) {
+                    intent = new Intent(DestinationsActivity.this, TravelActivity.class);
+                    startActivity(intent);
+                }
 
-        btnTransport.setOnClickListener(v -> {
-            Intent intent = new Intent(DestinationsActivity.this, TransportationActivity.class);
-            startActivity(intent);
+                View tabView = tab.getCustomView();
+                if (tabView != null) {
+                    ImageView tabIcon = tabView.findViewById(R.id.tab_navigation);
+                    tabIcon.setColorFilter(getResources().getColor(R.color.light_modern_purple));
+                }
+            }
+
+            public void onTabUnselected(TabLayout.Tab tab) {
+                View tabView = tab.getCustomView();
+                if (tabView != null) {
+                    ImageView tabIcon = tabView.findViewById(R.id.tab_navigation);
+                    tabIcon.clearColorFilter();
+                }
+            }
+            public void onTabReselected(TabLayout.Tab tab) { }
         });
-    }
+    };
 }

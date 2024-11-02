@@ -48,13 +48,15 @@ dependencies {
     implementation libs.core
     testImplementation libs.junit
     testImplementation libs.mockito.core
+    testImplementation libs.junit.junit
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
     testImplementation libs.core.testing
     testImplementation libs.robolectric
     testImplementation libs.firebase.auth.v2310
-    implementation 'androidx.recyclerview:recyclerview:1.3.0'
-    implementation 'com.google.firebase:firebase-database:20.2.1'
-    }
+    implementation libs.recyclerview
+    implementation libs.firebase.database.v2021
+    implementation libs.lottie
+}
 
 apply plugin: 'com.google.gms.google-services'

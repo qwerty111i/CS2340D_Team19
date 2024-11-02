@@ -41,13 +41,13 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/rectangleCard"
-            app:layout_constraintBottom_toTopOf="@id/usernameLayout"/>
+            app:layout_constraintBottom_toTopOf="@id/emailLayout"/>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/usernameLayout"
+            android:id="@+id/emailLayout"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
+            android:layout_height="75dp"
+            android:layout_marginTop="20dp"
             app:boxBackgroundMode="outline"
             app:boxStrokeColor="@color/modern_blue"
             app:boxStrokeWidth="2dp"
@@ -69,6 +69,41 @@
             app:layout_constraintBottom_toTopOf="@id/passwordLayout">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins_regular"
+                android:inputType="text"
+                android:maxLines="1"
+                android:scrollHorizontally="true"
+                android:textColor="@color/white" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/usernameLayout"
+            android:layout_width="0dp"
+            android:layout_height="75dp"
+            app:boxBackgroundMode="outline"
+            app:boxStrokeColor="@color/modern_blue"
+            app:boxStrokeWidth="2dp"
+            app:boxStrokeWidthFocused="3dp"
+            app:startIconDrawable="@drawable/user"
+            app:startIconTint="@color/white"
+            android:hint="@string/sign_up_hint"
+            android:textColorHint="@color/white"
+            app:hintTextColor="@color/white"
+            app:errorEnabled="true"
+            app:boxStrokeErrorColor="@color/muted_red"
+            app:errorTextAppearance="@style/ErrorTextStyle"
+            app:errorTextColor="@color/muted_red"
+            app:errorIconTint="@color/muted_red"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintWidth_percent="0.6"
+            app:layout_constraintTop_toBottomOf="@id/emailLayout"
+            app:layout_constraintBottom_toTopOf="@id/passwordLayout">
+
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/username"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -82,7 +117,7 @@
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/passwordLayout"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="75dp"
             app:boxBackgroundMode="outline"
             app:boxStrokeColor="@color/modern_purple"
             app:boxStrokeWidth="2dp"
@@ -118,6 +153,7 @@
             android:id="@+id/signUp"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:layout_marginTop="25dp"
             android:text="@string/sign_up_button"
             android:textSize="23sp"
             android:fontFamily="@font/poppins_regular"
@@ -134,7 +170,7 @@
             android:id="@+id/signInText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="25dp"
             android:text="@string/sign_in_text"
             android:textSize="18sp"
             android:textColor="@android:color/white"
@@ -149,7 +185,8 @@
             android:id="@+id/signIn"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginTop="-15dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
             android:text="@string/sign_in_button"
             android:textSize="23sp"
             android:fontFamily="@font/poppins_regular"

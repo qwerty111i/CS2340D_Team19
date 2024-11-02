@@ -23,8 +23,10 @@ import com.google.firebase.FirebaseApp;
 
 public class SignupActivity extends AppCompatActivity {
 
+    private TextInputLayout email;
     private TextInputLayout username;
     private TextInputLayout password;
+    private TextInputEditText emailText;
     private TextInputEditText usernameText;
     private TextInputEditText passwordText;
     private Button signUp;
@@ -68,8 +70,10 @@ public class SignupActivity extends AppCompatActivity {
 
     private void listeners(ActivitySignupBinding binding) {
         // Linking components from XML to activity
+        email = binding.emailLayout;
         username = binding.usernameLayout;
         password = binding.passwordLayout;
+        emailText = binding.email;
         usernameText = binding.username;
         passwordText = binding.password;
         signUp = binding.signUp;
@@ -78,6 +82,7 @@ public class SignupActivity extends AppCompatActivity {
         // Sign Up button listener
         signUp.setOnClickListener(v -> {
             // Setting values in the viewModel
+            viewModel.setEmail(email.getEditText().getText().toString());
             viewModel.setUsername(username.getEditText().getText().toString());
             viewModel.setPassword(password.getEditText().getText().toString());
 
@@ -93,16 +98,16 @@ public class SignupActivity extends AppCompatActivity {
         });
 
         // Sets the username text field back to the start when unfocused
-        usernameText.setOnFocusChangeListener((v, hasFocus) -> {
+        emailText.setOnFocusChangeListener((v, hasFocus) -> {
             if (!hasFocus) {
-                usernameText.setSelection(0);
+                emailText.setSelection(0);
             }
         });
 
         // Sets the password text field back to the start when unfocused
         passwordText.setOnFocusChangeListener((v, hasFocus) -> {
             if (!hasFocus) {
-                usernameText.setSelection(0);
+                emailText.setSelection(0);
             }
         });
     }
@@ -110,6 +115,14 @@ public class SignupActivity extends AppCompatActivity {
     private void observers(ActivitySignupBinding binding) {
         // Obtains username error using getUsernameError in viewModel
         // Updates new variable errorMessage to match the username error
+        viewModel.getEmailError().observe(this, errorMessage -> {
+            if (errorMessage != null) {
+                email.setError(errorMessage);
+            } else {
+                email.setError(null);
+            }
+        });
+
         viewModel.getUsernameError().observe(this, errorMessage -> {
             if (errorMessage != null) {
                 username.setError(errorMessage);
@@ -165,6 +178,15 @@ public class SignupActivity extends AppCompatActivity {
 
     private void textWatchers() {
         // Checks if username text field is edited after error is shown
+        email.getEditText().addTextChangedListener(new android.text.TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+            public void onTextChanged(CharSequence s, int start, int before, int count) { }
+            public void afterTextChanged(android.text.Editable s) {
+                // Sets error to null if field is edited
+                email.setError(null);
+            }
+        });
         username.getEditText().addTextChangedListener(new android.text.TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) { }

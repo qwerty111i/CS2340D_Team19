@@ -24,4 +24,7 @@ public class TravelDetails {
     public String getEndDate() {
         return endDate;
     }
+    public void setLocation(String location) {
+        this.location = location;
+    }
 }
