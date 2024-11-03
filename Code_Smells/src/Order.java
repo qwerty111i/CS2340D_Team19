@@ -12,9 +12,11 @@ public class Order {
     public double calculateTotalPrice() {
     	double total = 0.0;
     	for (Item item : items) {
-        	double price = priceWithDiscount(item); //Replaces the switch statement
-            
+
+        	//Just changed the price variable to match the one in Order.
+            double price = item.priceWithDiscount(); // Replaces the switch statement
         	total += price * item.getProductInfo().getQuantity();
+
        	    if (item instanceof TaxableItem) {
                 TaxableItem taxableItem = (TaxableItem) item;
                 double tax = taxableItem.getTaxRate() / 100.0 * item.getProductInfo().getPrice();
@@ -23,17 +25,6 @@ public class Order {
         }
 
         return applyDiscounts(total);
-    }
-
-    public double priceWithDiscount(Item item) {
-        double price = item.getProductInfo().getPrice();
-        if (item.getDiscountInfo().getDiscountType() == DiscountType.PERCENTAGE) {
-            price -= item.getDiscountInfo().getDiscountAmount() * price;
-        } else if (item.getDiscountInfo().getDiscountType() == DiscountType.AMOUNT) {
-            price -= item.getDiscountInfo().getDiscountAmount();
-        }
-        // If there's no discount
-        return price;
     }
 
     private double applyDiscounts(double total) {
