@@ -1,31 +1,17 @@
 class Item {
-    private ProductInfo productInfo;
-    private DiscountType discountType;
-    private double discountAmount;
+    private final ProductInfo productInfo;
+    private final DiscountInfo discountInfo;
 
-    public Item(ProductInfo productInfo, DiscountType discountType, double discountAmount) {
+    public Item(ProductInfo productInfo, DiscountInfo discountInfo) {
         this.productInfo = productInfo;
-        this.discountType = discountType;
-        this.discountAmount = discountAmount;
+        this.discountInfo = discountInfo;
     }
 
-    public String getName() {
-        return productInfo.getName();
+    public ProductInfo getProductInfo() {
+        return productInfo;
     }
 
-    public double getPrice() {
-        return productInfo.getPrice();
-    }
-
-    public int getQuantity() {
-        return productInfo.getQuantity();
-    }
-
-    public DiscountType getDiscountType() {
-        return discountType;
-    }
-
-    public double getDiscountAmount() {
-        return discountAmount;
+    public DiscountInfo getDiscountInfo() {
+        return discountInfo;
     }
 }
