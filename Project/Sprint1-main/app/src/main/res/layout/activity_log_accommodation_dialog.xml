@@ -155,7 +155,7 @@
             app:layout_constraintStart_toStartOf="@id/end_date"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/end_date"
-            app:layout_constraintWidth_percent="0.499"
+            app:layout_constraintWidth_percent="0.44"
             app:startIconDrawable="@drawable/calendar"
             app:startIconTint="@color/black">
 
@@ -190,7 +190,7 @@
             android:layout_width="wrap_content"
             android:gravity="start"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="15dp"
             android:text="Number of Rooms"
             android:textSize="18sp"
             android:textColor="@android:color/black"
