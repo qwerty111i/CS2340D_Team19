@@ -3,12 +3,15 @@ package com.example.sprint1.model;
 public class Accommodation {
     private String checkIn;
     private String checkOut;
+    private String location;
     private int numRooms;
     private String roomType;
 
-    public Accommodation(String checkIn, String checkOut, int numRooms, String roomType) {
+    public Accommodation(String checkIn, String checkOut, String location, int numRooms,
+                         String roomType) {
         this.checkIn = checkIn;
         this.checkOut = checkOut;
+        this.location = location;
         this.numRooms = numRooms;
         this.roomType = roomType;
     }
@@ -27,6 +30,14 @@ public class Accommodation {
 
     public void setCheckOut(String checkOut) {
         this.checkOut = checkOut;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     public int getNumRooms() {

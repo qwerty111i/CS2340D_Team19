@@ -3,28 +3,52 @@ package com.example.sprint1.view;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
+import com.example.sprint1.BR;
 import com.example.sprint1.R;
+import com.example.sprint1.databinding.ActivityAccommodationsBinding;
+import com.example.sprint1.viewmodel.AccommodationViewModel;
 import com.google.android.material.tabs.TabLayout;
 
 public class AccommodationsActivity extends AppCompatActivity {
     private TabLayout tabLayout;
+    private AccommodationViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
 
-        setContentView(R.layout.activity_accommodations);
+        // Inflating the layout
+        ActivityAccommodationsBinding binding =
+                ActivityAccommodationsBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
+        // Creating the ViewModel
+        viewModel = new ViewModelProvider(this).get(AccommodationViewModel.class);
+
+        // Binding the ViewModel
+        binding.setVariable(BR.viewModel, viewModel);
+        binding.setLifecycleOwner(this);
+
+        Button buttonLog = binding.buttonLog;
+        binding.buttonLog.setOnClickListener(v -> {
+            LogAccommodationDialog accommodationLog = new LogAccommodationDialog();
+            accommodationLog.show(getSupportFragmentManager(), "LogAccommodationDialog");
+        });
 
         // Add navigation bar
         tabLayout = findViewById(R.id.tab_navigation);
         navigation();
     }
+
+
 
     private void navigation() {
         boolean checkSelected = false;
