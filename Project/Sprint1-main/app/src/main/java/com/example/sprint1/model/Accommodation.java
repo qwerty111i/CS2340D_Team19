@@ -7,7 +7,8 @@ public class Accommodation {
     private int numRooms;
     private String roomType;
 
-    public Accommodation(String checkIn, String checkOut, String location, int numRooms, String roomType) {
+    public Accommodation(String checkIn, String checkOut, String location, int numRooms,
+                         String roomType) {
         this.checkIn = checkIn;
         this.checkOut = checkOut;
         this.location = location;
