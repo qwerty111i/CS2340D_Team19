@@ -216,7 +216,7 @@
             app:startIconTint="@color/black">
 
         <AutoCompleteTextView
-            android:id="@+id/number_of_rooms_view"
+            android:id="@+id/number_of_rooms_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="none"
@@ -255,7 +255,7 @@
             app:startIconTint="@color/black">
 
             <AutoCompleteTextView
-                android:id="@+id/room_type_view"
+                android:id="@+id/room_type_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="none"
