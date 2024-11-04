@@ -48,8 +48,8 @@ public class LogAccommodationDialog extends DialogFragment {
         binding.setViewModel(viewModel);
         binding.setLifecycleOwner(this);
         startDialog();
-        // observers();
-        // textWatchers();
+        observers();
+        textWatchers();
         return binding.getRoot();
     }
     @Override
@@ -134,25 +134,92 @@ public class LogAccommodationDialog extends DialogFragment {
         checkInDateText.setOnClickListener(v -> showDatePickerDialog(checkInDateText));
         checkOutDateText.setOnClickListener(v -> showDatePickerDialog(checkOutDateText));
 
-        /*
         // Called when the Submit button is pressed
         submitButton.setOnClickListener(v -> {
             String locationText = this.locationText.getText().toString();
-            String startDateText = this.checkInDateText.getText().toString();
-            String endDateText = this.checkOutDateText.getText().toString();
+            String checkInDateText = this.checkInDateText.getText().toString();
+            String checkOutDateText = this.checkOutDateText.getText().toString();
+            String numberOfRoomsString = this.numberOfRoomsText.getText().toString();
+            int numberOfRooms = 0;
+            try {
+                numberOfRooms = Integer.parseInt(numberOfRoomsString);
+            } catch (NumberFormatException e) {
+                this.numberOfRoomsText.setError("Please enter a valid number of rooms");
+                return;
+            }
 
-            // Updates the MutableLiveData in the View Model
-            //viewModel.setTravelDetails(locationText, startDateText, endDateText);
+            String roomTypeText = this.roomTypeText.getText().toString();
+
+            viewModel.setAccommodationDetails(locationText, checkInDateText,
+                    checkOutDateText, numberOfRooms, roomTypeText);
 
             if (viewModel.areInputsValid().getValue()) {
-                // Saves details in the database
                 viewModel.saveDetails();
-
-                // Closes the dialog
                 dismiss();
             }
         });
+    }
+    private void observers() {
+        viewModel.getInputError().observe(this, errorMessage -> {
+            if (errorMessage != null) {
+                location.setError(errorMessage);
+            } else {
+                location.setError(null);
+            }
+        });
 
-         */
+        // Obtains date error using getDateError in viewModel
+        // Updates new variable errorMessage to match the date error
+        viewModel.getDateError().observe(this, errorMessage -> {
+            if (errorMessage != null) {
+                checkInDate.setError(errorMessage);
+                checkOutDate.setError(errorMessage);
+            } else {
+                checkInDate.setError(null);
+                checkOutDate.setError(null);
+            }
+        });
+    }
+
+    private void textWatchers() {
+        locationText.addTextChangedListener(new android.text.TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            public void afterTextChanged(android.text.Editable s) {
+                // Sets error to null if field is edited
+                locationText.setError(null);
+            }
+        });
+        numberOfRoomsText.addTextChangedListener(new android.text.TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            public void afterTextChanged(android.text.Editable s) {
+                // Sets error to null if field is edited
+                numberOfRoomsText.setError(null);
+            }
+        });
+        roomTypeText.addTextChangedListener(new android.text.TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            public void afterTextChanged(android.text.Editable s) {
+                // Sets error to null if field is edited
+                roomType.setError(null);
+            }
+        });
     }
 }

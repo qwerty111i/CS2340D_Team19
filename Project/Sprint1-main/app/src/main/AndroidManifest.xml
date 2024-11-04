@@ -19,6 +19,9 @@
             android:name=".view.LogisticsChart"
             android:exported="false" />
         <activity
+            android:name=".view.LogAccommodationDialog"
+            android:exported="false" />
+        <activity
             android:name=".view.LogTravelDialog"
             android:exported="false" />
         <activity
