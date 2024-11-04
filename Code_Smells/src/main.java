@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class main {
+public class Main {
 	public static void main(String[] args) {
         ProductInfo pi1 = new ProductInfo("Book", 20, 1);
         DiscountInfo di1 = new DiscountInfo(DiscountType.AMOUNT, 5);
@@ -25,8 +25,7 @@ public class main {
 
         System.out.println("Total Price: " + order.calculateTotalPrice());
 
-        order.sendConfirmationEmail();
-        order.printOrder();
+        System.out.println(order.sendConfirmationEmail());
     }
 }
 

@@ -47,16 +47,9 @@ public class Order {
         }
    }
 
-    public void printOrder() {
-        System.out.println("Order Details:");
-        for (Item item : items) {
-            System.out.println(item.getProductInfo().getName() + " - " + item.getProductInfo().getPrice());
-        }
-   }
-
-    public void sendConfirmationEmail() {
+    public String sendConfirmationEmail() {
         EmailSender emailSender = new EmailSender(customer, items, calculateTotalPrice());
-        emailSender.sendEmail();
+        return emailSender.sendEmail();
     }
 
     public void addItem(Item item) {
