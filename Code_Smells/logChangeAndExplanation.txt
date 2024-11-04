@@ -1,0 +1,20 @@
+﻿* Code Smell Fixes Explanation: Team 19
+* Adwaith Ramesh
+* James Gao
+* Leila Kazemzadeh
+* Matthew Sebastian
+* Michael Zuo
+Sahadev Bharath
+
+
+
+
+1. In the calculateTotalPrice method in the Order class there was a switch statement which helped determine the discount applied to each order. In order to make the code more readable and scalable, we changed the logic to use an if statement instead of a switch statement
+2. The calculateTotalPrice method was also pretty long and the logic for calculating the discount was included in this method. In order to shorten it and make the method more cohesive, we created the priceWithoutDiscount method to calculate the discount that should be applied, making the calculateTotalPrice method more readable.
+3. We moved the priceWithDiscount method from Order to Item to reduce a bit of coupling and improve feature envy.
+4. The class Item has more than 4 parameters. To fix this, we created a new class, ProductInfo, that takes in name, price, and quantity to act as one of the parameters for Item and make the parameter list shorter. 
+5. TaxableItem has the same issue as item and ProductInfo was also used in the same way to solve the issue of too many parameters. We also created a DiscountInfo class to further decrease the parameter any Item must take in.
+6. The has_gift_card boolean does not follow the preferred name format. We refactored the boolean name to hasGiftCard.
+7. The EmailSender class uses the default implicit constructor. We created a private constructor to hide the implicit public one.
+8. The Order class was large and had a lot of data that wasn’t strictly necessary for it to hold, causing the class to have low cohesion. To solve this we added a Customer class to separate the customer’s information from the Order class. 
+9. Having an entire GiftCardItem class was unnecessary for the function of our code so we got rid of the class and added a boolean variable, hasGiftCard, to our Customer class instead.
