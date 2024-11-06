@@ -97,10 +97,17 @@ public class SignupActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        // Sets the username text field back to the start when unfocused
+        // Sets the email text field back to the start when unfocused
         emailText.setOnFocusChangeListener((v, hasFocus) -> {
             if (!hasFocus) {
                 emailText.setSelection(0);
+            }
+        });
+
+        // Sets the username text field back to the start when unfocused
+        usernameText.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                usernameText.setSelection(0);
             }
         });
 

@@ -65,6 +65,10 @@ public class SignupViewModel extends ViewModel {
                 && !checkInput(username.getValue())) {
             valid = false;
             usernameError.setValue("Username cannot contain whitespace!");
+        } else if (checkInput(username.getValue())
+                && userModel.isUsernameTaken(username.getValue())) {
+            valid = false;
+            usernameError.setValue("Username already in use.");
         }
 
         // Password error
@@ -81,6 +85,8 @@ public class SignupViewModel extends ViewModel {
         // Creates a new user with an email and password
         Log.d("SignupViewModel", "Email: "
                 + email.getValue() + ", Password: " + password.getValue());
+        userModel.loadUserMap();
+
         mAuth.createUserWithEmailAndPassword(
                 email.getValue(), password.getValue()).addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
@@ -97,7 +103,6 @@ public class SignupViewModel extends ViewModel {
                             newUser = new User(email.getValue());
                         }
                         userModel.storeUser(newUser);
-                        userModel.loadUserMap();
                         validationError.setValue(null);
                     } else {
                         Exception exception = task.getException();
