@@ -9,7 +9,8 @@ public class Dining {
     private List<String> reviews;
     private String reservationTime;
 
-    public Dining(String location, String website, ArrayList<String> reviews, String reservationTime) {
+    public Dining(String location, String website, ArrayList<String> reviews,
+                  String reservationTime) {
         this.location = location;
         this.website = website;
         if (reviews == null) {
