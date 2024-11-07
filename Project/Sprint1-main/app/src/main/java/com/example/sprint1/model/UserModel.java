@@ -88,6 +88,9 @@ public class UserModel {
             }
         });
     }
+    public boolean isUsernameTaken(String username) {
+        return userMap.containsKey(username);
+    }
     public String getEmailByUsername(String username) {
         return userMap.get(username);
     }

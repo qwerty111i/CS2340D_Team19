@@ -1,60 +1,56 @@
 import java.util.List;
 
 public class Order {
+    private Customer customer;
     private List<Item> items;
-    private String customerName;
-    private String customerEmail;
 
-    public Order(List<Item> items, String customerName, String customerEmail) {
+    public Order(Customer customer, List<Item> items) {
+        this.customer = customer;
         this.items = items;
-        this.customerName = customerName;
-        this.customerEmail = customerEmail;
     }
 
     public double calculateTotalPrice() {
     	double total = 0.0;
     	for (Item item : items) {
-        	double price = priceWithDiscount(item); //Replaces the switch statement
-            
-        	total += price * item.getQuantity();
+
+        	//Just changed the price variable to match the one in Order.
+            double price = item.priceWithDiscount(); // Replaces the switch statement
+        	total += price * item.getProductInfo().getQuantity();
+
        	    if (item instanceof TaxableItem) {
                 TaxableItem taxableItem = (TaxableItem) item;
-                double tax = taxableItem.getTaxRate() / 100.0 * item.getPrice();
+                double tax = taxableItem.getTaxRate() / 100.0 * item.getProductInfo().getPrice();
                 total += tax;
             }
         }
-    	if (hasGiftCard()) {
-        	total -= 10.0; // subtract $10 for gift card
-    	}
-    	if (total > 100.0) {
-        	total *= 0.9; // apply 10% discount for orders over $100
-    	}
-    	return total;
+
+        return applyDiscounts(total);
     }
 
-    public double priceWithDiscount(Item item) {
-        double price = item.getPrice();
-        if(item.getDiscountType() == DiscountType.PERCENTAGE){
-            price -= item.getDiscountAmount() * price;
+    private double applyDiscounts(double total) {
+        // Subtract $10 for gift card
+        if (customer.hasGiftCard()) {
+            total -= 10.0;
         }
-        else if(item.getDiscountType() == DiscountType.AMOUNT){
-            price -= item.getDiscountAmount();
-        }
-        //otherwise no discount
-        return price;
 
+        // Apply 10% discount for orders over $100
+        if (total > 100.0) {
+            total *= 0.9;
+        }
+
+        return total;
     }
 
-    public void sendConfirmationEmail() {
-        String message = "Thank you for your order, " + customerName + "!\n\n" +
-                "Your order details:\n";
-        for (Item item : items) {
-            message += item.getName() + " - " + item.getPrice() + "\n";
+    public void addItemsFromAnotherOrder(Order otherOrder) {
+        for (Item item : otherOrder.getItems()) {
+            items.add(item);
         }
-        message += "Total: " + calculateTotalPrice();
-        EmailSender.sendEmail(customerEmail, "Order Confirmation", message);
-    }
+   }
 
+    public String sendConfirmationEmail() {
+        EmailSender emailSender = new EmailSender(customer, items, calculateTotalPrice());
+        return emailSender.sendEmail();
+    }
 
     public void addItem(Item item) {
         items.add(item);
@@ -71,46 +67,5 @@ public class Order {
     public void setItems(List<Item> items) {
         this.items = items;
     }
-
-    public String getCustomerName() {
-        return customerName;
-    }
-
-    public void setCustomerName(String customerName) {
-        this.customerName = customerName;
-    }
-
-    public String getCustomerEmail() {
-        return customerEmail;
-    }
-
-    public void setCustomerEmail(String customerEmail) {
-        this.customerEmail = customerEmail;
-    }
-
-    public boolean hasGiftCard() {
-        boolean has_gift_card = false;
-        for (Item item : items) {
-            if (item instanceof GiftCardItem) {
-                has_gift_card = true;
-                break;
-            }
-        }
-        return has_gift_card;
-    }
-
-   public void printOrder() {
-        System.out.println("Order Details:");
-        for (Item item : items) {
-            System.out.println(item.getName() + " - " + item.getPrice());
-        }
-   }
-
-   public void addItemsFromAnotherOrder(Order otherOrder) {
-        for (Item item : otherOrder.getItems()) {
-            items.add(item);
-        }
-   }
-
 }
 

@@ -1,31 +1,29 @@
 class Item {
-    private ProductInfo productInfo;
-    private DiscountType discountType;
-    private double discountAmount;
+    private final ProductInfo productInfo;
+    private final DiscountInfo discountInfo;
 
-    public Item(ProductInfo productInfo, DiscountType discountType, double discountAmount) {
+    public Item(ProductInfo productInfo, DiscountInfo discountInfo) {
         this.productInfo = productInfo;
-        this.discountType = discountType;
-        this.discountAmount = discountAmount;
+        this.discountInfo = discountInfo;
     }
 
-    public String getName() {
-        return productInfo.getName();
+    public ProductInfo getProductInfo() {
+        return productInfo;
     }
 
-    public double getPrice() {
-        return productInfo.getPrice();
+    public DiscountInfo getDiscountInfo() {
+        return discountInfo;
     }
 
-    public int getQuantity() {
-        return productInfo.getQuantity();
-    }
-
-    public DiscountType getDiscountType() {
-        return discountType;
-    }
-
-    public double getDiscountAmount() {
-        return discountAmount;
+    // Moved Leila's Method here and made some slight variable based changes to keep it here instead of in Order
+    public double priceWithDiscount() {
+        double price = productInfo.getPrice();
+        if (discountInfo.getDiscountType() == DiscountType.PERCENTAGE) {
+            price -= discountInfo.getDiscountAmount() * price;
+        } else if (discountInfo.getDiscountType() == DiscountType.AMOUNT) {
+            price -= discountInfo.getDiscountAmount();
+        }
+        // Returns price with discount applied
+        return price;
     }
 }
