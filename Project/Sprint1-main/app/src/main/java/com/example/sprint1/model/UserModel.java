@@ -68,6 +68,16 @@ public class UserModel {
             Log.e("UserModel", "UserId is not set, cannot store vacation.");
         }
     }
+
+    // Method to store accommodations under the specific user's nod
+    public void storeAccommodation(Accommodation accommodation) {
+        if (userId != null) {
+            database.child(userId).child("accommodations").push().setValue(accommodation);
+        } else {
+            Log.e("UserModel", "UserId is not set, cannot store accommodations.");
+        }
+    }
+
     public void loadUserMap() {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("users");
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
