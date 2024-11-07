@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.sprint1.model.Accommodation;
 import com.example.sprint1.model.AccommodationModel;
+import com.example.sprint1.model.UserModel;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -70,7 +71,7 @@ public class AccommodationViewModel extends ViewModel {
                 numberOfRooms.getValue(),
                 roomType.getValue());
 
-        AccommodationModel.getInstance().storeAccommodation(accommodation);
+        UserModel.getInstance().storeAccommodation(accommodation);
     }
 
     // Base check for inputs (empty or not)
