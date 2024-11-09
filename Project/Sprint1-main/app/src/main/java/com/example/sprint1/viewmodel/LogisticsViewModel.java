@@ -8,6 +8,8 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.sprint1.model.Trip;
+import com.example.sprint1.model.UserModel;
 import com.example.sprint1.model.VacationTime;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -59,6 +61,15 @@ public class LogisticsViewModel extends ViewModel {
         fetchInvitedUsers();
         retrieveNotes();
         fetchVacationTimes();
+    }
+
+    // Saves the details in the database
+    public void saveTrip(String tripText) {
+        // Creates a new Trip object, storing all the data
+        Trip newTrip = new Trip(tripText);
+
+        // Uses the Singleton implemented Database to store information
+        UserModel.getInstance().storeTrip(newTrip);
     }
 
     public void calculatePlannedTime(List<VacationTime> vacationTimes) {
