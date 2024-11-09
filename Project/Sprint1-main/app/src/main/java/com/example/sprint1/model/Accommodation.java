@@ -9,14 +9,13 @@ public class Accommodation {
     private String trip;
 
     public Accommodation(String checkIn, String checkOut, String location, int numRooms,
-                         String roomType, String trip) {
+                         String roomType) {
         this.checkIn = checkIn;
         this.checkOut = checkOut;
         this.location = location;
         this.numRooms = numRooms;
         this.roomType = roomType;
 
-        this.trip = trip;
     }
 
     public String getCheckIn() {
