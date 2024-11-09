@@ -5,21 +5,28 @@ import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
-
+import android.widget.Spinner;
 import androidx.fragment.app.DialogFragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-
 import com.example.sprint1.databinding.ActivityLogTravelDialogBinding;
+import com.example.sprint1.model.Trip;
 import com.example.sprint1.viewmodel.DestinationsViewModel;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
-
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
 
 public class LogTravelDialog extends DialogFragment {
 
@@ -29,9 +36,11 @@ public class LogTravelDialog extends DialogFragment {
     private TextInputLayout location;
     private TextInputLayout startDate;
     private TextInputLayout endDate;
+    private Spinner tripDropDown;
     private TextInputEditText locationText;
     private TextInputEditText startDateText;
     private TextInputEditText endDateText;
+    private String selectedTrip;
 
     @Override
     public View onCreateView(
@@ -118,29 +127,63 @@ public class LogTravelDialog extends DialogFragment {
         endDate = binding.endDateView;
         endDateText = binding.endDateText;
 
+        tripDropDown = binding.dropdown;
         submitButton = binding.submit;
 
         // Calls the date picker dialog when clicked
         startDateText.setOnClickListener(v -> showDatePickerDialog(startDateText));
         endDateText.setOnClickListener(v -> showDatePickerDialog(endDateText));
 
+        ArrayList<String> updatedTripList = new ArrayList<>();
+
+        // Gets the updated list of trips
+        viewModel.setDropdownItems();
+        viewModel.getTripList().observe(this, trips -> {
+            updatedTripList.clear();
+            updatedTripList.addAll(trips);
+
+            // Sets the dropdown with the list of trips
+            if (getActivity() != null && getContext() != null) {
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                        getContext(), android.R.layout.simple_spinner_item, updatedTripList);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                tripDropDown.setAdapter(adapter);
+                tripDropDown.setSelection(0);
+            }
+        });
+
+        // Sets the dropdown and selectedTrip with the selected item
+        setSelectedTrip();
 
         // Called when the Submit button is pressed
         submitButton.setOnClickListener(v -> {
             String locationText = this.locationText.getText().toString();
             String startDateText = this.startDateText.getText().toString();
             String endDateText = this.endDateText.getText().toString();
+            String currentTripText = selectedTrip;
 
             // Updates the MutableLiveData in the View Model
-            viewModel.setTravelDetails(locationText, startDateText, endDateText);
+            viewModel.setTravelDetails(locationText, startDateText, endDateText, currentTripText);
 
             if (viewModel.areInputsValid().getValue()) {
                 // Saves details in the database
-                viewModel.saveDetails();
+                viewModel.saveTravelDetails();
 
                 // Closes the dialog
                 dismiss();
             }
+        });
+    }
+
+    private void setSelectedTrip() {
+        tripDropDown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View view, int position, long id) {
+                selectedTrip = parentView.getItemAtPosition(position).toString();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) { }
         });
     }
 

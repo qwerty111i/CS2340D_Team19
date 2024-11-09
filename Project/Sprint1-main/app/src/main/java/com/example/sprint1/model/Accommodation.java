@@ -6,6 +6,7 @@ public class Accommodation {
     private String location;
     private int numRooms;
     private String roomType;
+    private String trip;
 
     public Accommodation(String checkIn, String checkOut, String location, int numRooms,
                          String roomType) {
@@ -14,6 +15,7 @@ public class Accommodation {
         this.location = location;
         this.numRooms = numRooms;
         this.roomType = roomType;
+
     }
 
     public String getCheckIn() {
@@ -54,5 +56,13 @@ public class Accommodation {
 
     public void setRoomType(String roomType) {
         this.roomType = roomType;
+    }
+
+    public String getTrip() {
+        return trip;
+    }
+
+    public void setTrip(String trip) {
+        this.trip = trip;
     }
 }

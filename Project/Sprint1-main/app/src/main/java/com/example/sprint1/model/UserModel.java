@@ -2,12 +2,15 @@ package com.example.sprint1.model;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,12 +22,14 @@ public class UserModel {
     private static UserModel instance;
     private String userId;
     private Map<String, String> userMap;
+    private ArrayList<String> tripIds;
 
     // Private constructor
     private UserModel() {
         // Uses the DatabaseReference to point to the "users" node in Firebase
         database = FirebaseDatabase.getInstance().getReference("users");
         userMap = new HashMap<>();
+        tripIds = new ArrayList<>();
     }
 
     // Uses the Singleton design pattern to get instance
@@ -54,9 +59,48 @@ public class UserModel {
     // Method to store travel details under the specific user's node
     public void storeTravelDetails(TravelDetails travelDetails) {
         if (userId != null) {
-            database.child(userId).child("travelDetails").push().setValue(travelDetails);
+            // Gets all the nodes under Trips
+            DatabaseReference tripRef = database.child(userId).child("Trips");
+            for (String id : tripIds) {
+                tripRef.child(id).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if (snapshot.exists()) {
+                            // Gets the trip name
+                            String tripName = snapshot
+                                    .child("tripName")
+                                    .getValue(String.class);
+
+                            // Compares the trip name with the travel details trip name
+                            if (travelDetails.getTripName().equals(tripName)) {
+                                database.child(userId)
+                                        .child("Trips")
+                                        .child(id)
+                                        .child("Travel Details")
+                                        .push()
+                                        .setValue(travelDetails);
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) { }
+                });
+            }
         } else {
             Log.e("UserModel", "UserId is not set, cannot store travel details.");
+        }
+    }
+
+    // Method to store trips under the specific user's node
+    public void storeTrip(Trip trip) {
+        if (userId != null) {
+            DatabaseReference tripRef = database.child(userId)
+                    .child("Trips").push();
+            tripIds.add(tripRef.getKey());
+            tripRef.setValue(trip);
+        } else {
+            Log.e("UserModel", "UserId is not set, cannot store trip.");
         }
     }
 
@@ -72,7 +116,10 @@ public class UserModel {
     // Method to store accommodations under the specific user's nod
     public void storeAccommodation(Accommodation accommodation) {
         if (userId != null) {
-            database.child(userId).child("accommodations").push().setValue(accommodation);
+            database.child(userId)
+                    .child(accommodation.getTrip())
+                    .child("accommodations")
+                    .push().setValue(accommodation);
         } else {
             Log.e("UserModel", "UserId is not set, cannot store accommodations.");
         }

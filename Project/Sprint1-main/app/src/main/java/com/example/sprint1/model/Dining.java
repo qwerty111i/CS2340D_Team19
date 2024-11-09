@@ -8,9 +8,10 @@ public class Dining {
     private String website;
     private List<String> reviews;
     private String reservationTime;
+    private String trip;
 
     public Dining(String location, String website, ArrayList<String> reviews,
-                  String reservationTime) {
+                  String reservationTime, String trip) {
         this.location = location;
         this.website = website;
         if (reviews == null) {
@@ -19,6 +20,7 @@ public class Dining {
             this.reviews = new ArrayList<>(reviews);
         }
         this.reservationTime = reservationTime;
+        this.trip = trip;
     }
 
     public String getLocation() {
@@ -63,5 +65,13 @@ public class Dining {
 
     public void setReservationTime(String reservationTime) {
         this.reservationTime = reservationTime;
+    }
+
+    public String getTrip() {
+        return trip;
+    }
+
+    public void setTrip(String trip) {
+        this.trip = trip;
     }
 }

@@ -3,7 +3,6 @@ package com.example.sprint1;
 import static org.junit.Assert.assertEquals;
 
 import com.example.sprint1.model.TravelDetails;
-import com.example.sprint1.model.TravelModel;
 
 import org.junit.Before;
 import org.junit.Test;

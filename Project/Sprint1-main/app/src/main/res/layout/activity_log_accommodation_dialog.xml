@@ -263,5 +263,58 @@
                 android:textColor="@color/black" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <TextView
+            android:id="@+id/trip"
+            android:layout_marginTop="20dp"
+            android:layout_width="0dp"
+            android:gravity="start"
+            android:layout_marginStart="35dp"
+            android:layout_height="wrap_content"
+            android:text="Trip"
+            android:textSize="18sp"
+            android:textColor="@android:color/black"
+            android:fontFamily="@font/poppins_regular"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/room_type"
+            app:layout_constraintBottom_toTopOf="@id/trip_input" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/trip_input"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintVertical_bias=".005"
+            app:boxBackgroundMode="filled"
+            app:boxBackgroundColor="@color/light_modern_purple"
+            app:boxStrokeColor="@color/modern_purple"
+            app:boxStrokeWidth="3dp"
+            app:boxStrokeWidthFocused="3dp"
+            app:startIconDrawable="@drawable/location"
+            app:startIconTint="@color/black"
+            android:hint="@string/travel_location_input"
+            android:textColorHint="@color/black"
+            app:hintTextColor="@color/black"
+            app:errorEnabled="true"
+            app:boxStrokeErrorColor="@color/muted_red"
+            app:errorTextAppearance="@style/ErrorTextStyle"
+            app:errorTextColor="@color/muted_red"
+            app:errorIconTint="@color/muted_red"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintWidth_percent="0.8"
+            app:layout_constraintTop_toBottomOf="@id/trip"
+            app:layout_constraintBottom_toTopOf="@id/submit">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/trip_input_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins_regular"
+                android:inputType="text"
+                android:maxLines="1"
+                android:scrollHorizontally="true"
+                android:textColor="@color/black" />
+        </com.google.android.material.textfield.TextInputLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

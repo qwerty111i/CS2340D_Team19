@@ -33,6 +33,7 @@ public class LogAccommodationDialog extends DialogFragment {
     private TextInputLayout checkOutDate;
     private TextInputLayout numberOfRooms;
     private TextInputLayout roomType;
+    private TextInputEditText currentTrip;
     private TextInputEditText locationText;
     private TextInputEditText checkInDateText;
     private TextInputEditText checkOutDateText;
@@ -140,6 +141,8 @@ public class LogAccommodationDialog extends DialogFragment {
             String checkInDateText = this.checkInDateText.getText().toString();
             String checkOutDateText = this.checkOutDateText.getText().toString();
             String numberOfRoomsString = this.numberOfRoomsText.getText().toString();
+            String tripText = this.currentTrip.getText().toString();
+
             int numberOfRooms = 0;
             try {
                 numberOfRooms = Integer.parseInt(numberOfRoomsString);
@@ -151,7 +154,7 @@ public class LogAccommodationDialog extends DialogFragment {
             String roomTypeText = this.roomTypeText.getText().toString();
 
             viewModel.setAccommodationDetails(locationText, checkInDateText,
-                    checkOutDateText, numberOfRooms, roomTypeText);
+                    checkOutDateText, numberOfRooms, roomTypeText, tripText);
 
             if (viewModel.areInputsValid().getValue()) {
                 viewModel.saveDetails();

@@ -125,7 +125,6 @@ public class CalculateVacationDialog extends DialogFragment {
         startDateText.setOnClickListener(v -> showDatePickerDialog(startDateText));
         endDateText.setOnClickListener(v -> showDatePickerDialog(endDateText));
 
-
         // Called when the Submit button is pressed
         submitButton.setOnClickListener(v -> {
             String durationText = this.durationText.getText().toString();
@@ -144,7 +143,7 @@ public class CalculateVacationDialog extends DialogFragment {
                 });
 
                 // Saves details in the database
-                viewModel.saveDetails2();
+                viewModel.saveVacationTimeDetails();
 
                 // Closes the dialog
                 dismiss();

@@ -1,15 +1,25 @@
 package com.example.sprint1.viewmodel;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.sprint1.model.TravelDetails;
+import com.example.sprint1.model.Trip;
 import com.example.sprint1.model.UserModel;
 import com.example.sprint1.model.VacationTime;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Calendar;
@@ -29,12 +39,16 @@ public class DestinationsViewModel extends ViewModel {
     private MutableLiveData<String> startVacationDate = new MutableLiveData<>();
     private MutableLiveData<String> endVacationDate = new MutableLiveData<>();
     private MutableLiveData<String> toastMessage = new MutableLiveData<>();
+    private MutableLiveData<String> trip = new MutableLiveData<>();
+    private MutableLiveData<ArrayList<String>> tripList = new MutableLiveData<>();
 
-    public void setTravelDetails(String location, String startDate, String endDate) {
+    public void setTravelDetails(String location, String startDate,
+                                 String endDate, String trip) {
         // Sets the values of the MutableLiveData
         this.location.setValue(location);
         this.startDate.setValue(startDate);
         this.endDate.setValue(endDate);
+        this.trip.setValue(trip);
 
         // Checks whether location and date are valid
         boolean validLocation = checkInput(location);
@@ -56,6 +70,41 @@ public class DestinationsViewModel extends ViewModel {
 
         // Sets the value of validInputs (true/false)
         validInputs.setValue(validLocation && validDates);
+    }
+
+    public void setDropdownItems() {
+        // Empty starting list
+        ArrayList<String> newTripList = new ArrayList<>();
+
+        // Gets the current user ID in Firebase
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String userId = "";
+        if (user != null) {
+            userId = user.getUid();
+        }
+
+        // Gets the trips from Firebase
+        DatabaseReference database = FirebaseDatabase
+                .getInstance()
+                .getReference("users")
+                .child(userId)
+                .child("Trips");
+        database.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                // Iterates through the Trip node and adds each child to the list
+                for (DataSnapshot tripSnapshot : snapshot.getChildren()) {
+                    Trip newTrip = tripSnapshot.getValue(Trip.class);
+                    newTripList.add(newTrip.getTripName());
+                }
+
+                // Sets the tripList equal to the new list of trips
+                tripList.setValue(newTripList);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) { }
+        });
     }
 
     public void calculateVacationTime(String duration, String startDate, String endDate) {
@@ -236,19 +285,29 @@ public class DestinationsViewModel extends ViewModel {
     }
 
     // Saves the details in the database
-    public void saveDetails() {
+    public void saveTravelDetails() {
         // Creates a new TravelDetails object, storing all the data
         TravelDetails travelDetails = new TravelDetails(
                 location.getValue(),
                 startDate.getValue(),
-                endDate.getValue());
+                endDate.getValue(),
+                trip.getValue());
 
         // Uses the Singleton implemented Database to store information
         UserModel.getInstance().storeTravelDetails(travelDetails);
     }
 
+    // Saves the details in the database
+    public void saveTrip(String tripText) {
+        // Creates a new Trip object, storing all the data
+        Trip newTrip = new Trip(tripText);
+
+        // Uses the Singleton implemented Database to store information
+        UserModel.getInstance().storeTrip(newTrip);
+    }
+
     // Saves the calculation details in the database
-    public void saveDetails2() {
+    public void saveVacationTimeDetails() {
         // Creates a new VacationTime object, storing all the data
         VacationTime vtime = new VacationTime(
                 startVacationDate.getValue(),
@@ -258,9 +317,6 @@ public class DestinationsViewModel extends ViewModel {
         // Uses the Singleton implemented user Database to store information
         UserModel.getInstance().storeVacation(vtime);
     }
-
-
-
 
     public LiveData<Boolean> areInputsValid() {
         return validInputs;
@@ -302,15 +358,11 @@ public class DestinationsViewModel extends ViewModel {
         return endDate;
     }
 
-    public LiveData<String> getStartVacationDate() {
-        return startVacationDate;
-    }
-
-    public LiveData<String> getEndVacationDate() {
-        return endVacationDate;
-    }
-
     public LiveData<String> getToastMessage() {
         return toastMessage;
+    }
+
+    public LiveData<ArrayList<String>> getTripList() {
+        return tripList;
     }
 }

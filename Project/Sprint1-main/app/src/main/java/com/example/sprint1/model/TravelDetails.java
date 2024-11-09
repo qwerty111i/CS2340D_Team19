@@ -4,13 +4,15 @@ public class TravelDetails {
     private String location;
     private String startDate;
     private String endDate;
+    private String tripName;
 
     public TravelDetails() { }
 
-    public TravelDetails(String location, String startDate, String endDate) {
+    public TravelDetails(String location, String startDate, String endDate, String tripName) {
         this.location = location;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.tripName = tripName;
     }
 
     public String getLocation() {
@@ -24,7 +26,12 @@ public class TravelDetails {
     public String getEndDate() {
         return endDate;
     }
+
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public String getTripName() {
+        return tripName;
     }
 }
