@@ -40,11 +40,9 @@ public class DestinationsActivity extends AppCompatActivity {
     private DestinationsViewModel viewModel;
     private Button logTravelBtn;
     private Button vacationBtn;
-    private Button createTrip;
-
-
 
     //Create local lists for data pulled from Firebase
+    private List<String> tripNames = new ArrayList<>();
     private List<String> startDates = new ArrayList<>();
     private List<String> endDates = new ArrayList<>();
     private List<String> locations = new ArrayList<>();
@@ -94,12 +92,9 @@ public class DestinationsActivity extends AppCompatActivity {
         // Calculate Vacation Time Feature
         calculateVacation(binding);
 
-        // ...
-        createNewTrip(binding);
-
         //connect adapter to Recycler View
         RecyclerView recyclerView = binding.logRecycler;
-        adapter = new TravelAdapter(locations, days);
+        adapter = new TravelAdapter(tripNames, locations, days);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -126,53 +121,82 @@ public class DestinationsActivity extends AppCompatActivity {
         });
     }
 
-    public void createNewTrip(ActivityDestinationsBinding binding) {
-        createTrip = binding.addTrip;
-
-        createTrip.setOnClickListener(v -> {
-            TripDialog dialog = new TripDialog();
-            dialog.show(getSupportFragmentManager(), "CalculateVacationDialog");
-        });
-    }
-
     private void getTravelDetails(String email) {
-        DatabaseReference travelDetailsRef = databaseRef.child("users");
+        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference().child("users");
 
-        travelDetailsRef.orderByChild("email").equalTo(email).addValueEventListener(
-                new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    //clear lists to avoid duplication
-                    locations.clear();
-                    startDates.clear();
-                    endDates.clear();
-                    days.clear();
+        // Finds the user using their email
+        usersRef.orderByChild("email").equalTo(email).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot userSnapshot) {
+                // Clears the lists to avoid duplication
+                tripNames.clear();
+                locations.clear();
+                startDates.clear();
+                endDates.clear();
+                days.clear();
 
-                    for (DataSnapshot travelSnapshot : snapshot.getChildren()) {
-                        addTravelToLists(travelSnapshot
-                                .child("Trips")
-                                .child("travelDetails"));
+                // Snapshot of the user with the associated email ID
+                DataSnapshot userData = userSnapshot.getChildren().iterator().next();
+                String userId = userData.getKey();
+
+                // Reference at user/userId/"Trips"
+                DatabaseReference tripsRef = usersRef.child(userId).child("Trips");
+
+                // Retrieves all trips made by the user
+                tripsRef.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot tripsSnapshot) {
+
+                        // Returns if no trips exist
+                        if (!tripsSnapshot.exists()) {
+                            Log.d("Firebase", "No trips found for: " + userId);
+                            return;
+                        }
+
+                        // Iterate through each existing trip
+                        for (DataSnapshot tripSnapshot : tripsSnapshot.getChildren()) {
+                            // Gets the trip ID
+                            String tripId = tripSnapshot.getKey();
+
+                            // Currently at users/userId/"Trips"/tripId/"Travel Details"
+                            DatabaseReference travelDetailsRef = tripsRef.child(tripId).child("Travel Details");
+
+                            // Adds the travel details to the lists
+                            travelDetailsRef.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot travelSnapshot) {
+                                    addTravelToLists(travelSnapshot);
+                                    getAllDuration(startDates, endDates);
+
+                                    // Log data
+                                    Log.d("Firebase", "Start Dates: " + startDates);
+                                    Log.d("Firebase", "End Dates: " + endDates);
+                                    Log.d("Firebase", "Locations: " + locations);
+
+                                    // Notify adapter
+                                    adapter.notifyDataSetChanged();
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+                                    Log.d("Firebase", "Error retrieving travel details for tripId: " + tripId);
+                                }
+                            });
+                        }
                     }
 
-                    //verify data retrieval
-                    Log.d("Firebase", "Start Dates: " + startDates);
-                    Log.d("Firebase", "End Dates: " + endDates);
-                    Log.d("Firebase", "Locations:" + locations);
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Log.d("Firebase", "Error retrieving trips for userId: " + userId);
+                    }
+                });
+            }
 
-                    //Add days of travel to each location to days list
-                    getAllDuration(startDates, endDates);
-
-                    //Notify adapter when data has changed
-                    adapter.notifyDataSetChanged();
-
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                    Log.d("Firebase", "Error retrieving data");
-
-                }
-            });
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.d("Firebase", "Error retrieving user data");
+            }
+        });
     }
 
     private void addTravelToLists(DataSnapshot travelDetailsSnapshot) {
@@ -182,6 +206,7 @@ public class DestinationsActivity extends AppCompatActivity {
             String startDate = snapshot.child("startDate").getValue(String.class);
             String endDate = snapshot.child("endDate").getValue(String.class);
             String location = snapshot.child("location").getValue(String.class);
+            String tripName = snapshot.child("tripName").getValue(String.class);
 
             if (startDate != null) {
                 startDates.add(startDate);
@@ -195,6 +220,9 @@ public class DestinationsActivity extends AppCompatActivity {
                 locations.add(location);
             }
 
+            if (tripName != null) {
+                tripNames.add(tripName);
+            }
         }
     }
 

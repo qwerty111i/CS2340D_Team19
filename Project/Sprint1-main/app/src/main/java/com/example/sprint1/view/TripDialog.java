@@ -17,6 +17,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.sprint1.databinding.ActivityLogTravelDialogBinding;
 import com.example.sprint1.databinding.ActivityTripDialogBinding;
 import com.example.sprint1.viewmodel.DestinationsViewModel;
+import com.example.sprint1.viewmodel.LogisticsViewModel;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -24,7 +25,7 @@ import java.util.Calendar;
 
 public class TripDialog extends DialogFragment {
 
-    private DestinationsViewModel viewModel;
+    private LogisticsViewModel viewModel;
     private ActivityTripDialogBinding binding;
     private Button submitButton;
     private TextInputLayout trip;
@@ -37,7 +38,7 @@ public class TripDialog extends DialogFragment {
         binding = ActivityTripDialogBinding.inflate(inflater, container, false);
 
         // Creating the ViewModel
-        viewModel = new ViewModelProvider(this).get(DestinationsViewModel.class);
+        viewModel = new ViewModelProvider(this).get(LogisticsViewModel.class);
 
         // Binding the ViewModel
         binding.setViewModel(viewModel);

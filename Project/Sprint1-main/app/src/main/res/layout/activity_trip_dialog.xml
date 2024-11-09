@@ -8,7 +8,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.example.sprint1.viewmodel.DestinationsViewModel" />
+            type="com.example.sprint1.viewmodel.LogisticsViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

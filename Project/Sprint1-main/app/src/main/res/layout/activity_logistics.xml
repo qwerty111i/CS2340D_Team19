@@ -33,11 +33,11 @@
             android:fontFamily="@font/poppins_bold" />
 
         <Button
-            android:id="@+id/allotted_vs_planned"
+            android:id="@+id/add_trip"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginTop="20dp"
-            android:text="@string/allotted_vs_planned_btn"
+            android:text="Create Trip"
             android:textSize="23sp"
             android:fontFamily="@font/poppins_regular"
             app:backgroundTint="@color/modern_blue"
@@ -46,7 +46,26 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHeight_percent="0.08"
-            app:layout_constraintTop_toBottomOf="@id/logistics_title" />
+            app:layout_constraintTop_toBottomOf="@id/logistics_title"
+            app:layout_constraintBottom_toTopOf="@id/allotted_vs_planned"
+            app:cornerRadius="10dp" />
+
+        <Button
+            android:id="@+id/allotted_vs_planned"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="20dp"
+            android:text="@string/allotted_vs_planned_btn"
+            android:textSize="23sp"
+            android:fontFamily="@font/poppins_regular"
+            app:backgroundTint="@color/modern_purple"
+            app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Medium"
+            app:layout_constraintWidth_percent="0.78"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHeight_percent="0.08"
+            app:layout_constraintTop_toBottomOf="@id/add_trip"
+            app:layout_constraintBottom_toTopOf="@id/contributors"/>
 
         <TextView
             android:id="@+id/contributors"

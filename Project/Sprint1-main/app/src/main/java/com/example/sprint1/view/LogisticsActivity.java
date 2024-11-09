@@ -14,6 +14,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.sprint1.BR;
 import com.example.sprint1.R;
+import com.example.sprint1.databinding.ActivityDestinationsBinding;
 import com.example.sprint1.databinding.ActivityLogisticsBinding;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
@@ -27,6 +28,7 @@ import java.util.List;
 public class LogisticsActivity extends AppCompatActivity {
     private TabLayout tabLayout;
     private LogisticsViewModel viewModel;
+    private Button createTrip;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +62,9 @@ public class LogisticsActivity extends AppCompatActivity {
             }
         });
 
+        // New Trip button
+        createNewTrip(binding);
+
         // Button click listeners
         btnAllotted.setOnClickListener(v -> {
             LogisticsChart logisticsChart = new LogisticsChart();
@@ -74,6 +79,15 @@ public class LogisticsActivity extends AppCompatActivity {
         // Navigation bar
         tabLayout = binding.tabNavigation;
         navigation();
+    }
+
+    public void createNewTrip(ActivityLogisticsBinding binding) {
+        createTrip = binding.addTrip;
+
+        createTrip.setOnClickListener(v -> {
+            TripDialog dialog = new TripDialog();
+            dialog.show(getSupportFragmentManager(), "Create New Trip");
+        });
     }
 
     private View createInvitedUserCard(String email) {
@@ -102,7 +116,6 @@ public class LogisticsActivity extends AppCompatActivity {
 
         return cardLayout;
     }
-
 
     public void onInviteButtonClick(View view) {
         // Observe the LiveData

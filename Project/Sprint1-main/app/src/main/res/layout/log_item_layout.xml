@@ -10,7 +10,7 @@
     <View
         android:id="@+id/entry_card"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
+        android:layout_height="75dp"
         android:layout_marginTop="15dp"
         android:layout_marginBottom="25dp"
         android:layout_marginLeft="5dp"
@@ -19,19 +19,33 @@
         tools:ignore="MissingConstraints" />
 
     <TextView
+        android:id="@+id/log_trip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Trip1"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="8dp"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="@color/snackbar_action_text"
+        android:fontFamily="@font/poppins_bold"
+        app:layout_constraintTop_toTopOf="@id/entry_card"
+        android:paddingStart="17dp"
+        tools:ignore="MissingConstraints,RtlSymmetry" />
+
+    <TextView
         android:id="@+id/log_destination_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Destination1"
-        android:layout_marginTop="10dp"
         android:layout_marginBottom="8dp"
         android:textSize="18sp"
         android:textStyle="bold"
         android:textColor="@color/white"
         android:fontFamily="@font/poppins_regular"
-        app:layout_constraintTop_toTopOf="@id/entry_card"
         android:paddingStart="17dp"
-        tools:ignore="MissingConstraints,RtlSymmetry" />
+        app:layout_constraintTop_toBottomOf="@id/log_trip"
+        tools:ignore="MissingConstraints" />
 
     <TextView
         android:id="@+id/log_days"
