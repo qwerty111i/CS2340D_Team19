@@ -44,7 +44,7 @@
             android:exported="false" />
         <activity
             android:name=".view.DiningActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".view.DestinationsActivity"
             android:exported="true" />

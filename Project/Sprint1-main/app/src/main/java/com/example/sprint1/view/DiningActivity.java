@@ -3,6 +3,7 @@ package com.example.sprint1.view;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 
 import androidx.activity.EdgeToEdge;
@@ -11,7 +12,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.sprint1.BR;
 import com.example.sprint1.R;
-import com.example.sprint1.databinding.ActivityDestinationsBinding;
+import com.example.sprint1.databinding.ActivityDiningBinding;
 import com.example.sprint1.viewmodel.DiningViewModel;
 import com.google.android.material.tabs.TabLayout;
 
@@ -19,14 +20,17 @@ public class DiningActivity extends AppCompatActivity {
     private TabLayout tabLayout;
     private DiningViewModel viewModel;
 
+    private Button addReservationBtn;
+    private Button notesBtn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
 
         // Inflating the layout
-        ActivityDestinationsBinding binding =
-                ActivityDestinationsBinding.inflate(getLayoutInflater());
+        ActivityDiningBinding binding =
+                ActivityDiningBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         // Creating the ViewModel
@@ -36,9 +40,21 @@ public class DiningActivity extends AppCompatActivity {
         binding.setVariable(BR.viewModel, viewModel);
         binding.setLifecycleOwner(this);
 
+        // Add Reservation Functionality
+        addNewReservation(binding);
+
         // Add navigation bar
         tabLayout = findViewById(R.id.tab_navigation);
         navigation();
+    }
+
+    public void addNewReservation(ActivityDiningBinding binding) {
+        addReservationBtn = binding.addReservation;
+
+        addReservationBtn.setOnClickListener(v -> {
+            AddReservationDialog dialog = new AddReservationDialog();
+            dialog.show(getSupportFragmentManager(), "AddReservationDialog");
+        });
     }
 
     private void navigation() {
