@@ -5,7 +5,9 @@ import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,36 +16,43 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import androidx.fragment.app.DialogFragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+
+import com.example.sprint1.databinding.ActivityAddReservationDialogBinding;
 import com.example.sprint1.databinding.ActivityLogTravelDialogBinding;
+import com.example.sprint1.model.Trip;
 import com.example.sprint1.viewmodel.DestinationsViewModel;
+import com.example.sprint1.viewmodel.DiningViewModel;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
 
-public class LogTravelDialog extends DialogFragment {
+public class AddReservationDialog extends DialogFragment {
 
-    private DestinationsViewModel viewModel;
-    private ActivityLogTravelDialogBinding binding;
+    private DiningViewModel viewModel;
+    private ActivityAddReservationDialogBinding binding;
     private Button submitButton;
     private TextInputLayout location;
-    private TextInputLayout startDate;
-    private TextInputLayout endDate;
+    private TextInputLayout website;
+    private TextInputLayout startTime;
     private Spinner tripDropDown;
     private TextInputEditText locationText;
-    private TextInputEditText startDateText;
-    private TextInputEditText endDateText;
+    private TextInputEditText websiteText;
+    private TextInputEditText startTimeText;
     private String selectedTrip;
 
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the binding for the dialog layout
-        binding = ActivityLogTravelDialogBinding.inflate(inflater, container, false);
+        binding = ActivityAddReservationDialogBinding.inflate(inflater, container, false);
 
         // Creating the ViewModel
-        viewModel = new ViewModelProvider(this).get(DestinationsViewModel.class);
+        viewModel = new ViewModelProvider(this).get(DiningViewModel.class);
 
         // Binding the ViewModel
         binding.setViewModel(viewModel);
@@ -53,7 +62,6 @@ public class LogTravelDialog extends DialogFragment {
         startDialog();
 
         // Observes changes in the Live Data
-        observers();
 
         // Live check to see if inputs are edited after errors
         textWatchers();
@@ -115,18 +123,17 @@ public class LogTravelDialog extends DialogFragment {
         location = binding.locationView;
         locationText = binding.locationText;
 
-        startDate = binding.startDateView;
-        startDateText = binding.startDateText;
+        website = binding.websiteView;
+        websiteText = binding.websiteText;
 
-        endDate = binding.endDateView;
-        endDateText = binding.endDateText;
+        startTime = binding.startTimeView;
+        startTimeText = binding.startTimeText;
 
         tripDropDown = binding.dropdown;
         submitButton = binding.submit;
 
         // Calls the date picker dialog when clicked
-        startDateText.setOnClickListener(v -> showDatePickerDialog(startDateText));
-        endDateText.setOnClickListener(v -> showDatePickerDialog(endDateText));
+        startTimeText.setOnClickListener(v -> showDatePickerDialog(startTimeText));
 
         ArrayList<String> updatedTripList = new ArrayList<>();
 
@@ -152,20 +159,13 @@ public class LogTravelDialog extends DialogFragment {
         // Called when the Submit button is pressed
         submitButton.setOnClickListener(v -> {
             String locationText = this.locationText.getText().toString();
-            String startDateText = this.startDateText.getText().toString();
-            String endDateText = this.endDateText.getText().toString();
+            String websiteText = this.websiteText.getText().toString();
+            String startTimeText = this.startTimeText.getText().toString();
             String currentTripText = selectedTrip;
 
             // Updates the MutableLiveData in the View Model
-            viewModel.setTravelDetails(locationText, startDateText, endDateText, currentTripText);
-
-            if (viewModel.areInputsValid().getValue()) {
-                // Saves details in the database
-                viewModel.saveTravelDetails();
-
-                // Closes the dialog
-                dismiss();
-            }
+            viewModel.setTravelDetails(locationText, websiteText, startTimeText, currentTripText);
+            dismiss();
         });
     }
 
@@ -178,30 +178,6 @@ public class LogTravelDialog extends DialogFragment {
 
             @Override
             public void onNothingSelected(AdapterView<?> parentView) { }
-        });
-    }
-
-    private void observers() {
-        // Obtains location error using getLocationError in viewModel
-        // Updates new variable errorMessage to match the location error
-        viewModel.getLocationError().observe(this, errorMessage -> {
-            if (errorMessage != null) {
-                location.setError(errorMessage);
-            } else {
-                location.setError(null);
-            }
-        });
-
-        // Obtains date error using getDateError in viewModel
-        // Updates new variable errorMessage to match the date error
-        viewModel.getDateError().observe(this, errorMessage -> {
-            if (errorMessage != null) {
-                startDate.setError(errorMessage);
-                endDate.setError(errorMessage);
-            } else {
-                startDate.setError(null);
-                endDate.setError(null);
-            }
         });
     }
 

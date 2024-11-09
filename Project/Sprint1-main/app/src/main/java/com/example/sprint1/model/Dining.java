@@ -8,19 +8,14 @@ public class Dining {
     private String website;
     private List<String> reviews;
     private String reservationTime;
-    private String trip;
+    private String tripName;
 
-    public Dining(String location, String website, ArrayList<String> reviews,
-                  String reservationTime, String trip) {
+    public Dining(String location, String website,
+                  String reservationTime, String tripName) {
         this.location = location;
         this.website = website;
-        if (reviews == null) {
-            this.reviews = new ArrayList<>();
-        } else {
-            this.reviews = new ArrayList<>(reviews);
-        }
         this.reservationTime = reservationTime;
-        this.trip = trip;
+        this.tripName = tripName;
     }
 
     public String getLocation() {
@@ -67,11 +62,11 @@ public class Dining {
         this.reservationTime = reservationTime;
     }
 
-    public String getTrip() {
-        return trip;
+    public String getTripName() {
+        return tripName;
     }
 
-    public void setTrip(String trip) {
-        this.trip = trip;
+    public void setTripName(String tripName) {
+        this.tripName = tripName;
     }
 }
