@@ -30,7 +30,8 @@
             android:fontFamily="@font/poppins_bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/dining_location"/>
 
         <TextView
             android:id="@+id/dining_location"
@@ -72,7 +73,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintWidth_percent="0.8"
             app:layout_constraintTop_toBottomOf="@id/dining_location"
-            app:layout_constraintBottom_toTopOf="@id/start_time">
+            app:layout_constraintBottom_toTopOf="@id/website_view">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/location_text"
@@ -139,31 +140,30 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/start_time_view"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:boxBackgroundMode="filled"
             app:boxBackgroundColor="@color/light_modern_purple"
-            app:startIconDrawable="@drawable/calendar"
-            app:startIconTint="@color/black"
-            app:errorEnabled="true"
+            app:boxBackgroundMode="filled"
             app:boxStrokeErrorColor="@color/muted_red"
+            app:errorEnabled="true"
+            app:errorIconDrawable="@null"
             app:errorTextAppearance="@style/ErrorTextStyle"
             app:errorTextColor="@color/muted_red"
-            app:errorIconDrawable="@null"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/trip"
             app:layout_constraintEnd_toStartOf="parent"
-            app:layout_constraintWidth_percent="0.44"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/start_time"
-            app:layout_constraintBottom_toTopOf="@id/trip">
+            app:startIconDrawable="@drawable/calendar"
+            app:startIconTint="@color/black">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/start_time_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="false"
                 android:fontFamily="@font/poppins_regular"
                 android:hint="Select Start Time"
-                android:focusable="false"
-                android:clickable="true"
                 android:textColor="@color/black" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -180,7 +180,7 @@
             android:fontFamily="@font/poppins_regular"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/location_view"
+            app:layout_constraintTop_toBottomOf="@id/start_time_view"
             app:layout_constraintBottom_toTopOf="@id/dropdown" />
 
         <Spinner

@@ -117,7 +117,6 @@ public class UserModel {
     public void storeAccommodation(Accommodation accommodation) {
         if (userId != null) {
             database.child(userId)
-                    .child(accommodation.getTrip())
                     .child("accommodations")
                     .push().setValue(accommodation);
         } else {
@@ -145,7 +144,7 @@ public class UserModel {
                                 database.child(userId)
                                         .child("Trips")
                                         .child(id)
-                                        .child("Travel Details")
+                                        .child("Dining Details")
                                         .push()
                                         .setValue(reservationDetails);
                             }

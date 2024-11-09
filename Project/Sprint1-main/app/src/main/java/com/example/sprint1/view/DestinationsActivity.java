@@ -149,7 +149,9 @@ public class DestinationsActivity extends AppCompatActivity {
                     days.clear();
 
                     for (DataSnapshot travelSnapshot : snapshot.getChildren()) {
-                        addTravelToLists(travelSnapshot.child("travelDetails"));
+                        addTravelToLists(travelSnapshot
+                                .child("Trips")
+                                .child("travelDetails"));
                     }
 
                     //verify data retrieval
