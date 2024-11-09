@@ -7,18 +7,34 @@ import android.widget.ImageView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
+import com.example.sprint1.BR;
 import com.example.sprint1.R;
+import com.example.sprint1.databinding.ActivityDestinationsBinding;
+import com.example.sprint1.viewmodel.DiningViewModel;
 import com.google.android.material.tabs.TabLayout;
 
 public class DiningActivity extends AppCompatActivity {
     private TabLayout tabLayout;
+    private DiningViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_dining);
+
+        // Inflating the layout
+        ActivityDestinationsBinding binding =
+                ActivityDestinationsBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
+        // Creating the ViewModel
+        viewModel = new ViewModelProvider(this).get(DiningViewModel.class);
+
+        // Binding the ViewModel
+        binding.setVariable(BR.viewModel, viewModel);
+        binding.setLifecycleOwner(this);
 
         // Add navigation bar
         tabLayout = findViewById(R.id.tab_navigation);

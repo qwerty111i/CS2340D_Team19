@@ -40,6 +40,7 @@ public class DestinationsActivity extends AppCompatActivity {
     private DestinationsViewModel viewModel;
     private Button logTravelBtn;
     private Button vacationBtn;
+    private Button createTrip;
 
 
 
@@ -93,6 +94,8 @@ public class DestinationsActivity extends AppCompatActivity {
         // Calculate Vacation Time Feature
         calculateVacation(binding);
 
+        // ...
+        createNewTrip(binding);
 
         //connect adapter to Recycler View
         RecyclerView recyclerView = binding.logRecycler;
@@ -123,6 +126,14 @@ public class DestinationsActivity extends AppCompatActivity {
         });
     }
 
+    public void createNewTrip(ActivityDestinationsBinding binding) {
+        createTrip = binding.addTrip;
+
+        createTrip.setOnClickListener(v -> {
+            TripDialog dialog = new TripDialog();
+            dialog.show(getSupportFragmentManager(), "CalculateVacationDialog");
+        });
+    }
 
     private void getTravelDetails(String email) {
         DatabaseReference travelDetailsRef = databaseRef.child("users");
@@ -140,7 +151,6 @@ public class DestinationsActivity extends AppCompatActivity {
                     for (DataSnapshot travelSnapshot : snapshot.getChildren()) {
                         addTravelToLists(travelSnapshot.child("travelDetails"));
                     }
-
 
                     //verify data retrieval
                     Log.d("Firebase", "Start Dates: " + startDates);

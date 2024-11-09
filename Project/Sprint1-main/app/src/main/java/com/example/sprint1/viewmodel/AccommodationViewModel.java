@@ -7,7 +7,6 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.sprint1.model.Accommodation;
-import com.example.sprint1.model.AccommodationModel;
 import com.example.sprint1.model.UserModel;
 
 import java.text.ParseException;
@@ -25,15 +24,16 @@ public class AccommodationViewModel extends ViewModel {
     private MutableLiveData<Boolean> validInputs = new MutableLiveData<>();
     private MutableLiveData<String> dateError = new MutableLiveData<>();
     private MutableLiveData<String> inputError = new MutableLiveData<>();
-
+    private MutableLiveData<String> trip = new MutableLiveData<>();
 
     public void setAccommodationDetails(String location, String checkIn, String checkOut,
-                                        int numRooms, String roomType) {
+                                        int numRooms, String roomType, String trip) {
         this.location.setValue(location);
         this.checkInDate.setValue(checkIn);
         this.checkOutDate.setValue(checkOut);
         this.numberOfRooms.setValue(numRooms);
         this.roomType.setValue(roomType);
+        this.trip.setValue(trip);
 
         // Checks whether location and date are valid
         boolean validLocation = checkInput(location);
@@ -69,8 +69,8 @@ public class AccommodationViewModel extends ViewModel {
                 checkOutDate.getValue(),
                 location.getValue(),
                 numberOfRooms.getValue(),
-                roomType.getValue());
-
+                roomType.getValue(),
+                trip.getValue());
         UserModel.getInstance().storeAccommodation(accommodation);
     }
 
@@ -126,5 +126,4 @@ public class AccommodationViewModel extends ViewModel {
     public LiveData<String> getInputError() {
         return inputError;
     }
-
 }

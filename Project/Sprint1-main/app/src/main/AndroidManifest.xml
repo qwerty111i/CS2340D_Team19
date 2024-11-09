@@ -47,7 +47,7 @@
             android:exported="false" />
         <activity
             android:name=".view.DestinationsActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".view.LogisticsActivity"
             android:exported="true"
