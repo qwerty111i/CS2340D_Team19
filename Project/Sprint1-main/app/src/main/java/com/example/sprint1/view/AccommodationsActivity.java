@@ -46,6 +46,10 @@ public class AccommodationsActivity extends AppCompatActivity {
         // Add navigation bar
         tabLayout = findViewById(R.id.tab_navigation);
         navigation();
+
+        //Fetch Accommodation entries from firebase
+        viewModel.fetchAccommodations();
+
     }
 
 
