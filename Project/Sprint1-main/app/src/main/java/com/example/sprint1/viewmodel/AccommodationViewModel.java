@@ -34,19 +34,17 @@ public class AccommodationViewModel extends ViewModel {
     private MutableLiveData<Boolean> validInputs = new MutableLiveData<>();
     private MutableLiveData<String> dateError = new MutableLiveData<>();
     private MutableLiveData<String> inputError = new MutableLiveData<>();
-    private MutableLiveData<String> trip = new MutableLiveData<>();
 
     List<Accommodation> accommodationsList = new ArrayList<>();
 
 
     public void setAccommodationDetails(String location, String checkIn, String checkOut,
-                                        int numRooms, String roomType, String trip) {
+                                        int numRooms, String roomType) {
         this.location.setValue(location);
         this.checkInDate.setValue(checkIn);
         this.checkOutDate.setValue(checkOut);
         this.numberOfRooms.setValue(numRooms);
         this.roomType.setValue(roomType);
-        this.trip.setValue(trip);
 
         // Checks whether location and date are valid
         boolean validLocation = checkInput(location);
