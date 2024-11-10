@@ -43,7 +43,7 @@ public class DestinationsActivity extends AppCompatActivity {
     private Button vacationBtn;
     private LogisticsViewModel logisticsViewModel;
 
-    //Create local lists for data pulled from Firebase
+    // Create local lists for data pulled from Firebase
     private List<String> tripNames = new ArrayList<>();
     private List<String> startDates = new ArrayList<>();
     private List<String> endDates = new ArrayList<>();
@@ -52,13 +52,12 @@ public class DestinationsActivity extends AppCompatActivity {
 
     private String currentEmail;
 
-    //Initialize Firebase
+    // Initialize Firebase
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
     private DatabaseReference databaseRef = database.getReference();
 
     private TravelAdapter adapter;
     private Button createTrip;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,26 +84,25 @@ public class DestinationsActivity extends AppCompatActivity {
             Log.d("UserEmail", "User email: " + currentEmail);
         }
 
-        // Add navigation bar
-        tabLayout = findViewById(R.id.tab_navigation);
-        navigation();
-
         // Log Travel Feature
         logTravel(binding);
 
         // Calculate Vacation Time Feature
         calculateVacation(binding);
 
-        //connect adapter to Recycler View
+        // Connect adapter to Recycler View
         RecyclerView recyclerView = binding.logRecycler;
         adapter = new TravelAdapter(tripNames, locations, days);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        //Pulling data for log entries from Firebase
+        // Pulling data for log entries from Firebase
         getTravelDetails(currentEmail);
         chooseTrip(binding);
 
+        // Add navigation bar
+        tabLayout = findViewById(R.id.tab_navigation);
+        navigation();
     }
 
     public void chooseTrip(ActivityDestinationsBinding binding) {
@@ -193,7 +191,6 @@ public class DestinationsActivity extends AppCompatActivity {
 
                                     // Notify adapter
                                     adapter.notifyDataSetChanged();
-                                    Log.d("CHECKIMP", locations.toString());
                                 }
 
                                 @Override
@@ -219,7 +216,7 @@ public class DestinationsActivity extends AppCompatActivity {
     }
 
     private void addTravelToLists(DataSnapshot travelDetailsSnapshot) {
-        //Loop through each travel detail
+        // Loop through each travel detail
         for (DataSnapshot snapshot : travelDetailsSnapshot.getChildren()) {
 
             String startDate = snapshot.child("startDate").getValue(String.class);
