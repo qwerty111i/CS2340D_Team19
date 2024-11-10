@@ -11,20 +11,19 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.sprint1.R;
-import com.example.sprint1.model.Accommodation;
+import com.example.sprint1.model.AccommodationDetails;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
 public class AccommodationAdapter extends RecyclerView.Adapter<AccommodationAdapter.AccommodationViewHolder> {
     Context context;
-    List<Accommodation> accommodations;
+    List<AccommodationDetails> accommodations;
 
-    public AccommodationAdapter(Context context, List<Accommodation> accommodations){
+    public AccommodationAdapter(Context context, List<AccommodationDetails> accommodations){
         this.context = context;
         this.accommodations = accommodations;
     }
@@ -39,7 +38,7 @@ public class AccommodationAdapter extends RecyclerView.Adapter<AccommodationAdap
 
     @Override
     public void onBindViewHolder(@NonNull AccommodationAdapter.AccommodationViewHolder holder, int position) {
-        Accommodation accommodation = accommodations.get(position);
+        AccommodationDetails accommodation = accommodations.get(position);
 
         //Parse the check-in date
         String checkInDateString = accommodation.getCheckIn();

@@ -28,8 +28,8 @@
         android:layout_marginBottom="8dp"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:textColor="@color/snackbar_action_text"
-        android:fontFamily="@font/poppins_bold"
+        android:textColor="@color/light_modern_purple"
+        android:fontFamily="@font/poppins_medium_italic"
         app:layout_constraintTop_toTopOf="@id/entry_card"
         android:paddingStart="17dp"
         app:layout_constraintStart_toStartOf="parent" />
@@ -58,7 +58,7 @@
         android:layout_marginEnd="15dp"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:textColor="@color/golden"
+        android:textColor="@color/light_modern_purple"
         app:layout_constraintStart_toEndOf ="@id/log_destination_text"
         app:layout_constraintTop_toTopOf="@id/log_destination_text" />
 
@@ -70,7 +70,7 @@
         android:layout_marginBottom="8dp"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:textColor="@color/golden"
+        android:textColor="@color/light_modern_purple"
         android:fontFamily="@font/poppins_regular"
         android:paddingStart="17dp"
         app:layout_constraintTop_toBottomOf="@id/log_destination_text"
@@ -84,7 +84,7 @@
         android:layout_marginBottom="8dp"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:textColor="@color/golden"
+        android:textColor="@color/light_modern_purple"
         android:fontFamily="@font/poppins_regular"
         android:paddingStart="7dp"
         app:layout_constraintTop_toBottomOf="@id/log_destination_text"

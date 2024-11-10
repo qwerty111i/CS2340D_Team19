@@ -1,41 +1,29 @@
 package com.example.sprint1.model;
 
-public class Accommodation {
+public class AccommodationDetails {
     private String checkIn;
     private String checkOut;
     private String location;
     private int numRooms;
     private String roomType;
-    private String trip;
+    private String tripName;
 
-
-
-
-    public Accommodation(String checkIn, String checkOut, String location, int numRooms,
-                         String roomType) {
+    public AccommodationDetails(String checkIn, String checkOut, String location, int numRooms,
+                                String roomType, String tripName) {
         this.checkIn = checkIn;
         this.checkOut = checkOut;
         this.location = location;
         this.numRooms = numRooms;
         this.roomType = roomType;
-
-
+        this.tripName = tripName;
     }
 
     public String getCheckIn() {
         return checkIn;
     }
 
-    public void setCheckIn(String checkIn) {
-        this.checkIn = checkIn;
-    }
-
     public String getCheckOut() {
         return checkOut;
-    }
-
-    public void setCheckOut(String checkOut) {
-        this.checkOut = checkOut;
     }
 
     public String getLocation() {
@@ -50,10 +38,6 @@ public class Accommodation {
         return numRooms;
     }
 
-    public void setNumRooms(int numRooms) {
-        this.numRooms = numRooms;
-    }
-
     public String getRoomType() {
         return roomType;
     }
@@ -62,12 +46,8 @@ public class Accommodation {
         this.roomType = roomType;
     }
 
-    public String getTrip() {
-        return trip;
-    }
-
-    public void setTrip(String trip) {
-        this.trip = trip;
+    public String getTripName() {
+        return tripName;
     }
 
     public String getHotel() {

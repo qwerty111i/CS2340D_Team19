@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.example.sprint1.R;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -42,9 +43,6 @@ public class DiningAdapter extends RecyclerView.Adapter<DiningAdapter.ViewHolder
             view = LayoutInflater.from(parent.getContext()).
                     inflate(R.layout.dining_log_layout, parent, false);
         } else {
-            for (int i = 0; i < tripNames.size(); i++) {
-                tripNames.set(i, "(Expired) " + tripNames.get(i));
-            }
             view = LayoutInflater.from(parent.getContext()).
                     inflate(R.layout.expired_dining_log_layout, parent, false);
         }
@@ -73,6 +71,9 @@ public class DiningAdapter extends RecyclerView.Adapter<DiningAdapter.ViewHolder
     public int getItemViewType(int position) {
         String reservationDate = dates.get(position);
         if (isExpired(reservationDate)) {
+            if (!tripNames.get(position).contains("(Expired)")) {
+                tripNames.set(position, "(Expired) " + tripNames.get(position));
+            }
             return 0;
         }
         return 1;
@@ -81,14 +82,30 @@ public class DiningAdapter extends RecyclerView.Adapter<DiningAdapter.ViewHolder
     // Checks if the date is expired
     public boolean isExpired(String reservationDate) {
         // Converts the reservationDate into an actual Date
-        SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-YY");
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yy");
         try {
             Date checkDate = sdf.parse(reservationDate);
             Date currentDate = new Date();
+
+            // Resetting the time
+            checkDate = resetTime(checkDate);
+            currentDate = resetTime(currentDate);
+
             return checkDate.before(currentDate);
         } catch (Exception e) {
             return false;
         }
+    }
+
+    // Resets the time in a date
+    private Date resetTime(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        return calendar.getTime();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
