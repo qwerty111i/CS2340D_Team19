@@ -26,7 +26,7 @@
         android:layout_marginBottom="8dp"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:textColor="@color/snackbar_action_text"
+        android:textColor="@color/material_dynamic_primary10"
         android:fontFamily="@font/poppins_bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/entry_card"

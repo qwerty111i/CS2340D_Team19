@@ -37,6 +37,7 @@ public class DiningActivity extends AppCompatActivity {
 
     private Button addReservationBtn;
     private Button notesBtn;
+    private TabLayout tabs;
 
     // Create local lists for data pulled from Firebase
     private List<String> tripNames = new ArrayList<>();
