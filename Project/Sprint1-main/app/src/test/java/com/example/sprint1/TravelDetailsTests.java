@@ -7,7 +7,6 @@ import com.example.sprint1.model.TravelDetails;
 import org.junit.Before;
 import org.junit.Test;
 
-//Tests Done by Leila Kazemzadeh
 
 public class TravelDetailsTests {
 

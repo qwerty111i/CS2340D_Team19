@@ -8,6 +8,9 @@ public class Accommodation {
     private String roomType;
     private String trip;
 
+
+
+
     public Accommodation(String checkIn, String checkOut, String location, int numRooms,
                          String roomType) {
         this.checkIn = checkIn;
@@ -15,6 +18,7 @@ public class Accommodation {
         this.location = location;
         this.numRooms = numRooms;
         this.roomType = roomType;
+
 
     }
 
@@ -65,4 +69,13 @@ public class Accommodation {
     public void setTrip(String trip) {
         this.trip = trip;
     }
+
+    public String getHotel() {
+        return location + " Hotel";
+    }
+
+    public String getWebsite() {
+        return "www." + location + ".com";
+    }
+
 }

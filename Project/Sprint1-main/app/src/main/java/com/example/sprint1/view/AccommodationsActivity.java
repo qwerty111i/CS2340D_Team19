@@ -2,23 +2,56 @@ package com.example.sprint1.view;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import androidx.appcompat.widget.Toolbar;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.sprint1.BR;
 import com.example.sprint1.R;
 import com.example.sprint1.databinding.ActivityAccommodationsBinding;
+import com.example.sprint1.model.Accommodation;
+import com.example.sprint1.viewmodel.AccommodationAdapter;
 import com.example.sprint1.viewmodel.AccommodationViewModel;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+
 
 public class AccommodationsActivity extends AppCompatActivity {
     private TabLayout tabLayout;
     private AccommodationViewModel viewModel;
+    private AccommodationAdapter adapter;
+    private List<Accommodation> accommodations = new ArrayList<>();
+    private String currentEmail;
+
+    //Initialize Firebase
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference databaseRef = database.getReference();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,12 +63,25 @@ public class AccommodationsActivity extends AppCompatActivity {
                 ActivityAccommodationsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Sort");
+
         // Creating the ViewModel
         viewModel = new ViewModelProvider(this).get(AccommodationViewModel.class);
 
         // Binding the ViewModel
         binding.setVariable(BR.viewModel, viewModel);
         binding.setLifecycleOwner(this);
+
+
+
+        //Get currently logged in user
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser != null) {
+            currentEmail = currentUser.getEmail();
+            Log.d("UserEmail", "User email: " + currentEmail);
+        }
 
         Button buttonLog = binding.buttonLog;
         binding.buttonLog.setOnClickListener(v -> {
@@ -47,11 +93,72 @@ public class AccommodationsActivity extends AppCompatActivity {
         tabLayout = findViewById(R.id.tab_navigation);
         navigation();
 
+        //Connect recycler view
+        RecyclerView recyclerView = findViewById(R.id.accommodationRecycler);
+
         //Fetch Accommodation entries from firebase
-        viewModel.fetchAccommodations();
+        fetchAccommodations();
+
+        //Create adapter (AFTER pulling data from firebase)
+        adapter = new AccommodationAdapter(this, accommodations);
+
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
 
     }
 
+    public void fetchAccommodations() {
+        DatabaseReference accommodationDatabaseRef = databaseRef.child("users");
+
+        accommodationDatabaseRef.orderByChild("email").equalTo(currentEmail).addValueEventListener(
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        //clear list of accommodations to avoid duplication
+                        accommodations.clear();
+
+                        for (DataSnapshot accommodationsSnapshot : snapshot.getChildren()) {
+                            addAccommodationsToList(accommodationsSnapshot.child("accommodations"));
+                        }
+
+                        //verify data retrieval
+                        for(int i = 0; i < accommodations.size(); i++){
+                            Log.d("Firebase", "Check in: " + accommodations.get(i).getCheckIn());
+                            Log.d("Firebase", "Check out: " + accommodations.get(i).getCheckOut());
+                            Log.d("Firebase", "RoomType: " + accommodations.get(i).getRoomType());
+                            Log.d("Firebase", "Location: " + accommodations.get(i).getLocation());
+                            Log.d("Firebase", "Num Rooms: " + accommodations.get(i).getNumRooms());
+                            //check in, checkout, location, num of rooms, room type
+                        }
+                        // Notify adapter
+                        adapter.notifyDataSetChanged();
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Log.d("Firebase", "Error retrieving data");
+
+                    }
+                });
+    }
+
+    public void addAccommodationsToList(DataSnapshot accommodationsSnapshot) {
+        //Loop through each accommodation
+        for (DataSnapshot snapshot : accommodationsSnapshot.getChildren()) {
+
+            String checkIn = snapshot.child("checkIn").getValue(String.class);
+            String checkOut = snapshot.child("checkOut").getValue(String.class);
+            int numRooms = snapshot.child("numRooms").getValue(int.class);
+            String roomType = snapshot.child("roomType").getValue(String.class);
+            String location = snapshot.child("location").getValue(String.class);
+
+            Accommodation accommodation = new Accommodation(checkIn, checkOut, location, numRooms, roomType);
+            accommodations.add(accommodation);
+        }
+
+    }
 
 
     private void navigation() {
@@ -108,4 +215,65 @@ public class AccommodationsActivity extends AppCompatActivity {
             public void onTabReselected(TabLayout.Tab tab) { }
         });
     };
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.menu_sort_accommodations, menu); //inflate menu xml
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        if(item.getItemId() == R.id.accom_sort_CheckIn){
+            sortAccommodationsByCheckIn();
+            return true;
+        } else if(item.getItemId() == R.id.accom_sort_CheckOut) {
+            sortAccommodationsByCheckOut();
+            return true;
+        }
+        else{
+            return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void sortAccommodationsByCheckIn(){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yy", Locale.getDefault());
+
+        Collections.sort(accommodations, (d1, d2) ->{
+            try{
+                Date date1 = dateFormat.parse(d1.getCheckIn());
+                Date date2 = dateFormat.parse(d2.getCheckIn());
+
+                if(date1 != null && date2 != null){
+                    return date1.compareTo(date2);
+                }
+            } catch (ParseException e) {
+                throw new RuntimeException(e);
+            }
+            return 0;
+        });
+        adapter.notifyDataSetChanged();
+    }
+
+    private void sortAccommodationsByCheckOut(){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yy", Locale.getDefault());
+
+        Collections.sort(accommodations, (d1, d2) ->{
+            try{
+                Date date1 = dateFormat.parse(d1.getCheckOut());
+                Date date2 = dateFormat.parse(d2.getCheckOut());
+
+                if(date1 != null && date2 != null){
+                    return date1.compareTo(date2);
+                }
+            } catch (ParseException e) {
+                throw new RuntimeException(e);
+            }
+            return 0;
+        });
+        adapter.notifyDataSetChanged();
+    }
+
+
+
 }
