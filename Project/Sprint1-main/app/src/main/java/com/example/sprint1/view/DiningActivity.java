@@ -1,5 +1,6 @@
 package com.example.sprint1.view;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -80,6 +81,8 @@ public class DiningActivity extends AppCompatActivity {
             Log.d("UserEmail", "User email: " + currentEmail);
         }
 
+        addSortingTabs(binding);
+
         // Add Reservation Feature
         addNewReservation(binding);
 
@@ -93,8 +96,34 @@ public class DiningActivity extends AppCompatActivity {
         getDiningDetails(currentEmail);
 
         // Add navigation bar
-        tabLayout = findViewById(R.id.tab_navigation);
+        tabLayout = binding.tabNavigation;
         navigation();
+    }
+
+    public void addSortingTabs(ActivityDiningBinding binding) {
+        tabs = binding.sortOptions;
+
+        tabs.addTab(tabs.newTab().setText("Date"));
+        tabs.addTab(tabs.newTab().setText("Name"));
+
+        tabs.selectTab(tabs.getTabAt(0));
+
+        tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                tab.view.setBackgroundColor(getResources().getColor(R.color.golden));
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+                tab.view.setBackgroundColor(getResources().getColor(R.color.snackbar_background));
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+                // Handle tab reselected
+            }
+        });
     }
 
     public void addNewReservation(ActivityDiningBinding binding) {
