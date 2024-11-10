@@ -1,6 +1,7 @@
 package com.example.sprint1.viewmodel;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,8 +13,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.sprint1.R;
 import com.example.sprint1.model.Accommodation;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class AccommodationAdapter extends RecyclerView.Adapter<AccommodationAdapter.AccommodationViewHolder> {
     Context context;
@@ -34,7 +39,42 @@ public class AccommodationAdapter extends RecyclerView.Adapter<AccommodationAdap
 
     @Override
     public void onBindViewHolder(@NonNull AccommodationAdapter.AccommodationViewHolder holder, int position) {
-    //assign values to the views created in the row layout xml file
+        Accommodation accommodation = accommodations.get(position);
+
+        //Parse the check-in date
+        String checkInDateString = accommodation.getCheckIn();
+        String checkOutDateString = accommodation.getCheckOut();
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yy", Locale.getDefault());
+        try{
+            Date checkInDate = dateFormat.parse(checkInDateString);
+            Date checkOutDate = dateFormat.parse(checkOutDateString);
+            Date currentDate = new Date();
+
+            //Compare the dates
+            if(checkInDate != null && checkInDate.before(currentDate)){
+                //If check-in date is in the past, turn text red
+                holder.tvCheckIn.setTextColor(Color.RED);
+            } else{
+                //set default color
+                holder.tvCheckIn.setTextColor(Color.WHITE); //Replace w default white
+            }
+
+            if(checkOutDate != null && checkOutDate.before(currentDate)){
+                //If check-in date is in the past, turn text red
+                holder.tvCheckOut.setTextColor(Color.RED);
+            } else{
+                //set default color
+                holder.tvCheckOut.setTextColor(Color.WHITE); //Replace w default white
+            }
+        }
+
+        catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+
+
+        //assign values to the views created in the row layout xml file
         //based on the position of the recycler view
         holder.tvCheckIn.setText("Check In: " + accommodations.get(position).getCheckIn());
         holder.tvCheckOut.setText("Check Out: " + accommodations.get(position).getCheckOut());

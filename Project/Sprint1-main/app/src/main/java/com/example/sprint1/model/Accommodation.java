@@ -7,6 +7,9 @@ public class Accommodation {
     private int numRooms;
     private String roomType;
     private String trip;
+    private String ColorResID;
+
+
 
     public Accommodation(String checkIn, String checkOut, String location, int numRooms,
                          String roomType) {
@@ -15,6 +18,7 @@ public class Accommodation {
         this.location = location;
         this.numRooms = numRooms;
         this.roomType = roomType;
+        ColorResID = "w";
 
     }
 
@@ -73,4 +77,5 @@ public class Accommodation {
     public String getWebsite() {
         return "www." + location + ".com";
     }
+
 }
