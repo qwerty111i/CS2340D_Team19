@@ -74,7 +74,8 @@ public class AccommodationViewModel extends ViewModel {
         }
 
         // Sets the value of validInputs (true/false)
-        validInputs.setValue(validLocation && validRoomType && validNumberOfRooms && validDates && validTrip);
+        validInputs.setValue(validLocation && validRoomType
+                && validNumberOfRooms && validDates && validTrip);
     }
 
     public void saveAccommodationDetails() {
@@ -172,8 +173,12 @@ public class AccommodationViewModel extends ViewModel {
     public LiveData<String> getRoomType() {
         return roomType;
     }
-    public LiveData<String> getTripError() { return tripError; }
-    public LiveData<ArrayList<String>> getTripList() { return tripList; }
+    public LiveData<String> getTripError() {
+        return tripError;
+    }
+    public LiveData<ArrayList<String>> getTripList() {
+        return tripList;
+    }
     public LiveData<String> getDateError() {
         return dateError;
     }

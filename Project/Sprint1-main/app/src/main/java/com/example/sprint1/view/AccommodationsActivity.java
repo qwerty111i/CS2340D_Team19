@@ -50,8 +50,8 @@ public class AccommodationsActivity extends AppCompatActivity {
     private String currentEmail;
 
     //Initialize Firebase
-    FirebaseDatabase database = FirebaseDatabase.getInstance();
-    DatabaseReference databaseRef = database.getReference();
+    private FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private DatabaseReference databaseRef = database.getReference();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,69 +110,76 @@ public class AccommodationsActivity extends AppCompatActivity {
         DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference().child("users");
 
         // Finds the user using their email
-        usersRef.orderByChild("email").equalTo(email).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot userSnapshot) {
-                // Clears the lists to avoid duplication
-                accommodations.clear();
+        usersRef.orderByChild("email").equalTo(email).addValueEventListener(
+                new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot userSnapshot) {
+                    // Clears the lists to avoid duplication
+                    accommodations.clear();
 
-                // Snapshot of the user with the associated email ID
-                DataSnapshot userData = userSnapshot.getChildren().iterator().next();
-                String userId = userData.getKey();
+                    // Snapshot of the user with the associated email ID
+                    DataSnapshot userData = userSnapshot.getChildren().iterator().next();
+                    String userId = userData.getKey();
 
-                // Reference at user/userId/"Trips"
-                DatabaseReference tripsRef = usersRef.child(userId).child("Trips");
+                    // Reference at user/userId/"Trips"
+                    DatabaseReference tripsRef = usersRef.child(userId).child("Trips");
 
-                // Retrieves all trips made by the user
-                tripsRef.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot tripsSnapshot) {
-                        accommodations.clear();
+                    // Retrieves all trips made by the user
+                    tripsRef.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot tripsSnapshot) {
+                            accommodations.clear();
 
-                        // Returns if no trips exist
-                        if (!tripsSnapshot.exists()) {
-                            Log.d("Firebase", "No trips found for: " + userId);
-                            return;
+                            // Returns if no trips exist
+                            if (!tripsSnapshot.exists()) {
+                                Log.d("Firebase", "No trips found for: " + userId);
+                                return;
+                            }
+
+                            // Iterate through each existing trip
+                            for (DataSnapshot tripSnapshot : tripsSnapshot.getChildren()) {
+                                // Gets the trip ID
+                                String tripId = tripSnapshot.getKey();
+
+                                // Currently at users/userId/"Trips"/tripId/"Travel Details"
+                                DatabaseReference accommodationDetailsRef = tripsRef.child(tripId).
+                                        child("Accommodation Details");
+
+                                // Adds the reservation details to the lists
+                                accommodationDetailsRef.addListenerForSingleValueEvent(
+                                        new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(
+                                                @NonNull DataSnapshot accommodationSnapshot) {
+                                            addAccommodationToList(accommodationSnapshot);
+
+                                            // Notify adapter
+                                            adapter.notifyDataSetChanged();
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) {
+                                            Log.d("Firebase",
+                                                    "Error retrieving reservation "
+                                                            + "details for tripId: "
+                                                            + tripId);
+                                        }
+                                    });
+                            }
                         }
 
-                        // Iterate through each existing trip
-                        for (DataSnapshot tripSnapshot : tripsSnapshot.getChildren()) {
-                            // Gets the trip ID
-                            String tripId = tripSnapshot.getKey();
-
-                            // Currently at users/userId/"Trips"/tripId/"Travel Details"
-                            DatabaseReference accommodationDetailsRef = tripsRef.child(tripId).child("Accommodation Details");
-
-                            // Adds the reservation details to the lists
-                            accommodationDetailsRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot accommodationSnapshot) {
-                                    addAccommodationToList(accommodationSnapshot);
-
-                                    // Notify adapter
-                                    adapter.notifyDataSetChanged();
-                                }
-
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError error) {
-                                    Log.d("Firebase", "Error retrieving reservation details for tripId: " + tripId);
-                                }
-                            });
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            Log.d("Firebase", "Error retrieving trips for userId: " + userId);
                         }
-                    }
+                    });
+                }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        Log.d("Firebase", "Error retrieving trips for userId: " + userId);
-                    }
-                });
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.d("Firebase", "Error retrieving user data");
-            }
-        });
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Log.d("Firebase", "Error retrieving user data");
+                }
+            });
     }
 
     private void addAccommodationToList(DataSnapshot accommodationDetailsSnapshot) {
@@ -193,7 +200,8 @@ public class AccommodationsActivity extends AppCompatActivity {
             Log.d("Firebase", "Trip Name: " + trip);
             //check in, checkout, location, num of rooms, room type
 
-            AccommodationDetails accommodation = new AccommodationDetails(checkIn, checkOut, location, numRooms, roomType, trip);
+            AccommodationDetails accommodation = new AccommodationDetails(checkIn, checkOut,
+                    location, numRooms, roomType, trip);
             accommodations.add(accommodation);
         }
     }
@@ -254,34 +262,33 @@ public class AccommodationsActivity extends AppCompatActivity {
     };
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu){
+    public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_sort_accommodations, menu); //inflate menu xml
         return true;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item){
-        if(item.getItemId() == R.id.accom_sort_CheckIn){
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.accom_sort_CheckIn) {
             sortAccommodationsByCheckIn();
             return true;
-        } else if(item.getItemId() == R.id.accom_sort_CheckOut) {
+        } else if (item.getItemId() == R.id.accom_sort_CheckOut) {
             sortAccommodationsByCheckOut();
             return true;
-        }
-        else{
+        } else {
             return super.onOptionsItemSelected(item);
         }
     }
 
-    private void sortAccommodationsByCheckIn(){
+    private void sortAccommodationsByCheckIn() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yy", Locale.getDefault());
 
-        Collections.sort(accommodations, (d1, d2) ->{
-            try{
+        Collections.sort(accommodations, (d1, d2) -> {
+            try {
                 Date date1 = dateFormat.parse(d1.getCheckIn());
                 Date date2 = dateFormat.parse(d2.getCheckIn());
 
-                if(date1 != null && date2 != null){
+                if (date1 != null && date2 != null) {
                     return date1.compareTo(date2);
                 }
             } catch (ParseException e) {
@@ -292,15 +299,15 @@ public class AccommodationsActivity extends AppCompatActivity {
         adapter.notifyDataSetChanged();
     }
 
-    private void sortAccommodationsByCheckOut(){
+    private void sortAccommodationsByCheckOut() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yy", Locale.getDefault());
 
-        Collections.sort(accommodations, (d1, d2) ->{
-            try{
+        Collections.sort(accommodations, (d1, d2) -> {
+            try {
                 Date date1 = dateFormat.parse(d1.getCheckOut());
                 Date date2 = dateFormat.parse(d2.getCheckOut());
 
-                if(date1 != null && date2 != null){
+                if (date1 != null && date2 != null) {
                     return date1.compareTo(date2);
                 }
             } catch (ParseException e) {

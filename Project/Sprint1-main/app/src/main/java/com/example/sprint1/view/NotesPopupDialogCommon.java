@@ -113,7 +113,8 @@ public class NotesPopupDialogCommon extends DialogFragment {
 
             // Populate the Spinner with the trip list
             if (getActivity() != null && getContext() != null) {
-                ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, updatedTripList);
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
+                        android.R.layout.simple_spinner_item, updatedTripList);
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 tripNameSpinner.setAdapter(adapter);
                 tripNameSpinner.setSelection(0);
@@ -123,7 +124,8 @@ public class NotesPopupDialogCommon extends DialogFragment {
         // Set the selected trip when the user selects an item from the Spinner
         tripNameSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parentView, View view, int position, long id) {
+            public void onItemSelected(AdapterView<?> parentView,
+                                       View view, int position, long id) {
                 selectedTrip = parentView.getItemAtPosition(position).toString();
             }
 

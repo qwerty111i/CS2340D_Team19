@@ -19,17 +19,19 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class AccommodationAdapter extends RecyclerView.Adapter<AccommodationAdapter.AccommodationViewHolder> {
-    Context context;
-    List<AccommodationDetails> accommodations;
+public class AccommodationAdapter extends
+        RecyclerView.Adapter<AccommodationAdapter.AccommodationViewHolder> {
+    private Context context;
+    private List<AccommodationDetails> accommodations;
 
-    public AccommodationAdapter(Context context, List<AccommodationDetails> accommodations){
+    public AccommodationAdapter(Context context, List<AccommodationDetails> accommodations) {
         this.context = context;
         this.accommodations = accommodations;
     }
     @NonNull
     @Override
-    public AccommodationAdapter.AccommodationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public AccommodationAdapter.
+            AccommodationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         //Inflating layout and giving look to each row
         LayoutInflater inflator = LayoutInflater.from(context);
         View view = inflator.inflate(R.layout.accommodation_item_layout, parent, false);
@@ -37,7 +39,8 @@ public class AccommodationAdapter extends RecyclerView.Adapter<AccommodationAdap
     }
 
     @Override
-    public void onBindViewHolder(@NonNull AccommodationAdapter.AccommodationViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull AccommodationAdapter.AccommodationViewHolder holder,
+                                 int position) {
         AccommodationDetails accommodation = accommodations.get(position);
 
         //Parse the check-in date
@@ -45,30 +48,28 @@ public class AccommodationAdapter extends RecyclerView.Adapter<AccommodationAdap
         String checkOutDateString = accommodation.getCheckOut();
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yy", Locale.getDefault());
-        try{
+        try {
             Date checkInDate = dateFormat.parse(checkInDateString);
             Date checkOutDate = dateFormat.parse(checkOutDateString);
             Date currentDate = new Date();
 
             //Compare the dates
-            if(checkInDate != null && checkInDate.before(currentDate)){
+            if (checkInDate != null && checkInDate.before(currentDate)) {
                 //If check-in date is in the past, turn text red
                 holder.tvCheckIn.setTextColor(Color.RED);
-            } else{
+            } else {
                 //set default color
                 holder.tvCheckIn.setTextColor(Color.WHITE); //Replace w default white
             }
 
-            if(checkOutDate != null && checkOutDate.before(currentDate)){
+            if (checkOutDate != null && checkOutDate.before(currentDate)) {
                 //If check-in date is in the past, turn text red
                 holder.tvCheckOut.setTextColor(Color.RED);
-            } else{
+            } else {
                 //set default color
                 holder.tvCheckOut.setTextColor(Color.WHITE); //Replace w default white
             }
-        }
-
-        catch (ParseException e) {
+        } catch (ParseException e) {
             throw new RuntimeException(e);
         }
 
@@ -78,8 +79,10 @@ public class AccommodationAdapter extends RecyclerView.Adapter<AccommodationAdap
         holder.tvCheckIn.setText("Check In: " + accommodations.get(position).getCheckIn());
         holder.tvCheckOut.setText("Check Out: " + accommodations.get(position).getCheckOut());
         holder.tvLocation.setText(accommodations.get(position).getLocation());
-        holder.tvNumRooms.setText(String.valueOf(accommodations.get(position).getNumRooms()) + " rooms");
-       holder.tvTypeRoom.setText(" - " + String.valueOf(accommodations.get(position).getRoomType()));
+        holder.tvNumRooms.setText(String.valueOf(accommodations.get(position).getNumRooms())
+                + " rooms");
+        holder.tvTypeRoom.setText(" - " + String.valueOf(accommodations.get(position).
+                getRoomType()));
         holder.tvHotel.setText(accommodations.get(position).getHotel());
         holder.tvWebsite.setText(accommodations.get(position).getWebsite());
 
@@ -92,9 +95,15 @@ public class AccommodationAdapter extends RecyclerView.Adapter<AccommodationAdap
         return accommodations.size();
     }
 
-    public static class AccommodationViewHolder extends RecyclerView.ViewHolder{
+    public static class AccommodationViewHolder extends RecyclerView.ViewHolder {
         //grabbing items from layout file and assigning them to variables
-        TextView tvCheckIn, tvCheckOut, tvLocation, tvNumRooms, tvTypeRoom, tvHotel, tvWebsite;
+        private TextView tvCheckIn;
+        private TextView tvCheckOut;
+        private TextView tvLocation;
+        private TextView tvNumRooms;
+        private TextView tvTypeRoom;
+        private TextView tvHotel;
+        private TextView tvWebsite;
 
         public AccommodationViewHolder(@NonNull View itemView) {
             super(itemView);
