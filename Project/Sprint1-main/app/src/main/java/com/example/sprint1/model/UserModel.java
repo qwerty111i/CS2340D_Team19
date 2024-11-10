@@ -229,6 +229,44 @@ public class UserModel {
             }
         });
     }
+
+    public void getTripId(String selectedTripName, String userId, DatabaseReference database, final TripIdCallback callback) {
+        DatabaseReference tripsRef = database.child(userId).child("Trips");
+        tripsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot tripsSnapshot) {
+                if (tripsSnapshot.exists()) {
+                    for (DataSnapshot tripSnapshot : tripsSnapshot.getChildren()) {
+                        String tripName = tripSnapshot.child("tripName").getValue(String.class);
+
+                        // Check if the tripName matches the selected trip
+                        if (tripName != null && tripName.equals(selectedTripName)) {
+                            String tripId = tripSnapshot.getKey(); // Get the tripId
+                            callback.onTripIdRetrieved(tripId); // Pass the tripId back through the callback
+                            return; // Exit the loop once we find the tripId
+                        }
+                    }
+                    callback.onTripIdRetrieved(null); // No matching trip found
+                } else {
+                    callback.onTripIdRetrieved(null); // No trips available
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("Firebase", "Error retrieving trips: " + error.getMessage());
+                callback.onTripIdRetrieved(null); // Handle error case (you might also consider passing the error message)
+            }
+        });
+    }
+
+
+
+    public interface TripIdCallback {
+        void onTripIdRetrieved(String tripId);
+    }
+
+
     public boolean isUsernameTaken(String username) {
         return userMap.containsKey(username);
     }

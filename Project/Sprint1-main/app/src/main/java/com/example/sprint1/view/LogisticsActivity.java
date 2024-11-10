@@ -24,10 +24,11 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.sprint1.viewmodel.LogisticsViewModel;
 import java.util.List;
 
-public class LogisticsActivity extends AppCompatActivity {
+public class LogisticsActivity extends AppCompatActivity implements InviteUserSpinnerPopup.TripSelectionListener {
     private TabLayout tabLayout;
     private LogisticsViewModel viewModel;
     private Button createTrip;
+    private Button inviteButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,22 +74,42 @@ public class LogisticsActivity extends AppCompatActivity {
         //notesButton.setOnClickListener(v -> showNotesDialog());
         //viewModel.retrieveNotes();
 
-        inviteButton.setOnClickListener(this::onInviteButtonClick);
+        //inviteButton.setOnClickListener(this::onInviteButtonClick);
 
         // Navigation bar
         tabLayout = binding.tabNavigation;
         navigation();
         chooseTrip(binding);
+
     }
 
+    @Override
+    public void onTripSelected(String selectedTrip) {
+        viewModel.getUsersLiveData().observe(this, users -> {
+            if (users != null && !users.isEmpty()) {
+                showInviteDialog(users, selectedTrip);
+            } else {
+                Toast.makeText(LogisticsActivity.this,
+                        "No users found to invite", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
     public void chooseTrip(ActivityLogisticsBinding binding) {
         createTrip = binding.buttonNotes;
+
+        inviteButton = binding.buttonInvite;
+        inviteButton.setOnClickListener(v -> {
+            InviteUserSpinnerPopup dialog = new InviteUserSpinnerPopup();
+            dialog.show(getSupportFragmentManager(), "Invite trip");
+        });
 
         createTrip.setOnClickListener(v -> {
             NotesPopupForLogistics dialog = new NotesPopupForLogistics();
             dialog.show(getSupportFragmentManager(), "Create New Trip");
         });
+
+
     }
 
     public void createNewTrip(ActivityLogisticsBinding binding) {
@@ -127,19 +148,9 @@ public class LogisticsActivity extends AppCompatActivity {
         return cardLayout;
     }
 
-    public void onInviteButtonClick(View view) {
-        // Observe the LiveData
-        viewModel.getUsersLiveData().observe(this, users -> {
-            if (users != null && !users.isEmpty()) {
-                showInviteDialog(users);
-            } else {
-                Toast.makeText(LogisticsActivity.this,
-                        "No users found to invite", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
 
-    private void showInviteDialog(List<String> userList) {
+
+        private void showInviteDialog(List<String> userList, String selectedUser) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Select users to invite");
 
@@ -165,7 +176,7 @@ public class LogisticsActivity extends AppCompatActivity {
                     selectedUsers.add(filteredUserList.get(i));
                 }
             }
-            viewModel.inviteUsers(selectedUsers, LogisticsActivity.this);
+            viewModel.inviteUsers(selectedUsers, LogisticsActivity.this, selectedUser);
         });
 
         builder.setNegativeButton("Cancel", (dialog, id) -> dialog.dismiss());
