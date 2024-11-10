@@ -6,9 +6,11 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.sprint1.model.Accommodation;
 import com.example.sprint1.model.UserModel;
+import com.example.sprint1.view.AccommodationsActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -35,7 +37,8 @@ public class AccommodationViewModel extends ViewModel {
     private MutableLiveData<String> dateError = new MutableLiveData<>();
     private MutableLiveData<String> inputError = new MutableLiveData<>();
 
-    List<Accommodation> accommodationsList = new ArrayList<>();
+
+
 
 
     public void setAccommodationDetails(String location, String checkIn, String checkOut,
@@ -113,75 +116,72 @@ public class AccommodationViewModel extends ViewModel {
         return false;
     }
 
-    public void fetchAccommodations() {
-        String currentEmail = null;
 
-        //Initialize Firebase
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference databaseRef = database.getReference();
+//    public void fetchAccommodations() {
+//        String currentEmail = null;
+//
+//        //Initialize Firebase
+//        FirebaseDatabase database = FirebaseDatabase.getInstance();
+//        DatabaseReference databaseRef = database.getReference();
+//
+//        //Get currently logged in user
+//        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+//        if (currentUser != null) {
+//            currentEmail = currentUser.getEmail();
+//            Log.d("UserEmail", "User email: " + currentEmail);
+//        }
+//
+//
+//        DatabaseReference accommodationDatabaseRef = databaseRef.child("users");
+//
+//        accommodationDatabaseRef.orderByChild("email").equalTo(currentEmail).addValueEventListener(
+//                new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                        //clear list of accommodations to avoid duplication
+//                        accommodationsList.clear();
+//
+//                        for (DataSnapshot accommodationsSnapshot : snapshot.getChildren()) {
+//                            addAccommodationsToList(accommodationsSnapshot.child("accommodations"));
+//                        }
+//
+//                        //verify data retrieval
+//                        for(int i = 0; i < accommodationsList.size(); i++){
+//                        Log.d("Firebase", "Check in: " + accommodationsList.get(i).getCheckIn());
+//                        Log.d("Firebase", "Check out: " + accommodationsList.get(i).getCheckOut());
+//                        Log.d("Firebase", "RoomType: " + accommodationsList.get(i).getRoomType());
+//                        Log.d("Firebase", "Location: " + accommodationsList.get(i).getLocation());
+//                        Log.d("Firebase", "Num Rooms: " + accommodationsList.get(i).getNumRooms());
+//                        //check in, checkout, location, num of rooms, room type
+//                        }
+//                        // Notify adapter
+//                        adapter.notifyDataSetChanged();
+//
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError error) {
+//                        Log.d("Firebase", "Error retrieving data");
+//
+//                    }
+//                });
+//    }
 
-        //Get currently logged in user
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (currentUser != null) {
-            currentEmail = currentUser.getEmail();
-            Log.d("UserEmail", "User email: " + currentEmail);
-        }
-
-        DatabaseReference accommodationDatabaseRef = databaseRef.child("users");
-
-        accommodationDatabaseRef.orderByChild("email").equalTo(currentEmail).addValueEventListener(
-                new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        //clear list of accomodations to avoid duplication
-                        accommodationsList.clear();
-
-                        for (DataSnapshot accommodationsSnapshot : snapshot.getChildren()) {
-                            addAccommodationsToList(accommodationsSnapshot.child("accommodations"));
-                        }
-
-
-                        //verify data retrieval
-                        for(int i = 0; i < accommodationsList.size(); i++){
-                        Log.d("Firebase", "Check in: " + accommodationsList.get(i).getCheckIn());
-                        Log.d("Firebase", "Check out: " + accommodationsList.get(i).getCheckOut());
-                        Log.d("Firebase", "RoomType: " + accommodationsList.get(i).getRoomType());
-                        Log.d("Firebase", "Location: " + accommodationsList.get(i).getLocation());
-                        Log.d("Firebase", "Num Rooms: " + accommodationsList.get(i).getNumRooms());
-                        //check in, checkout, location, num of rooms, room type
-                        }
-
-
-                        //Notify adapter when data has changed
-                        //adapter.notifyDataSetChanged();
-
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        Log.d("Firebase", "Error retrieving data");
-
-                    }
-                });
-    }
-
-    public void addAccommodationsToList(DataSnapshot accommodationsSnapshot) {
-        //Loop through each accommodation
-        for (DataSnapshot snapshot : accommodationsSnapshot.getChildren()) {
-
-            String checkIn = snapshot.child("checkIn").getValue(String.class);
-            String checkOut = snapshot.child("checkOut").getValue(String.class);
-            int numRooms = snapshot.child("numRooms").getValue(int.class);
-            String roomType = snapshot.child("roomType").getValue(String.class);
-            String location = snapshot.child("location").getValue(String.class);
-
-            Accommodation accommodation = new Accommodation(checkIn, checkOut, location, numRooms, roomType);
-            accommodationsList.add(accommodation);
-
-
-        }
-
-    }
+//    public void addAccommodationsToList(DataSnapshot accommodationsSnapshot) {
+//        //Loop through each accommodation
+//        for (DataSnapshot snapshot : accommodationsSnapshot.getChildren()) {
+//
+//            String checkIn = snapshot.child("checkIn").getValue(String.class);
+//            String checkOut = snapshot.child("checkOut").getValue(String.class);
+//            int numRooms = snapshot.child("numRooms").getValue(int.class);
+//            String roomType = snapshot.child("roomType").getValue(String.class);
+//            String location = snapshot.child("location").getValue(String.class);
+//
+//            Accommodation accommodation = new Accommodation(checkIn, checkOut, location, numRooms, roomType);
+//            accommodationsList.add(accommodation);
+//        }
+//
+//    }
 
     public LiveData<Boolean> areInputsValid() {
         return validInputs;
@@ -207,4 +207,5 @@ public class AccommodationViewModel extends ViewModel {
     public LiveData<String> getInputError() {
         return inputError;
     }
+
 }

@@ -65,4 +65,12 @@ public class Accommodation {
     public void setTrip(String trip) {
         this.trip = trip;
     }
+
+    public String getHotel() {
+        return location + " Hotel";
+    }
+
+    public String getWebsite() {
+        return "www." + location + ".com";
+    }
 }
