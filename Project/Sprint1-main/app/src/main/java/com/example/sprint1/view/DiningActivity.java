@@ -1,6 +1,7 @@
 package com.example.sprint1.view;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.ImageView;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -105,17 +107,15 @@ public class DiningActivity extends AppCompatActivity {
         tabs.addTab(tabs.newTab().setText("Date"));
         tabs.addTab(tabs.newTab().setText("Name"));
 
-        tabs.selectTab(tabs.getTabAt(0));
-
         tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                tab.view.setBackgroundColor(getResources().getColor(R.color.golden));
+
             }
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-                tab.view.setBackgroundColor(getResources().getColor(R.color.snackbar_background));
+
             }
 
             @Override
