@@ -39,7 +39,7 @@ public class ReservationDetails {
     }
 
     public String getStartDate() {
-        return website;
+        return startDate;
     }
 
     public void setStartDate(String startDate) {
