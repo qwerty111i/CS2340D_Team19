@@ -5,9 +5,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class SortByLocation implements ReservationSortingStrategy {
+public class SortByName implements ReservationSortingStrategy {
     @Override
     public void sort(List<ReservationDetails> reservations) {
-        Collections.sort(reservations, Comparator.comparing(ReservationDetails::getLocation));
+        Collections.sort(reservations, Comparator.comparing(ReservationDetails::getName));
     }
 }

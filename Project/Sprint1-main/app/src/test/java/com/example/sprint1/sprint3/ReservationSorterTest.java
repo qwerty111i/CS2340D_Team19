@@ -2,7 +2,7 @@ package com.example.sprint1.sprint3;
 
 import com.example.sprint1.model.ReservationDetails;
 import com.example.sprint1.viewmodel.ReservationSorter;
-import com.example.sprint1.viewmodel.SortByLocation;
+import com.example.sprint1.viewmodel.SortByName;
 import com.example.sprint1.viewmodel.SortByDateAndTime;
 
 import org.junit.Assert;
@@ -17,9 +17,9 @@ public class ReservationSorterTest {
     @Test
     public void testSortByLocation() {
         ReservationDetails reserve1 = new ReservationDetails(
-                "Reservation 1", "Chicago", "www.chicago.com", "03/23/23", "12:00 PM", "Trip A");
+                "Reservation 2", "Chicago", "www.chicago.com", "03/23/23", "12:00 PM", "Trip A");
         ReservationDetails reserve2 = new ReservationDetails(
-                "Reservation 2", "Atlanta", "www.atlanta.com", "03/22/23", "1:00 PM", "Trip A");
+                "Reservation 1", "Atlanta", "www.atlanta.com", "03/22/23", "1:00 PM", "Trip A");
         ReservationDetails reserve3 = new ReservationDetails(
                 "Reservation 3", "Boston", "www.boston.com", "03/24/23", "2:00 PM", "Trip A");
 
@@ -29,12 +29,12 @@ public class ReservationSorterTest {
         reservations.add(reserve3);
 
         ReservationSorter sorter = new ReservationSorter();
-        sorter.setStrategy(new SortByLocation());
+        sorter.setStrategy(new SortByName());
         sorter.sortReservations(reservations);
 
-        Assert.assertEquals("Atlanta", reservations.get(0).getLocation());
-        Assert.assertEquals("Boston", reservations.get(1).getLocation());
-        Assert.assertEquals("Chicago", reservations.get(2).getLocation());
+        Assert.assertEquals("Reservation 2", reservations.get(0).getName());
+        Assert.assertEquals("Reservation 1", reservations.get(1).getLocation());
+        Assert.assertEquals("Reservation 3", reservations.get(2).getLocation());
     }
 
     // james
