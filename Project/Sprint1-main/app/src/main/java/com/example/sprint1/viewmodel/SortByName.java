@@ -8,6 +8,6 @@ import java.util.List;
 public class SortByName implements ReservationSortingStrategy {
     @Override
     public void sort(List<ReservationDetails> reservations) {
-        Collections.sort(reservations, Comparator.comparing(ReservationDetails::getLocation));
+        Collections.sort(reservations, Comparator.comparing(ReservationDetails::getName));
     }
 }
