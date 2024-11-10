@@ -148,15 +148,6 @@ public class DestinationsActivity extends AppCompatActivity {
                 endDates.clear();
                 days.clear();
 
-                for (DataSnapshot childSnapshot : userSnapshot.getChildren()) {
-                    // Log the key of the current child
-                    Log.d("Firebase", "Child key: " + childSnapshot.getKey());
-
-                    // Log the data of the current child (it can be a map of the data)
-                    Log.d("Firebase", "Child data: " + childSnapshot.getValue());
-                }
-
-                // Snapshot of the user with the associated email ID
 
                 DataSnapshot userData = userSnapshot.getChildren().iterator().next();
                 String userId = userData.getKey();
@@ -205,7 +196,6 @@ public class DestinationsActivity extends AppCompatActivity {
 
                                     // Notify adapter
                                     adapter.notifyDataSetChanged();
-                                    Log.d("CHECKIMP", locations.toString());
                                 }
 
                                 @Override
