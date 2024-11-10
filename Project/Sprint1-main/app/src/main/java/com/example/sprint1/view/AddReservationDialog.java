@@ -45,7 +45,8 @@ public class AddReservationDialog extends DialogFragment {
     private ArrayList<String> updatedTripList;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View
+        onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the binding for the dialog layout
         binding = ActivityAddReservationDialogBinding.inflate(inflater, container, false);
 

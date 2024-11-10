@@ -12,17 +12,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.sprint1.R;
 import com.example.sprint1.databinding.ActivityActualNotesPopupBinding;
-import com.example.sprint1.databinding.ActivityNotesPopupDialogCommonBinding;
 import com.example.sprint1.viewmodel.DestinationsViewModel;
 import com.example.sprint1.viewmodel.LogisticsViewModel;
 
@@ -94,14 +88,16 @@ public class ActualNotesPopup extends DialogFragment {
                 // Dismiss the dialog after saving
                 dismiss();
             } else {
-                Toast.makeText(getContext(), "Please select a trip and enter a note", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Please select a trip and enter a note",
+                        Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void saveNoteUnderSelectedTrip() {
         // Get the note text from an EditText or other input field
-        String noteText = ((EditText) getView().findViewById(R.id.noteEditText)).getText().toString();  // Replace with your EditText ID
+        String noteText = ((EditText) getView().findViewById(R.id.noteEditText)).getText().
+                toString();  // Replace with your EditText ID
 
         if (!noteText.isEmpty() && selectedTrip != null) {
             // Call ViewModel to add the note under the selected trip in the database

@@ -8,21 +8,13 @@ import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
-import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.sprint1.R;
-import com.example.sprint1.databinding.ActivityActualNotesPopupBinding;
+
 import com.example.sprint1.databinding.ActivityNotesTextViewPopupLogisticsBinding;
 import com.example.sprint1.viewmodel.DestinationsViewModel;
 import com.example.sprint1.viewmodel.LogisticsViewModel;
@@ -86,18 +78,19 @@ public class NotesTextViewPopupLogistics extends DialogFragment {
         logisticsViewModel.fetchNotesForTrip(selectedTrip);
 
         // Observe the LiveData for notes and update the TextView when data changes
-        logisticsViewModel.getNotesLiveData().observe(getViewLifecycleOwner(), new Observer<List<String>>() {
-            @Override
-            public void onChanged(List<String> notes) {
-                // Concatenate all notes into a single string
-                StringBuilder notesString = new StringBuilder();
-                for (String note : notes) {
-                    notesString.append(note).append("\n\n");
-                }
+        logisticsViewModel.getNotesLiveData().observe(getViewLifecycleOwner(),
+                new Observer<List<String>>() {
+                @Override
+                public void onChanged(List<String> notes) {
+                    // Concatenate all notes into a single string
+                    StringBuilder notesString = new StringBuilder();
+                    for (String note : notes) {
+                        notesString.append(note).append("\n\n");
+                    }
 
-                // Set the concatenated notes to the TextView
-                noteText.setText(notesString.toString());
-            }
-        });
+                    // Set the concatenated notes to the TextView
+                    noteText.setText(notesString.toString());
+                }
+            });
     }
 }

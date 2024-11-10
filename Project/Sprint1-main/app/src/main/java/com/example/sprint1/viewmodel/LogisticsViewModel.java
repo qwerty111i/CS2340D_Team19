@@ -179,7 +179,7 @@ public class LogisticsViewModel extends ViewModel {
         }
     }
 
-    public void saveNoteForTrip(String currentTripName, String note ) {
+    public void saveNoteForTrip(String currentTripName, String note) {
         if (note == null || note.trim().isEmpty()) {
             Log.d("LogisticsViewModel", "Attempted to add an empty note, ignoring.");
             return;
@@ -188,7 +188,8 @@ public class LogisticsViewModel extends ViewModel {
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         if (userId != null) {
             // Reference to the Trips node under the current user
-            DatabaseReference tripsRef = FirebaseDatabase.getInstance().getReference("users").child(userId).child("Trips");
+            DatabaseReference tripsRef = FirebaseDatabase.getInstance().getReference("users").
+                    child(userId).child("Trips");
 
             // Retrieve all trips for the current user
             tripsRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -202,22 +203,27 @@ public class LogisticsViewModel extends ViewModel {
                     // Iterate through each trip to find the matching trip by name
                     for (DataSnapshot tripSnapshot : tripsSnapshot.getChildren()) {
                         String tripId = tripSnapshot.getKey();
-                        String tripName = tripSnapshot.child("tripName").getValue(String.class);
+                        String tripName = tripSnapshot.child("tripName").
+                                getValue(String.class);
 
                         // If the trip name matches, store the note under this trip
                         if (currentTripName.equals(tripName)) {
                             // Reference to the Notes node under the selected trip
-                            DatabaseReference notesRef = tripsRef.child(tripId).child("Notes");
+                            DatabaseReference notesRef = tripsRef.child(tripId).
+                                    child("Notes");
 
                             // Push the note under the selected trip's Notes node
                             String noteId = notesRef.push().getKey();
                             if (noteId != null) {
                                 notesRef.child(noteId).setValue(note)
                                         .addOnSuccessListener(aVoid -> {
-                                            Log.d("saveNoteForTrip", "Note saved under trip: " + tripId);
+                                            Log.d("saveNoteForTrip",
+                                                    "Note saved under trip: " + tripId);
                                         })
                                         .addOnFailureListener(e -> {
-                                            Log.d("saveNoteForTrip", "Failed to save note under trip: " + tripId);
+                                            Log.d("saveNoteForTrip",
+                                                    "Failed to save note under trip: "
+                                                            + tripId);
                                         });
                             }
                         }
@@ -392,7 +398,7 @@ public class LogisticsViewModel extends ViewModel {
     }
 
     private void shareNotesWithInvitedUser(String inviterId, String inviterEmail,
-                                           String invitedUserId, DatabaseReference userReference) {
+                                           String invitedUserId, DatabaseReference userReference, String selectedTrip) {
         userReference.child(inviterId).child("notes")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -407,41 +413,102 @@ public class LogisticsViewModel extends ViewModel {
                             }
                         }
                     }
-
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
                         Log.d("Firebase", "Error retrieving notes");
                     }
                 });
     }
-    private void shareTravelDetailsWithInvitedUser(String inviterId, String inviterEmail, String
-            invitedUserId, DatabaseReference userReference) {
-        userReference.child(inviterId).child("travelDetails")
+
+    private void shareTravelDetailsWithInvitedUser(String inviterId, String inviterEmail, String invitedUserId, DatabaseReference userReference, String selectedTrip) {
+        // Reference to the Trips node under the current inviter
+        userReference.child(inviterId).child("Trips")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
-                    public void onDataChange(@NonNull DataSnapshot travelDetailsSnapshot) {
-                        for (DataSnapshot travelDetailSnapshot
-                               : travelDetailsSnapshot.getChildren()) {
-                            TravelDetails value = travelDetailSnapshot.
-                                    getValue(TravelDetails.class);
-                            String marker = "(Shared by ";
-                            if (value != null && !value.getLocation().contains(marker)) {
-                                value.setLocation(value.getLocation() + "\n"
-                                        + "(Shared by " + inviterEmail + ")");
-                                userReference.child(invitedUserId).child("travelDetails")
-                                        .push().setValue(value);
+                    public void onDataChange(@NonNull DataSnapshot tripsSnapshot) {
+                        if (!tripsSnapshot.exists()) {
+                            Log.e("shareTravelDetails", "No trips found for the user");
+                            return;
+                        }
+                        // Iterate through each trip to find the matching trip name
+                        for (DataSnapshot tripSnapshot : tripsSnapshot.getChildren()) {
+                            Trip trip = tripSnapshot.getValue(Trip.class);
+
+                            // Check if the tripName matches the selectedTrip
+                            if (trip != null && selectedTrip.equals(trip.getTripName())) {
+                                // Append "(Shared by ...)" to the trip name
+                                String sharedTripName = trip.getTripName() + " (Shared by " + inviterEmail + ")";
+
+                                // Create a new Trip object with the updated trip name
+                                Trip sharedTrip = new Trip(sharedTripName);
+
+                                // Add the new Trip under the invited user's "Trips" node
+                                String newTripId = userReference.child(invitedUserId).child("Trips").push().getKey();
+                                if (newTripId != null) {
+                                    userReference.child(invitedUserId).child("Trips").child(newTripId).setValue(sharedTrip)
+                                            .addOnCompleteListener(task -> {
+                                                if (task.isSuccessful()) {
+                                                    Log.d("Firebase", "Shared trip created successfully.");
+                                                } else {
+                                                    Log.d("Firebase", "Failed to create shared trip.");
+                                                }
+                                            });
+
+                                    // Now copy the TravelDetails into the new shared trip for the invited user
+                                    DataSnapshot travelDetailsSnapshot = tripSnapshot.child("Travel Details");
+                                    for (DataSnapshot travelIdSnapshot : travelDetailsSnapshot.getChildren()) {
+                                        TravelDetails travelDetails = travelIdSnapshot.getValue(TravelDetails.class);
+                                        if (travelDetails != null) {
+                                            String sharedTripName2 = trip.getTripName() + " (Shared by " + inviterEmail + ")";
+                                            travelDetails.setTripName(sharedTripName2);
+                                            // Share travel details under the new shared trip
+                                            userReference.child(invitedUserId).child("Trips").child(newTripId)
+                                                    .child("Travel Details").child(travelIdSnapshot.getKey()).setValue(travelDetails)
+                                                    .addOnCompleteListener(task -> {
+                                                        if (task.isSuccessful()) {
+                                                            Log.d("Firebase", "Travel details shared successfully.");
+                                                        } else {
+                                                            Log.d("Firebase", "Failed to share travel details.");
+                                                        }
+                                                    });
+                                        }
+                                    }
+                                }
+
+                                // Share notes with the invited user under the selected trip
+                                DataSnapshot notesSnapshot = tripSnapshot.child("Notes");
+                                for (DataSnapshot noteSnapshot : notesSnapshot.getChildren()) {
+                                    String noteContent = noteSnapshot.getValue(String.class);
+                                    String marker = "-->";
+                                    if (noteContent != null && !noteContent.contains(marker)) {
+                                        noteContent = noteContent + " -->  " + inviterEmail;
+
+                                        // Share note content under the new shared trip for the invited user
+                                        userReference.child(invitedUserId).child("Trips").child(newTripId)
+                                                .child("Notes").child(noteSnapshot.getKey()).setValue(noteContent)
+                                                .addOnCompleteListener(task -> {
+                                                    if (task.isSuccessful()) {
+                                                        Log.d("Firebase", "Note shared successfully.");
+                                                    } else {
+                                                        Log.d("Firebase", "Failed to share note.");
+                                                    }
+                                                });
+                                    }
+                                }
                             }
                         }
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
-                        Log.d("Firebase", "Error retrieving travel details");
+                        Log.e("shareTravelDetails", "Failed to read trips", error.toException());
                     }
                 });
     }
+
+
     private void fetchAndShareUserData(String inviterId, String invitedUserId,
-            DatabaseReference userReference) {
+            DatabaseReference userReference, String selectedUser) {
         userReference.child(inviterId).
                 child("email").addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -449,12 +516,12 @@ public class LogisticsViewModel extends ViewModel {
                         String inviterEmail = emailSnapshot.getValue(String.class);
                         if (inviterEmail != null && !inviterEmail.isEmpty()) {
                             // Share notes
-                            shareNotesWithInvitedUser(inviterId, inviterEmail,
-                                    invitedUserId, userReference);
+                            //shareNotesWithInvitedUser(inviterId, inviterEmail,
+                                    //invitedUserId, userReference, selectedUser);
 
                             // Share travel details
                             shareTravelDetailsWithInvitedUser(inviterId, inviterEmail,
-                                    invitedUserId, userReference);
+                                    invitedUserId, userReference, selectedUser);
                         } else {
                             Log.d("Firebase", "Inviter email not found");
                         }
@@ -467,7 +534,7 @@ public class LogisticsViewModel extends ViewModel {
                 });
     }
 
-    public void inviteUsers(List<String> selectedUsers, Context context) {
+    public void inviteUsers(List<String> selectedUsers, Context context, String selectedUser) {
         String inviterId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         DatabaseReference userReference = FirebaseDatabase.getInstance().getReference("users");
 
@@ -493,7 +560,7 @@ public class LogisticsViewModel extends ViewModel {
 
                                             // Fetch and share data
                                             fetchAndShareUserData(inviterId,
-                                                    invitedUserId, userReference);
+                                                    invitedUserId, userReference, selectedUser);
                                         }
                                     }
                                     Toast.makeText(context, "Users invited!",
@@ -519,7 +586,8 @@ public class LogisticsViewModel extends ViewModel {
         }
 
         // Reference to the Trips node under the current user
-        DatabaseReference tripsRef = FirebaseDatabase.getInstance().getReference("users").child(userId).child("Trips");
+        DatabaseReference tripsRef = FirebaseDatabase.getInstance().getReference("users").
+                child(userId).child("Trips");
 
         // Retrieve all trips for the current user
         tripsRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -557,7 +625,8 @@ public class LogisticsViewModel extends ViewModel {
 
                             @Override
                             public void onCancelled(DatabaseError databaseError) {
-                                Log.e("fetchNotesForTrip", "Error fetching notes: " + databaseError.getMessage());
+                                Log.e("fetchNotesForTrip", "Error fetching notes: "
+                                        + databaseError.getMessage());
                             }
                         });
                         break; // Stop after finding the matching trip

@@ -214,12 +214,13 @@ public class DestinationsActivity extends AppCompatActivity {
             }
         });
     }
-
+  
     private void addTravelToLists(DataSnapshot travelDetailsSnapshot) {
         // Loop through each travel detail
         for (DataSnapshot snapshot : travelDetailsSnapshot.getChildren()) {
-
+            Log.d("fore", snapshot.getValue().toString());
             String startDate = snapshot.child("startDate").getValue(String.class);
+            //Log.d("foeeeeeeeere", startDate);
             String endDate = snapshot.child("endDate").getValue(String.class);
             String location = snapshot.child("location").getValue(String.class);
             String tripName = snapshot.child("tripName").getValue(String.class);
