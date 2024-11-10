@@ -58,35 +58,43 @@ public class UserModel {
 
     // Method to store travel details under the specific user's node
     public void storeTravelDetails(TravelDetails travelDetails) {
+        String currentTripName = travelDetails.getTripName();
         if (userId != null) {
             // Gets all the nodes under Trips
-            DatabaseReference tripRef = database.child(userId).child("Trips");
-            for (String id : tripIds) {
-                tripRef.child(id).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if (snapshot.exists()) {
-                            // Gets the trip name
-                            String tripName = snapshot
-                                    .child("tripName")
-                                    .getValue(String.class);
-
-                            // Compares the trip name with the travel details trip name
-                            if (travelDetails.getTripName().equals(tripName)) {
-                                database.child(userId)
-                                        .child("Trips")
-                                        .child(id)
-                                        .child("Travel Details")
-                                        .push()
-                                        .setValue(travelDetails);
-                            }
-                        }
+            DatabaseReference tripsRef = database.child(userId).child("Trips");
+            tripsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot tripsSnapshot) {
+                    // Returns if no trips exist
+                    if (!tripsSnapshot.exists()) {
+                        Log.e("StoreTravelDetails", "No trips found for the user");
+                        return;
                     }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) { }
-                });
-            }
+                    for(DataSnapshot tripSnapshot : tripsSnapshot.getChildren()) {
+                        // Gets the trip key
+                        String tripId = tripSnapshot.getKey();
+
+                        // Gets the trip name from the trip key
+                        String tripName = tripSnapshot.child("tripName").getValue(String.class);
+
+                        // Adds the travel details if the trip names are equal
+                        if (currentTripName.equals(tripName)) {
+                            database.child(userId)
+                                    .child("Trips")
+                                    .child(tripId)
+                                    .child("Travel Details")
+                                    .push()
+                                    .setValue(travelDetails);
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Log.e("StoreTravelDetails", "Unable to store: " + error.getMessage());
+                }
+            });
         } else {
             Log.e("UserModel", "UserId is not set, cannot store travel details.");
         }
@@ -125,7 +133,7 @@ public class UserModel {
     }
 
     // Method to store reservation details under the specific user's node
-    public void storeReservationDetails(Dining reservationDetails) {
+    public void storeReservationDetails(ReservationDetails reservationDetails) {
         if (userId != null) {
             // Gets all the nodes under Trips
             DatabaseReference tripRef = database.child(userId).child("Trips");

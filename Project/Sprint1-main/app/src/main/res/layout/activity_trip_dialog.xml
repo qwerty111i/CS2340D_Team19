@@ -52,7 +52,6 @@
             android:id="@+id/trip_input"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintVertical_bias=".005"
             app:boxBackgroundMode="filled"
             app:boxBackgroundColor="@color/light_modern_purple"
             app:boxStrokeColor="@color/modern_purple"
@@ -60,7 +59,7 @@
             app:boxStrokeWidthFocused="3dp"
             app:startIconDrawable="@drawable/location"
             app:startIconTint="@color/black"
-            android:hint="Enter Trip Details: "
+            android:hint="Enter Trip Details"
             android:textColorHint="@color/black"
             app:hintTextColor="@color/black"
             app:errorEnabled="true"
@@ -71,8 +70,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintWidth_percent="0.8"
-            app:layout_constraintTop_toBottomOf="@id/trip"
-            app:layout_constraintBottom_toTopOf="@id/submit">
+            app:layout_constraintTop_toBottomOf="@id/trip">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/trip_input_text"
@@ -87,7 +85,6 @@
 
         <Button
             android:id="@+id/submit"
-            android:layout_marginTop="100dp"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:text="@string/log_travel_submit"
@@ -98,8 +95,8 @@
             app:layout_constraintWidth_percent="0.4"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHeight_percent="0.12"
-            app:layout_constraintTop_toBottomOf="@id/trip_input"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            app:layout_constraintHeight_percent="0.20"
+            app:layout_constraintTop_toBottomOf="@id/trip_input" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

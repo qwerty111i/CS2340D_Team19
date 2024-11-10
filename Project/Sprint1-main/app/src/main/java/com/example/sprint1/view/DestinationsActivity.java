@@ -159,6 +159,11 @@ public class DestinationsActivity extends AppCompatActivity {
                 tripsRef.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot tripsSnapshot) {
+                        tripNames.clear();
+                        locations.clear();
+                        startDates.clear();
+                        endDates.clear();
+                        days.clear();
 
                         // Returns if no trips exist
                         if (!tripsSnapshot.exists()) {
@@ -175,7 +180,7 @@ public class DestinationsActivity extends AppCompatActivity {
                             DatabaseReference travelDetailsRef = tripsRef.child(tripId).child("Travel Details");
 
                             // Adds the travel details to the lists
-                            travelDetailsRef.addValueEventListener(new ValueEventListener() {
+                            travelDetailsRef.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot travelSnapshot) {
                                     addTravelToLists(travelSnapshot);
@@ -188,6 +193,7 @@ public class DestinationsActivity extends AppCompatActivity {
 
                                     // Notify adapter
                                     adapter.notifyDataSetChanged();
+                                    Log.d("CHECKIMP", locations.toString());
                                 }
 
                                 @Override

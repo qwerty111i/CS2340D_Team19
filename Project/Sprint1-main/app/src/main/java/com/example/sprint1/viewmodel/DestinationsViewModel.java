@@ -232,6 +232,31 @@ public class DestinationsViewModel extends ViewModel {
         }
     }
 
+    // Base check for inputs (empty or not)
+    public boolean checkInput(String input) {
+        return input != null && !input.isEmpty();
+    }
+
+    // Checks if dates are valid
+    public boolean checkDates(String date1, String date2) {
+        if (date1 != null && date2 != null) {
+            try {
+                // Creates a SimpleDateFormat instance, formatted as below
+                SimpleDateFormat sdf = new SimpleDateFormat("M/d/yy", Locale.getDefault());
+
+                // Creates new Dates following the format created above
+                Date startDate = sdf.parse(date1);
+                Date endDate = sdf.parse(date2);
+
+                // Checks if the start date is less than or equal to the end date
+                return !startDate.after(endDate);
+            } catch (ParseException e) {
+                return false;
+            }
+        }
+        return false;
+    }
+
     // Helper method to validate date format
     private boolean isValidDate(String dateStr, SimpleDateFormat formatter) {
         if (dateStr == null) {
@@ -257,31 +282,6 @@ public class DestinationsViewModel extends ViewModel {
         } catch (NumberFormatException e) {
             return false;
         }
-    }
-
-    // Base check for inputs (empty or not)
-    public boolean checkInput(String input) {
-        return input != null && !input.isEmpty();
-    }
-
-    // Checks if dates are valid
-    public boolean checkDates(String date1, String date2) {
-        if (date1 != null && date2 != null) {
-            try {
-                // Creates a SimpleDateFormat instance, formatted as below
-                SimpleDateFormat sdf = new SimpleDateFormat("M/d/yy", Locale.getDefault());
-
-                // Creates new Dates following the format created above
-                Date startDate = sdf.parse(date1);
-                Date endDate = sdf.parse(date2);
-
-                // Checks if the start date is less than or equal to the end date
-                return !startDate.after(endDate);
-            } catch (ParseException e) {
-                return false;
-            }
-        }
-        return false;
     }
 
     // Saves the details in the database
