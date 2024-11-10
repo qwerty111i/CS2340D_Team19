@@ -2,10 +2,10 @@ package com.example.sprint1.view;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.TimePickerDialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,41 +13,42 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.Spinner;
+import android.widget.TimePicker;
+
 import androidx.fragment.app.DialogFragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.sprint1.databinding.ActivityAddReservationDialogBinding;
-import com.example.sprint1.databinding.ActivityLogTravelDialogBinding;
-import com.example.sprint1.model.Trip;
-import com.example.sprint1.viewmodel.DestinationsViewModel;
 import com.example.sprint1.viewmodel.DiningViewModel;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.List;
+import java.util.Locale;
 
 public class AddReservationDialog extends DialogFragment {
 
     private DiningViewModel viewModel;
     private ActivityAddReservationDialogBinding binding;
-    private Button submitButton;
     private TextInputLayout location;
     private TextInputLayout website;
+    private TextInputLayout startDate;
+    private TextInputLayout endDate;
     private TextInputLayout startTime;
-    private Spinner tripDropDown;
     private TextInputEditText locationText;
     private TextInputEditText websiteText;
+    private TextInputEditText startDateText;
+    private TextInputEditText endDateText;
     private TextInputEditText startTimeText;
+    private AutoCompleteTextView tripDropDown;
+    private Button submitButton;
     private String selectedTrip;
+    private ArrayList<String> updatedTripList;
 
     @Override
-    public View onCreateView(
-            LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the binding for the dialog layout
         binding = ActivityAddReservationDialogBinding.inflate(inflater, container, false);
 
@@ -58,10 +59,13 @@ public class AddReservationDialog extends DialogFragment {
         binding.setViewModel(viewModel);
         binding.setLifecycleOwner(this);
 
-        // Binds components and validates submit button
+        updatedTripList = new ArrayList<>();
+
+        // Binds components and validates dialog
         startDialog();
 
         // Observes changes in the Live Data
+        observers();
 
         // Live check to see if inputs are edited after errors
         textWatchers();
@@ -85,11 +89,64 @@ public class AddReservationDialog extends DialogFragment {
 
             // Sets the values of width and height based on the device's screen
             int width = (int) (metrics.widthPixels * 0.9);
-            int height = (int) (metrics.heightPixels * 0.6);
+            int height = (int) (metrics.heightPixels * 0.85);
 
             // Sets the dialog size
             dialog.getWindow().setLayout(width, height); // Set desired size here
         }
+    }
+
+    private void startDialog() {
+        // Binds the variables to the proper xml components
+        location = binding.locationView;
+        locationText = binding.locationText;
+
+        website = binding.websiteView;
+        websiteText = binding.websiteText;
+
+        startDate = binding.startDateView;
+        startDateText = binding.startDateText;
+
+        endDate = binding.endDateView;
+        endDateText = binding.endDateText;
+
+        startTime = binding.startTimeView;
+        startTimeText = binding.startTimeText;
+
+        tripDropDown = binding.dropdown;
+        submitButton = binding.submit;
+
+        // Calls the date picker dialog when clicked
+        startDateText.setOnClickListener(v -> showDatePickerDialog(startDateText));
+        endDateText.setOnClickListener(v -> showDatePickerDialog(endDateText));
+
+        // Calls the time picker dialog when clicked
+        startTimeText.setOnClickListener(v -> showTimePickerDialog(startTimeText));
+
+        // Sets the list of trips
+        viewModel.setDropdownItems();
+
+        // Called when the Submit button is pressed
+        submitButton.setOnClickListener(v -> {
+            String locationText = this.locationText.getText().toString();
+            String websiteText = this.websiteText.getText().toString();
+            String startDateText = this.startDateText.getText().toString();
+            String endDateText = this.endDateText.getText().toString();
+            String startTimeText = this.startTimeText.getText().toString();
+            String currentTripText = selectedTrip;
+
+            // Updates the MutableLiveData in the View Model
+            viewModel.setReservationDetails(locationText,
+                    websiteText, startDateText, endDateText, startTimeText, currentTripText);
+
+            if (viewModel.areInputsValid().getValue()) {
+                // Saves details in the database
+                viewModel.saveReservationsDetails();
+
+                // Closes the dialog
+                dismiss();
+            }
+        });
     }
 
     private void showDatePickerDialog(TextInputEditText dateInput) {
@@ -118,27 +175,77 @@ public class AddReservationDialog extends DialogFragment {
         datePickerDialog.show();
     }
 
-    private void startDialog() {
-        // Binds the variables to the proper xml components
-        location = binding.locationView;
-        locationText = binding.locationText;
+    private void showTimePickerDialog(TextInputEditText timeInput) {
+        // Setting default time
+        int currentHour = 12;
+        int currentMinute = 0;
 
-        website = binding.websiteView;
-        websiteText = binding.websiteText;
+        TimePickerDialog.OnTimeSetListener timeSetListener = (view, hour, minute) -> {
+            // Formats the time in a 12-hour format
+            String amPm = (hour < 12) ? "AM" : "PM";
+            int hour12 = (hour == 0) ? 12 : (hour > 12) ? (hour - 12) : hour;
+            String formattedTime = String.format(Locale.US, "%02d:%02d %s", hour12, minute, amPm);
 
-        startTime = binding.startTimeView;
-        startTimeText = binding.startTimeText;
+            // Displays the formatted time
+            timeInput.setText(formattedTime);
+        };
 
-        tripDropDown = binding.dropdown;
-        submitButton = binding.submit;
+        TimePickerDialog timePickerDialog = new TimePickerDialog(
+                getActivity(), timeSetListener, currentHour, currentMinute, false);
 
-        // Calls the date picker dialog when clicked
-        startTimeText.setOnClickListener(v -> showDatePickerDialog(startTimeText));
+        // Shows the time picker dialog
+        timePickerDialog.show();
+    }
 
-        ArrayList<String> updatedTripList = new ArrayList<>();
+    private void setSelectedTrip() {
+        tripDropDown.setOnItemClickListener((parentView, view, position, id) -> {
+            selectedTrip = parentView.getItemAtPosition(position).toString();
+        });
+    }
 
-        // Gets the updated list of trips
-        viewModel.setDropdownItems();
+    private void observers() {
+        // Obtains location error using getLocationError in viewModel
+        // Updates new variable errorMessage to match the location error
+        viewModel.getLocationError().observe(this, errorMessage -> {
+            if (errorMessage != null) {
+                location.setError(errorMessage);
+            } else {
+                location.setError(null);
+            }
+        });
+
+        // Obtains location error using getLocationError in viewModel
+        // Updates new variable errorMessage to match the location error
+        viewModel.getWebsiteError().observe(this, errorMessage -> {
+            if (errorMessage != null) {
+                website.setError(errorMessage);
+            } else {
+                website.setError(null);
+            }
+        });
+
+        // Obtains date error using getDateError in viewModel
+        // Updates new variable errorMessage to match the date error
+        viewModel.getDateError().observe(this, errorMessage -> {
+            if (errorMessage != null) {
+                startDate.setError(errorMessage);
+                endDate.setError(errorMessage);
+            } else {
+                startDate.setError(null);
+                endDate.setError(null);
+            }
+        });
+
+        // Obtains date error using getDateError in viewModel
+        // Updates new variable errorMessage to match the date error
+        viewModel.getTimeError().observe(this, errorMessage -> {
+            if (errorMessage != null) {
+                startTime.setError(errorMessage);
+            } else {
+                startTime.setError(null);
+            }
+        });
+
         viewModel.getTripList().observe(this, trips -> {
             updatedTripList.clear();
             updatedTripList.addAll(trips);
@@ -150,34 +257,10 @@ public class AddReservationDialog extends DialogFragment {
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 tripDropDown.setAdapter(adapter);
                 tripDropDown.setSelection(0);
+
+                // Sets the dropdown and selectedTrip with the selected item
+                setSelectedTrip();
             }
-        });
-
-        // Sets the dropdown and selectedTrip with the selected item
-        setSelectedTrip();
-
-        // Called when the Submit button is pressed
-        submitButton.setOnClickListener(v -> {
-            String locationText = this.locationText.getText().toString();
-            String websiteText = this.websiteText.getText().toString();
-            String startTimeText = this.startTimeText.getText().toString();
-            String currentTripText = selectedTrip;
-
-            // Updates the MutableLiveData in the View Model
-            viewModel.setTravelDetails(locationText, websiteText, startTimeText, currentTripText);
-            dismiss();
-        });
-    }
-
-    private void setSelectedTrip() {
-        tripDropDown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parentView, View view, int position, long id) {
-                selectedTrip = parentView.getItemAtPosition(position).toString();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parentView) { }
         });
     }
 
@@ -194,6 +277,21 @@ public class AddReservationDialog extends DialogFragment {
             public void afterTextChanged(android.text.Editable s) {
                 // Sets error to null if field is edited
                 locationText.setError(null);
+            }
+        });
+
+        // Checks if website text field is edited after error is shown
+        websiteText.addTextChangedListener(new android.text.TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            public void afterTextChanged(android.text.Editable s) {
+                // Sets error to null if field is edited
+                websiteText.setError(null);
             }
         });
     }

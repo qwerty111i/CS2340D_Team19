@@ -10,11 +10,13 @@
             name="viewModel"
             type="com.example.sprint1.viewmodel.AccommodationViewModel" />
     </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/accommodations"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".view.AccommodationsActivity">
+
         <TextView
             android:id="@+id/accommodation_title"
             android:layout_width="wrap_content"
@@ -55,7 +57,7 @@
             android:id="@+id/button_log"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:layout_marginBottom="60dp"
+            android:layout_marginBottom="15dp"
             android:layout_marginEnd="15dp"
             android:backgroundTint="@color/modern_blue"
             android:drawableTop="@drawable/add_notes"
