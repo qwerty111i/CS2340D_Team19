@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.sprint1.model.Dining;
+import com.example.sprint1.model.ReservationDetails;
 import com.example.sprint1.model.Trip;
 import com.example.sprint1.model.UserModel;
 import com.google.firebase.auth.FirebaseAuth;
@@ -15,23 +15,87 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
 import java.util.ArrayList;
 
 public class DiningViewModel extends ViewModel {
+    private MutableLiveData<String> name = new MutableLiveData<>();
+    private MutableLiveData<String> nameError = new MutableLiveData<>();
     private MutableLiveData<String> location = new MutableLiveData<>();
+    private MutableLiveData<String> locationError = new MutableLiveData<>();
     private MutableLiveData<String> website = new MutableLiveData<>();
-    private MutableLiveData<String> startTime = new MutableLiveData<>();
+    private MutableLiveData<String> websiteError = new MutableLiveData<>();
+    private MutableLiveData<String> date = new MutableLiveData<>();
+    private MutableLiveData<String> dateError = new MutableLiveData<>();
+    private MutableLiveData<String> time = new MutableLiveData<>();
+    private MutableLiveData<String> timeError = new MutableLiveData<>();
+    private MutableLiveData<Boolean> validInputs = new MutableLiveData<>();
     private MutableLiveData<String> trip = new MutableLiveData<>();
+    private MutableLiveData<String> tripError = new MutableLiveData<>();
     private MutableLiveData<ArrayList<String>> tripList = new MutableLiveData<>();
 
-    public void setTravelDetails(String location, String website,
-                                 String endDate, String trip) {
+    public void setReservationDetails(String name, String location, String website,
+                                      String date, String time, String trip) {
         // Sets the values of the MutableLiveData
+        this.name.setValue(name);
         this.location.setValue(location);
         this.website.setValue(website);
-        this.startTime.setValue(endDate);
+        this.date.setValue(date);
+        this.time.setValue(time);
         this.trip.setValue(trip);
+
+        // Checks whether inputs are valid
+        boolean validName = checkInput(name);
+        boolean validLocation = checkInput(location);
+        boolean validWebsite = checkInput(website);
+        boolean validDates = checkInput(date);
+        boolean validTime = checkInput(time);
+        boolean validTrip = checkInput(trip);
+
+        // Sets the Name error message
+        if (!validName) {
+            nameError.setValue("Invalid Name Input!");
+        } else {
+            nameError.setValue(null);
+        }
+
+        // Sets the Location error message
+        if (!validLocation) {
+            locationError.setValue("Invalid Location Input!");
+        } else {
+            locationError.setValue(null);
+        }
+
+        // Sets the Website error message
+        if (!validWebsite) {
+            websiteError.setValue("Invalid Website Input!");
+        } else {
+            websiteError.setValue(null);
+        }
+
+        // Sets the Date error message
+        if (!validDates) {
+            dateError.setValue("Invalid Date!");
+        } else {
+            dateError.setValue(null);
+        }
+
+        // Sets the Time error message
+        if (!validTime) {
+            timeError.setValue("Invalid Time!");
+        } else {
+            timeError.setValue(null);
+        }
+
+        // Sets the Trip error message
+        if (!validTrip) {
+            tripError.setValue("No Trip Selected!");
+        } else {
+            tripError.setValue(null);
+        }
+
+        // Sets the value of validInputs (true/false)
+        validInputs.setValue(validName && validLocation && validWebsite
+                && validDates && validTime && validTrip);
     }
 
     public void setDropdownItems() {
@@ -69,20 +133,59 @@ public class DiningViewModel extends ViewModel {
         });
     }
 
+    // Base check for inputs (empty or not)
+    public boolean checkInput(String input) {
+        return input != null && !input.isEmpty();
+    }
+
     // Saves the details in the database
     public void saveReservationsDetails() {
-        // Creates a new TravelDetails object, storing all the data
-        Dining reservationDetails = new Dining(
+        // Creates a new ReservationDetails object, storing all the data
+        ReservationDetails reservationDetails = new ReservationDetails(
+                name.getValue(),
                 location.getValue(),
                 website.getValue(),
-                startTime.getValue(),
+                date.getValue(),
+                time.getValue(),
                 trip.getValue());
 
         // Uses the Singleton implemented Database to store information
         UserModel.getInstance().storeReservationDetails(reservationDetails);
     }
 
+    public LiveData<Boolean> areInputsValid() {
+        return validInputs;
+    }
+
+    public LiveData<String> getNameError() {
+        return nameError;
+    }
+
+    public LiveData<String> getLocationError() {
+        return locationError;
+    }
+
+    public LiveData<String> getWebsiteError() {
+        return websiteError;
+    }
+
+    public LiveData<String> getDateError() {
+        return dateError;
+    }
+
+    public LiveData<String> getDate() {
+        return date;
+    }
+
+    public LiveData<String> getTimeError() {
+        return timeError;
+    }
+
     public LiveData<ArrayList<String>> getTripList() {
         return tripList;
+    }
+
+    public LiveData<String> getTripError() {
+        return tripError;
     }
 }

@@ -119,7 +119,7 @@
             app:errorTextAppearance="@style/ErrorTextStyle"
             app:errorTextColor="@color/muted_red"
             app:errorIconDrawable="@null"
-            app:layout_constraintStart_toEndOf="@id/start_date_view"
+            app:layout_constraintStart_toEndOf="@id/date_view"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/end_date" >
 

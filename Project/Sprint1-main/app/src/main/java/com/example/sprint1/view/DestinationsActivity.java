@@ -18,6 +18,7 @@ import com.example.sprint1.BR;
 import com.example.sprint1.R;
 import com.example.sprint1.databinding.ActivityDestinationsBinding;
 import com.example.sprint1.viewmodel.DestinationsViewModel;
+import com.example.sprint1.viewmodel.LogisticsViewModel;
 import com.example.sprint1.viewmodel.TravelAdapter;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
@@ -40,8 +41,9 @@ public class DestinationsActivity extends AppCompatActivity {
     private DestinationsViewModel viewModel;
     private Button logTravelBtn;
     private Button vacationBtn;
+    private LogisticsViewModel logisticsViewModel;
 
-    //Create local lists for data pulled from Firebase
+    // Create local lists for data pulled from Firebase
     private List<String> tripNames = new ArrayList<>();
     private List<String> startDates = new ArrayList<>();
     private List<String> endDates = new ArrayList<>();
@@ -50,12 +52,12 @@ public class DestinationsActivity extends AppCompatActivity {
 
     private String currentEmail;
 
-    //Initialize Firebase
+    // Initialize Firebase
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
     private DatabaseReference databaseRef = database.getReference();
 
     private TravelAdapter adapter;
-
+    private Button createTrip;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,25 +84,34 @@ public class DestinationsActivity extends AppCompatActivity {
             Log.d("UserEmail", "User email: " + currentEmail);
         }
 
-        // Add navigation bar
-        tabLayout = findViewById(R.id.tab_navigation);
-        navigation();
-
         // Log Travel Feature
         logTravel(binding);
 
         // Calculate Vacation Time Feature
         calculateVacation(binding);
 
-        //connect adapter to Recycler View
+        // Connect adapter to Recycler View
         RecyclerView recyclerView = binding.logRecycler;
         adapter = new TravelAdapter(tripNames, locations, days);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        //Pulling data for log entries from Firebase
+        // Pulling data for log entries from Firebase
         getTravelDetails(currentEmail);
+        chooseTrip(binding);
 
+        // Add navigation bar
+        tabLayout = findViewById(R.id.tab_navigation);
+        navigation();
+    }
+
+    public void chooseTrip(ActivityDestinationsBinding binding) {
+        createTrip = binding.buttonNotes;
+
+        createTrip.setOnClickListener(v -> {
+            NotesPopupDialogCommon dialog = new NotesPopupDialogCommon();
+            dialog.show(getSupportFragmentManager(), "Create New Trip");
+        });
     }
 
     public void logTravel(ActivityDestinationsBinding binding) {
@@ -146,6 +157,11 @@ public class DestinationsActivity extends AppCompatActivity {
                 tripsRef.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot tripsSnapshot) {
+                        tripNames.clear();
+                        locations.clear();
+                        startDates.clear();
+                        endDates.clear();
+                        days.clear();
 
                         // Returns if no trips exist
                         if (!tripsSnapshot.exists()) {
@@ -162,7 +178,7 @@ public class DestinationsActivity extends AppCompatActivity {
                             DatabaseReference travelDetailsRef = tripsRef.child(tripId).child("Travel Details");
 
                             // Adds the travel details to the lists
-                            travelDetailsRef.addValueEventListener(new ValueEventListener() {
+                            travelDetailsRef.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot travelSnapshot) {
                                     addTravelToLists(travelSnapshot);
@@ -200,7 +216,7 @@ public class DestinationsActivity extends AppCompatActivity {
     }
 
     private void addTravelToLists(DataSnapshot travelDetailsSnapshot) {
-        //Loop through each travel detail
+        // Loop through each travel detail
         for (DataSnapshot snapshot : travelDetailsSnapshot.getChildren()) {
 
             String startDate = snapshot.child("startDate").getValue(String.class);

@@ -8,7 +8,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.example.sprint1.viewmodel.LogisticsViewModel" />
+            type="com.example.sprint1.viewmodel.DestinationsViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -18,6 +18,7 @@
         android:background="@drawable/dialog_background"
         tools:context=".view.TripDialog">
 
+        <!-- Title -->
         <TextView
             android:id="@+id/title"
             android:gravity="center"
@@ -32,13 +33,14 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <!-- Trip Name Label -->
         <TextView
-            android:id="@+id/trip"
+            android:id="@+id/tripNameLabel"
             android:layout_marginTop="20dp"
             android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:gravity="start"
             android:layout_marginStart="35dp"
-            android:layout_height="wrap_content"
             android:text="Trip Name"
             android:textSize="18sp"
             android:textColor="@android:color/black"
@@ -46,47 +48,42 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/title"
-            app:layout_constraintBottom_toTopOf="@id/trip_input" />
+            app:layout_constraintBottom_toTopOf="@id/spinnerInputLayout" />
 
+        <!-- Spinner wrapped in TextInputLayout -->
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/trip_input"
+            android:id="@+id/spinnerInputLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:boxBackgroundMode="filled"
             app:boxBackgroundColor="@color/light_modern_purple"
             app:boxStrokeColor="@color/modern_purple"
             app:boxStrokeWidth="3dp"
-            app:boxStrokeWidthFocused="3dp"
-            app:startIconDrawable="@drawable/location"
             app:startIconTint="@color/black"
-            android:hint="Enter Trip Details"
-            android:textColorHint="@color/black"
-            app:hintTextColor="@color/black"
-            app:errorEnabled="true"
-            app:boxStrokeErrorColor="@color/muted_red"
-            app:errorTextAppearance="@style/ErrorTextStyle"
-            app:errorTextColor="@color/muted_red"
-            app:errorIconTint="@color/muted_red"
+            app:layout_constraintTop_toBottomOf="@id/tripNameLabel"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintWidth_percent="0.8"
-            app:layout_constraintTop_toBottomOf="@id/trip">
+            android:layout_marginTop="20dp">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/trip_input_text"
+            <Spinner
+                android:id="@+id/tripNameSpinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/poppins_regular"
-                android:inputType="text"
-                android:maxLines="1"
-                android:scrollHorizontally="true"
-                android:textColor="@color/black" />
+                android:layout_marginStart="35dp"
+                android:layout_marginEnd="35dp"
+                android:layout_marginTop="10dp"
+                android:background="@android:drawable/btn_dropdown"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <!-- Submit Button -->
         <Button
             android:id="@+id/submit"
+            android:layout_marginTop="40dp"
             android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:text="@string/log_travel_submit"
             android:textSize="20sp"
             android:fontFamily="@font/poppins_regular"
@@ -95,8 +92,9 @@
             app:layout_constraintWidth_percent="0.4"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHeight_percent="0.20"
-            app:layout_constraintTop_toBottomOf="@id/trip_input" />
+            app:layout_constraintHeight_percent="0.12"
+            app:layout_constraintTop_toBottomOf="@id/spinnerInputLayout"
+            app:layout_constraintBottom_toBottomOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
