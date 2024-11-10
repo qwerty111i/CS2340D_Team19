@@ -21,6 +21,7 @@ import com.example.sprint1.viewmodel.AccommodationViewModel;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 public class LogAccommodationDialog extends DialogFragment {
@@ -39,20 +40,33 @@ public class LogAccommodationDialog extends DialogFragment {
     private TextInputEditText checkOutDateText;
     private AutoCompleteTextView numberOfRoomsText;
     private AutoCompleteTextView roomTypeText;
+    private AutoCompleteTextView tripDropDown;
+    private String selectedTrip;
+    private ArrayList<String> updatedTripList;
 
     @Override
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         // Inflate the dialog layout
         binding = ActivityLogAccommodationDialogBinding .inflate(inflater, container, false);
+
         viewModel = new ViewModelProvider(this).get(AccommodationViewModel.class);
+
         binding.setViewModel(viewModel);
+
         binding.setLifecycleOwner(this);
+
+        updatedTripList = new ArrayList<>();
+
         startDialog();
+
         observers();
+
         textWatchers();
+
         return binding.getRoot();
     }
+
     @Override
     public void onStart() {
         super.onStart();
@@ -117,6 +131,8 @@ public class LogAccommodationDialog extends DialogFragment {
         roomType = binding.roomType;
         roomTypeText = binding.roomTypeText;
 
+
+        tripDropDown = binding.dropdown;
         submitButton = binding.submit;
 
         AutoCompleteTextView roomTypeView = binding.roomTypeText;
@@ -135,12 +151,16 @@ public class LogAccommodationDialog extends DialogFragment {
         checkInDateText.setOnClickListener(v -> showDatePickerDialog(checkInDateText));
         checkOutDateText.setOnClickListener(v -> showDatePickerDialog(checkOutDateText));
 
+        // Sets the list of trips
+        viewModel.setDropdownItems();
+
         // Called when the Submit button is pressed
         submitButton.setOnClickListener(v -> {
             String locationText = this.locationText.getText().toString();
             String checkInDateText = this.checkInDateText.getText().toString();
             String checkOutDateText = this.checkOutDateText.getText().toString();
             String numberOfRoomsString = this.numberOfRoomsText.getText().toString();
+            String currentTripText = selectedTrip;
 
             int numberOfRooms = 0;
             try {
@@ -153,10 +173,10 @@ public class LogAccommodationDialog extends DialogFragment {
             String roomTypeText = this.roomTypeText.getText().toString();
 
             viewModel.setAccommodationDetails(locationText, checkInDateText,
-                    checkOutDateText, numberOfRooms, roomTypeText);
+                    checkOutDateText, numberOfRooms, roomTypeText, currentTripText);
 
             if (viewModel.areInputsValid().getValue()) {
-                viewModel.saveDetails();
+                viewModel.saveAccommodationDetails();
                 dismiss();
             }
         });
@@ -180,6 +200,41 @@ public class LogAccommodationDialog extends DialogFragment {
                 checkInDate.setError(null);
                 checkOutDate.setError(null);
             }
+        });
+
+        // Obtains trip error using getTripError in viewModel
+        // Updates new variable errorMessage to match the trip error
+        viewModel.getTripError().observe(this, errorMessage -> {
+            if (errorMessage != null) {
+                tripDropDown.setError(errorMessage);
+            } else {
+                tripDropDown.setError(null);
+            }
+        });
+
+        // Observes new trips using getTripList in viewModel
+        // Updates the dropdown to add the new trips
+        viewModel.getTripList().observe(this, trips -> {
+            updatedTripList.clear();
+            updatedTripList.addAll(trips);
+
+            // Sets the dropdown with the list of trips
+            if (getActivity() != null && getContext() != null) {
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                        getContext(), android.R.layout.simple_spinner_item, updatedTripList);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                tripDropDown.setAdapter(adapter);
+                tripDropDown.setSelection(0);
+
+                // Sets the dropdown and selectedTrip with the selected item
+                setSelectedTrip();
+            }
+        });
+    }
+
+    private void setSelectedTrip() {
+        tripDropDown.setOnItemClickListener((parentView, view, position, id) -> {
+            selectedTrip = parentView.getItemAtPosition(position).toString();
         });
     }
 

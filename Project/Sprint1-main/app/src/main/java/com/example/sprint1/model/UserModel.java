@@ -121,14 +121,47 @@ public class UserModel {
         }
     }
 
-    // Method to store accommodations under the specific user's nod
-    public void storeAccommodation(Accommodation accommodation) {
+    // Method to store accommodation details under the specific user's node
+    public void storeAccommodationDetails(AccommodationDetails accommodationDetails) {
+        String currentTripName = accommodationDetails.getTripName();
         if (userId != null) {
-            database.child(userId)
-                    .child("accommodations")
-                    .push().setValue(accommodation);
+            // Gets all the nodes under Trips
+            DatabaseReference tripsRef = database.child(userId).child("Trips");
+            tripsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot tripsSnapshot) {
+                    // Returns if no trips exist
+                    if (!tripsSnapshot.exists()) {
+                        Log.e("StoreTravelDetails", "No trips found for the user");
+                        return;
+                    }
+
+                    for(DataSnapshot tripSnapshot : tripsSnapshot.getChildren()) {
+                        // Gets the trip key
+                        String tripId = tripSnapshot.getKey();
+
+                        // Gets the trip name from the trip key
+                        String tripName = tripSnapshot.child("tripName").getValue(String.class);
+
+                        // Adds the travel details if the trip names are equal
+                        if (currentTripName.equals(tripName)) {
+                            database.child(userId)
+                                    .child("Trips")
+                                    .child(tripId)
+                                    .child("Accommodation Details")
+                                    .push()
+                                    .setValue(accommodationDetails);
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Log.e("StoreAccommodationDetails", "Unable to store: " + error.getMessage());
+                }
+            });
         } else {
-            Log.e("UserModel", "UserId is not set, cannot store accommodations.");
+            Log.e("UserModel", "UserId is not set, cannot store accommodation details.");
         }
     }
 

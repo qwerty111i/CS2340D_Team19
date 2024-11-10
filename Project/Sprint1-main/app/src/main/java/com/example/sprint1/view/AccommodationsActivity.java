@@ -13,7 +13,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,7 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.sprint1.BR;
 import com.example.sprint1.R;
 import com.example.sprint1.databinding.ActivityAccommodationsBinding;
-import com.example.sprint1.model.Accommodation;
+import com.example.sprint1.model.AccommodationDetails;
 import com.example.sprint1.viewmodel.AccommodationAdapter;
 import com.example.sprint1.viewmodel.AccommodationViewModel;
 import com.google.android.material.tabs.TabLayout;
@@ -46,7 +45,7 @@ public class AccommodationsActivity extends AppCompatActivity {
     private TabLayout tabLayout;
     private AccommodationViewModel viewModel;
     private AccommodationAdapter adapter;
-    private List<Accommodation> accommodations = new ArrayList<>();
+    private List<AccommodationDetails> accommodations = new ArrayList<>();
     private String currentEmail;
 
     //Initialize Firebase
@@ -97,69 +96,106 @@ public class AccommodationsActivity extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.accommodationRecycler);
 
         //Fetch Accommodation entries from firebase
-        fetchAccommodations();
+        getAccommodationDetails(currentEmail);
 
         //Create adapter (AFTER pulling data from firebase)
         adapter = new AccommodationAdapter(this, accommodations);
 
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-
     }
 
-    public void fetchAccommodations() {
-        DatabaseReference accommodationDatabaseRef = databaseRef.child("users");
+    private void getAccommodationDetails(String email) {
+        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference().child("users");
 
-        accommodationDatabaseRef.orderByChild("email").equalTo(currentEmail).addValueEventListener(
-                new ValueEventListener() {
+        // Finds the user using their email
+        usersRef.orderByChild("email").equalTo(email).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot userSnapshot) {
+                // Clears the lists to avoid duplication
+                accommodations.clear();
+
+                // Snapshot of the user with the associated email ID
+                DataSnapshot userData = userSnapshot.getChildren().iterator().next();
+                String userId = userData.getKey();
+
+                // Reference at user/userId/"Trips"
+                DatabaseReference tripsRef = usersRef.child(userId).child("Trips");
+
+                // Retrieves all trips made by the user
+                tripsRef.addValueEventListener(new ValueEventListener() {
                     @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        //clear list of accommodations to avoid duplication
+                    public void onDataChange(@NonNull DataSnapshot tripsSnapshot) {
                         accommodations.clear();
 
-                        for (DataSnapshot accommodationsSnapshot : snapshot.getChildren()) {
-                            addAccommodationsToList(accommodationsSnapshot.child("accommodations"));
+                        // Returns if no trips exist
+                        if (!tripsSnapshot.exists()) {
+                            Log.d("Firebase", "No trips found for: " + userId);
+                            return;
                         }
 
-                        //verify data retrieval
-                        for(int i = 0; i < accommodations.size(); i++){
-                            Log.d("Firebase", "Check in: " + accommodations.get(i).getCheckIn());
-                            Log.d("Firebase", "Check out: " + accommodations.get(i).getCheckOut());
-                            Log.d("Firebase", "RoomType: " + accommodations.get(i).getRoomType());
-                            Log.d("Firebase", "Location: " + accommodations.get(i).getLocation());
-                            Log.d("Firebase", "Num Rooms: " + accommodations.get(i).getNumRooms());
-                            //check in, checkout, location, num of rooms, room type
-                        }
-                        // Notify adapter
-                        adapter.notifyDataSetChanged();
+                        // Iterate through each existing trip
+                        for (DataSnapshot tripSnapshot : tripsSnapshot.getChildren()) {
+                            // Gets the trip ID
+                            String tripId = tripSnapshot.getKey();
 
+                            // Currently at users/userId/"Trips"/tripId/"Travel Details"
+                            DatabaseReference accommodationDetailsRef = tripsRef.child(tripId).child("Accommodation Details");
+
+                            // Adds the reservation details to the lists
+                            accommodationDetailsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot accommodationSnapshot) {
+                                    addAccommodationToList(accommodationSnapshot);
+
+                                    // Notify adapter
+                                    adapter.notifyDataSetChanged();
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+                                    Log.d("Firebase", "Error retrieving reservation details for tripId: " + tripId);
+                                }
+                            });
+                        }
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
-                        Log.d("Firebase", "Error retrieving data");
-
+                        Log.d("Firebase", "Error retrieving trips for userId: " + userId);
                     }
                 });
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.d("Firebase", "Error retrieving user data");
+            }
+        });
     }
 
-    public void addAccommodationsToList(DataSnapshot accommodationsSnapshot) {
-        //Loop through each accommodation
-        for (DataSnapshot snapshot : accommodationsSnapshot.getChildren()) {
-
+    private void addAccommodationToList(DataSnapshot accommodationDetailsSnapshot) {
+        // Loop through each travel detail
+        for (DataSnapshot snapshot : accommodationDetailsSnapshot.getChildren()) {
             String checkIn = snapshot.child("checkIn").getValue(String.class);
             String checkOut = snapshot.child("checkOut").getValue(String.class);
             int numRooms = snapshot.child("numRooms").getValue(int.class);
             String roomType = snapshot.child("roomType").getValue(String.class);
             String location = snapshot.child("location").getValue(String.class);
+            String trip = snapshot.child("tripName").getValue(String.class);
 
-            Accommodation accommodation = new Accommodation(checkIn, checkOut, location, numRooms, roomType);
+            Log.d("Firebase", "Check in: " + checkIn);
+            Log.d("Firebase", "Check out: " + checkOut);
+            Log.d("Firebase", "RoomType: " + roomType);
+            Log.d("Firebase", "Location: " + location);
+            Log.d("Firebase", "Num Rooms: " + numRooms);
+            Log.d("Firebase", "Trip Name: " + trip);
+            //check in, checkout, location, num of rooms, room type
+
+            AccommodationDetails accommodation = new AccommodationDetails(checkIn, checkOut, location, numRooms, roomType, trip);
             accommodations.add(accommodation);
         }
-
     }
-
 
     private void navigation() {
         boolean checkSelected = false;
