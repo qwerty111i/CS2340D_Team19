@@ -29,19 +29,19 @@ public class DiningViewModel extends ViewModel {
     private MutableLiveData<String> time = new MutableLiveData<>();
     private MutableLiveData<String> timeError = new MutableLiveData<>();
     private MutableLiveData<Boolean> validInputs = new MutableLiveData<>();
-    private MutableLiveData<String> trip = new MutableLiveData<>();
+    private MutableLiveData<String> tripName = new MutableLiveData<>();
     private MutableLiveData<String> tripError = new MutableLiveData<>();
     private MutableLiveData<ArrayList<String>> tripList = new MutableLiveData<>();
 
     public void setReservationDetails(String name, String location, String website,
-                                      String date, String time, String trip) {
+                                      String date, String time, String tripName) {
         // Sets the values of the MutableLiveData
         this.name.setValue(name);
         this.location.setValue(location);
         this.website.setValue(website);
         this.date.setValue(date);
         this.time.setValue(time);
-        this.trip.setValue(trip);
+        this.tripName.setValue(tripName);
 
         // Checks whether inputs are valid
         boolean validName = checkInput(name);
@@ -49,7 +49,7 @@ public class DiningViewModel extends ViewModel {
         boolean validWebsite = checkInput(website);
         boolean validDates = checkInput(date);
         boolean validTime = checkInput(time);
-        boolean validTrip = checkInput(trip);
+        boolean validTripName = checkInput(tripName);
 
         // Sets the Name error message
         if (!validName) {
@@ -87,7 +87,7 @@ public class DiningViewModel extends ViewModel {
         }
 
         // Sets the Trip error message
-        if (!validTrip) {
+        if (!validTripName) {
             tripError.setValue("No Trip Selected!");
         } else {
             tripError.setValue(null);
@@ -95,7 +95,7 @@ public class DiningViewModel extends ViewModel {
 
         // Sets the value of validInputs (true/false)
         validInputs.setValue(validName && validLocation && validWebsite
-                && validDates && validTime && validTrip);
+                && validDates && validTime && validTripName);
     }
 
     public void setDropdownItems() {
@@ -147,7 +147,7 @@ public class DiningViewModel extends ViewModel {
                 website.getValue(),
                 date.getValue(),
                 time.getValue(),
-                trip.getValue());
+                tripName.getValue());
 
         // Uses the Singleton implemented Database to store information
         UserModel.getInstance().storeReservationDetails(reservationDetails);

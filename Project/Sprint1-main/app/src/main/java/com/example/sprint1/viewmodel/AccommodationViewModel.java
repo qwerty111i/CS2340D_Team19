@@ -33,25 +33,25 @@ public class AccommodationViewModel extends ViewModel {
     private MutableLiveData<Boolean> validInputs = new MutableLiveData<>();
     private MutableLiveData<String> dateError = new MutableLiveData<>();
     private MutableLiveData<String> inputError = new MutableLiveData<>();
-    private MutableLiveData<String> trip = new MutableLiveData<>();
+    private MutableLiveData<String> tripName = new MutableLiveData<>();
     private MutableLiveData<String> tripError = new MutableLiveData<>();
     private MutableLiveData<ArrayList<String>> tripList = new MutableLiveData<>();
 
     public void setAccommodationDetails(String location, String checkIn, String checkOut,
-                                        int numRooms, String roomType, String trip) {
+                                        int numRooms, String roomType, String tripName) {
         this.location.setValue(location);
         this.checkInDate.setValue(checkIn);
         this.checkOutDate.setValue(checkOut);
         this.numberOfRooms.setValue(numRooms);
         this.roomType.setValue(roomType);
-        this.trip.setValue(trip);
+        this.tripName.setValue(tripName);
 
         // Checks whether location and date are valid
         boolean validLocation = checkInput(location);
         boolean validRoomType = checkInput(roomType);
         boolean validNumberOfRooms = checkInput(numRooms);
         boolean validDates = checkDates(checkIn, checkOut);
-        boolean validTrip = checkInput(trip);
+        boolean validTripName = checkInput(tripName);
 
         // Set input errors based on validation
         if (!validLocation) {
@@ -60,7 +60,7 @@ public class AccommodationViewModel extends ViewModel {
             inputError.setValue("Room type is required!");
         } else if (!validNumberOfRooms) {
             inputError.setValue("Number of rooms must be greater than 0!");
-        } else if (!validTrip) {
+        } else if (!validTripName) {
             inputError.setValue("Invalid Trip Selection!");
         } else {
             inputError.setValue(null); // Clear error if all inputs are valid
@@ -74,7 +74,7 @@ public class AccommodationViewModel extends ViewModel {
         }
 
         // Sets the value of validInputs (true/false)
-        validInputs.setValue(validLocation && validRoomType && validNumberOfRooms && validDates && validTrip);
+        validInputs.setValue(validLocation && validRoomType && validNumberOfRooms && validDates && validTripName);
     }
 
     public void saveAccommodationDetails() {
@@ -84,7 +84,7 @@ public class AccommodationViewModel extends ViewModel {
                 location.getValue(),
                 numberOfRooms.getValue(),
                 roomType.getValue(),
-                trip.getValue());
+                tripName.getValue());
         UserModel.getInstance().storeAccommodationDetails(accommodationDetails);
     }
 
