@@ -41,7 +41,7 @@ public class DestinationsViewModel extends ViewModel {
     private MutableLiveData<String> startVacationDate = new MutableLiveData<>();
     private MutableLiveData<String> endVacationDate = new MutableLiveData<>();
     private MutableLiveData<String> toastMessage = new MutableLiveData<>();
-    private MutableLiveData<String> trip = new MutableLiveData<>();
+    private MutableLiveData<String> tripName = new MutableLiveData<>();
     private MutableLiveData<String> tripError = new MutableLiveData<>();
     private MutableLiveData<ArrayList<String>> tripList = new MutableLiveData<>();
 
@@ -51,7 +51,7 @@ public class DestinationsViewModel extends ViewModel {
         this.location.setValue(location);
         this.startDate.setValue(startDate);
         this.endDate.setValue(endDate);
-        this.trip.setValue(tripName);
+        this.tripName.setValue(tripName);
 
         // Checks whether location and date are valid
         boolean validLocation = checkInput(location);
@@ -304,7 +304,8 @@ public class DestinationsViewModel extends ViewModel {
                 location.getValue(),
                 startDate.getValue(),
                 endDate.getValue(),
-                trip.getValue());
+                tripName.getValue());
+
 
         // Uses the Singleton implemented Database to store information
         UserModel.getInstance().storeTravelDetails(travelDetails);
