@@ -154,15 +154,87 @@ public class LogisticsViewModel extends ViewModel {
         });
     }
 
-    public void addNote(String note) {
+    public void addNote(String tripId, String noteText) {
+        if (noteText == null || noteText.trim().isEmpty()) {
+            Log.d("UserModel", "Attempted to add an empty note, ignoring.");
+            return;
+        }
+
+        // Get the reference for the selected trip's notes
+        DatabaseReference tripNotesRef = FirebaseDatabase.getInstance()
+                .getReference("Trips")  // Assuming trips are stored under "trips" node
+                .child(tripId)           // Access the specific trip by ID
+                .child("notes");         // Access or create the "notes" section within the trip
+
+        // Add the note under the "notes" section with a unique ID
+        String noteId = tripNotesRef.push().getKey();
+        if (noteId != null) {
+            tripNotesRef.child(noteId).setValue(noteText)
+                    .addOnSuccessListener(aVoid -> {
+                        Log.d("UserModel", "Note added under trip: " + tripId);
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e("UserModel", "Failed to add note under trip: " + tripId, e);
+                    });
+        }
+    }
+
+    public void saveNoteForTrip(String currentTripName, String note ) {
         if (note == null || note.trim().isEmpty()) {
             Log.d("LogisticsViewModel", "Attempted to add an empty note, ignoring.");
             return;
         }
-        notesList.add(note);
-        notesLiveData.setValue(notesList);
-        saveNoteToFirebase(note);
+
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        if (userId != null) {
+            // Reference to the Trips node under the current user
+            DatabaseReference tripsRef = FirebaseDatabase.getInstance().getReference("users").child(userId).child("Trips");
+
+            // Retrieve all trips for the current user
+            tripsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot tripsSnapshot) {
+                    if (!tripsSnapshot.exists()) {
+                        Log.e("saveNoteForTrip", "No trips found for the user");
+                        return;
+                    }
+
+                    // Iterate through each trip to find the matching trip by name
+                    for (DataSnapshot tripSnapshot : tripsSnapshot.getChildren()) {
+                        String tripId = tripSnapshot.getKey();
+                        String tripName = tripSnapshot.child("tripName").getValue(String.class);
+
+                        // If the trip name matches, store the note under this trip
+                        if (currentTripName.equals(tripName)) {
+                            // Reference to the Notes node under the selected trip
+                            DatabaseReference notesRef = tripsRef.child(tripId).child("Notes");
+
+                            // Push the note under the selected trip's Notes node
+                            String noteId = notesRef.push().getKey();
+                            if (noteId != null) {
+                                notesRef.child(noteId).setValue(note)
+                                        .addOnSuccessListener(aVoid -> {
+                                            Log.d("saveNoteForTrip", "Note saved under trip: " + tripId);
+                                        })
+                                        .addOnFailureListener(e -> {
+                                            Log.d("saveNoteForTrip", "Failed to save note under trip: " + tripId);
+                                        });
+                            }
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Log.e("saveNoteForTrip", "Error retrieving trips for userId: " + userId);
+                }
+            });
+        } else {
+            Log.e("LogisticsViewModel", "UserId is not set, cannot save note.");
+        }
     }
+
+
 
     public void removeNote(String note) {
         notesList.remove(note);
@@ -437,6 +509,67 @@ public class LogisticsViewModel extends ViewModel {
                         });
             }
         }
+    }
+
+    public void fetchNotesForTrip(String currentTripName) {
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        if (userId == null) {
+            Log.e("LogisticsViewModel", "UserId is not set, cannot fetch notes.");
+            return;
+        }
+
+        // Reference to the Trips node under the current user
+        DatabaseReference tripsRef = FirebaseDatabase.getInstance().getReference("users").child(userId).child("Trips");
+
+        // Retrieve all trips for the current user
+        tripsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot tripsSnapshot) {
+                if (!tripsSnapshot.exists()) {
+                    Log.e("fetchNotesForTrip", "No trips found for the user");
+                    return;
+                }
+
+                // Iterate through each trip to find the matching trip by name
+                for (DataSnapshot tripSnapshot : tripsSnapshot.getChildren()) {
+                    String tripId = tripSnapshot.getKey();
+                    String tripName = tripSnapshot.child("tripName").getValue(String.class);
+
+                    // If the trip name matches, retrieve the notes under this trip
+                    if (currentTripName.equals(tripName)) {
+                        DatabaseReference notesRef = tripsRef.child(tripId).child("Notes");
+
+                        // Fetch notes under the selected trip's Notes node
+                        notesRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot notesSnapshot) {
+                                ArrayList<String> notes = new ArrayList<>();
+                                for (DataSnapshot noteSnapshot : notesSnapshot.getChildren()) {
+                                    String note = noteSnapshot.getValue(String.class);
+                                    if (note != null) {
+                                        notes.add(note);
+                                    }
+                                }
+
+                                // Update LiveData with the list of notes
+                                notesLiveData.setValue(notes);
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                Log.e("fetchNotesForTrip", "Error fetching notes: " + databaseError.getMessage());
+                            }
+                        });
+                        break; // Stop after finding the matching trip
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("fetchNotesForTrip", "Error retrieving trips for userId: " + userId);
+            }
+        });
     }
 
 

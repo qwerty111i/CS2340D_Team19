@@ -71,14 +71,25 @@ public class LogisticsActivity extends AppCompatActivity {
             logisticsChart.show(getSupportFragmentManager(), "LogisticsChart");
         });
 
-        notesButton.setOnClickListener(v -> showNotesDialog());
-        viewModel.retrieveNotes();
+        //notesButton.setOnClickListener(v -> showNotesDialog());
+        //viewModel.retrieveNotes();
 
         inviteButton.setOnClickListener(this::onInviteButtonClick);
 
         // Navigation bar
         tabLayout = binding.tabNavigation;
         navigation();
+        chooseTrip(binding);
+    }
+
+
+    public void chooseTrip(ActivityLogisticsBinding binding) {
+        createTrip = binding.buttonNotes;
+
+        createTrip.setOnClickListener(v -> {
+            NotesPopupForLogistics dialog = new NotesPopupForLogistics();
+            dialog.show(getSupportFragmentManager(), "Create New Trip");
+        });
     }
 
     public void createNewTrip(ActivityLogisticsBinding binding) {
@@ -209,7 +220,7 @@ public class LogisticsActivity extends AppCompatActivity {
         builder.setPositiveButton("Save", (dialog, which) -> {
             String note = input.getText().toString();
             if (!note.isEmpty()) {
-                viewModel.addNote(note);
+                //viewModel.addNote("trip", note);
             } else {
                 Toast.makeText(this, "Note cannot be empty", Toast.LENGTH_SHORT).show();
             }
