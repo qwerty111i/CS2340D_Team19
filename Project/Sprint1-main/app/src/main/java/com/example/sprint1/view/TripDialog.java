@@ -1,6 +1,5 @@
 package com.example.sprint1.view;
 
-import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -14,14 +13,10 @@ import android.widget.Button;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.sprint1.databinding.ActivityLogTravelDialogBinding;
 import com.example.sprint1.databinding.ActivityTripDialogBinding;
-import com.example.sprint1.viewmodel.DestinationsViewModel;
 import com.example.sprint1.viewmodel.LogisticsViewModel;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
-
-import java.util.Calendar;
 
 public class TripDialog extends DialogFragment {
 

@@ -71,7 +71,7 @@ public class UserModel {
                         return;
                     }
 
-                    for(DataSnapshot tripSnapshot : tripsSnapshot.getChildren()) {
+                    for (DataSnapshot tripSnapshot : tripsSnapshot.getChildren()) {
                         // Gets the trip key
                         String tripId = tripSnapshot.getKey();
 
@@ -136,7 +136,7 @@ public class UserModel {
                         return;
                     }
 
-                    for(DataSnapshot tripSnapshot : tripsSnapshot.getChildren()) {
+                    for (DataSnapshot tripSnapshot : tripsSnapshot.getChildren()) {
                         // Gets the trip key
                         String tripId = tripSnapshot.getKey();
 
@@ -180,7 +180,7 @@ public class UserModel {
                         return;
                     }
 
-                    for(DataSnapshot tripSnapshot : tripsSnapshot.getChildren()) {
+                    for (DataSnapshot tripSnapshot : tripsSnapshot.getChildren()) {
                         // Gets the trip key
                         String tripId = tripSnapshot.getKey();
 

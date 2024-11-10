@@ -78,18 +78,19 @@ public class NotesTextViewPopupLogistics extends DialogFragment {
         logisticsViewModel.fetchNotesForTrip(selectedTrip);
 
         // Observe the LiveData for notes and update the TextView when data changes
-        logisticsViewModel.getNotesLiveData().observe(getViewLifecycleOwner(), new Observer<List<String>>() {
-            @Override
-            public void onChanged(List<String> notes) {
-                // Concatenate all notes into a single string
-                StringBuilder notesString = new StringBuilder();
-                for (String note : notes) {
-                    notesString.append(note).append("\n\n");
-                }
+        logisticsViewModel.getNotesLiveData().observe(getViewLifecycleOwner(),
+                new Observer<List<String>>() {
+                @Override
+                public void onChanged(List<String> notes) {
+                    // Concatenate all notes into a single string
+                    StringBuilder notesString = new StringBuilder();
+                    for (String note : notes) {
+                        notesString.append(note).append("\n\n");
+                    }
 
-                // Set the concatenated notes to the TextView
-                noteText.setText(notesString.toString());
-            }
-        });
+                    // Set the concatenated notes to the TextView
+                    noteText.setText(notesString.toString());
+                }
+            });
     }
 }

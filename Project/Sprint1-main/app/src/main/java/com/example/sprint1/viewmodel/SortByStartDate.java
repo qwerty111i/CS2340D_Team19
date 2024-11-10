@@ -9,8 +9,10 @@ import java.util.List;
 import java.util.Locale;
 
 public class SortByStartDate implements ReservationSortingStrategy {
-    private final SimpleDateFormat dateFormat = new SimpleDateFormat("M/d/yy", Locale.getDefault());
-    private final SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a", Locale.getDefault());
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("M/d/yy",
+            Locale.getDefault());
+    private final SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a",
+            Locale.getDefault());
 
     @Override
     public void sort(List<ReservationDetails> reservations) {

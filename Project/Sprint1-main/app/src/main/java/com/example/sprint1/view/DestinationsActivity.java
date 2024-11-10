@@ -182,25 +182,28 @@ public class DestinationsActivity extends AppCompatActivity {
                                     // Adds the travel details to the lists
                                     travelDetailsRef.addListenerForSingleValueEvent(
                                             new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(@NonNull DataSnapshot travelSnapshot) {
-                                            addTravelToLists(travelSnapshot);
-                                            getAllDuration(startDates, endDates);
+                                            @Override
+                                            public void onDataChange(
+                                                    @NonNull DataSnapshot travelSnapshot) {
+                                                addTravelToLists(travelSnapshot);
+                                                getAllDuration(startDates, endDates);
 
-                                            // Log data
-                                            Log.d("Firebase", "Start Dates: " + startDates);
-                                            Log.d("Firebase", "End Dates: " + endDates);
-                                            Log.d("Firebase", "Locations: " + locations);
+                                                // Log data
+                                                Log.d("Firebase", "Start Dates: " + startDates);
+                                                Log.d("Firebase", "End Dates: " + endDates);
+                                                Log.d("Firebase", "Locations: " + locations);
 
-                                            // Notify adapter
-                                            adapter.notifyDataSetChanged();
-                                        }
+                                                // Notify adapter
+                                                adapter.notifyDataSetChanged();
+                                            }
 
-                                        @Override
-                                        public void onCancelled(@NonNull DatabaseError error) {
-                                            Log.d("Firebase", "Error retrieving travel details for tripId: " + tripId);
-                                        }
-                                    });
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError error) {
+                                                Log.d("Firebase",
+                                                        "Error retrieving travel "
+                                                                + "details for tripId: " + tripId);
+                                            }
+                                        });
                                 }
                             }
 
@@ -209,13 +212,13 @@ public class DestinationsActivity extends AppCompatActivity {
                                 Log.d("Firebase", "Error retrieving trips for userId: " + userId);
                             }
                         });
-            }
+                    }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.d("Firebase", "Error retrieving user data");
-            }
-        });
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Log.d("Firebase", "Error retrieving user data");
+                    }
+                });
     }
 
     private void addTravelToLists(DataSnapshot travelDetailsSnapshot) {

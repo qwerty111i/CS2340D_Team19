@@ -110,28 +110,11 @@ public class DiningActivity extends AppCompatActivity {
         DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference().child("users");
 
         // Finds the user using their email
-        usersRef.orderByChild("email").equalTo(email).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot userSnapshot) {
-                // Clears the lists to avoid duplication
-                names.clear();
-                locations.clear();
-                websites.clear();
-                dates.clear();
-                times.clear();
-                tripNames.clear();
-
-                // Snapshot of the user with the associated email ID
-                DataSnapshot userData = userSnapshot.getChildren().iterator().next();
-                String userId = userData.getKey();
-
-                // Reference at user/userId/"Trips"
-                DatabaseReference tripsRef = usersRef.child(userId).child("Trips");
-
-                // Retrieves all trips made by the user
-                tripsRef.addValueEventListener(new ValueEventListener() {
+        usersRef.orderByChild("email").equalTo(email).
+                addValueEventListener(new ValueEventListener() {
                     @Override
-                    public void onDataChange(@NonNull DataSnapshot tripsSnapshot) {
+                    public void onDataChange(@NonNull DataSnapshot userSnapshot) {
+                        // Clears the lists to avoid duplication
                         names.clear();
                         locations.clear();
                         websites.clear();
@@ -139,57 +122,83 @@ public class DiningActivity extends AppCompatActivity {
                         times.clear();
                         tripNames.clear();
 
-                        // Returns if no trips exist
-                        if (!tripsSnapshot.exists()) {
-                            Log.d("Firebase", "No trips found for: " + userId);
-                            return;
-                        }
+                        // Snapshot of the user with the associated email ID
+                        DataSnapshot userData = userSnapshot.getChildren().iterator().next();
+                        String userId = userData.getKey();
 
-                        // Iterate through each existing trip
-                        for (DataSnapshot tripSnapshot : tripsSnapshot.getChildren()) {
-                            // Gets the trip ID
-                            String tripId = tripSnapshot.getKey();
+                        // Reference at user/userId/"Trips"
+                        DatabaseReference tripsRef = usersRef.child(userId).child("Trips");
 
-                            // Currently at users/userId/"Trips"/tripId/"Travel Details"
-                            DatabaseReference reservationDetailsRef = tripsRef.child(tripId).child("Reservation Details");
+                        // Retrieves all trips made by the user
+                        tripsRef.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot tripsSnapshot) {
+                                names.clear();
+                                locations.clear();
+                                websites.clear();
+                                dates.clear();
+                                times.clear();
+                                tripNames.clear();
 
-                            // Adds the reservation details to the lists
-                            reservationDetailsRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot reservationSnapshot) {
-                                    addReservationToList(reservationSnapshot);
-
-                                    // Log data
-                                    Log.d("Firebase", "Names: " + names);
-                                    Log.d("Firebase", "Locations: " + locations);
-                                    Log.d("Firebase", "Websites: " + websites);
-                                    Log.d("Firebase", "Dates: " + dates);
-                                    Log.d("Firebase", "Times: " + times);
-
-                                    // Notify adapter
-                                    adapter.notifyDataSetChanged();
+                                // Returns if no trips exist
+                                if (!tripsSnapshot.exists()) {
+                                    Log.d("Firebase", "No trips found for: " + userId);
+                                    return;
                                 }
 
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError error) {
-                                    Log.d("Firebase", "Error retrieving reservation details for tripId: " + tripId);
+                                // Iterate through each existing trip
+                                for (DataSnapshot tripSnapshot : tripsSnapshot.getChildren()) {
+                                    // Gets the trip ID
+                                    String tripId = tripSnapshot.getKey();
+
+                                    // Currently at users/userId/"Trips"/tripId/"Travel Details"
+                                    DatabaseReference reservationDetailsRef = tripsRef.
+                                            child(tripId).
+                                            child("Reservation Details");
+
+                                    // Adds the reservation details to the lists
+                                    reservationDetailsRef.addListenerForSingleValueEvent(
+                                            new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(
+                                                        @NonNull DataSnapshot reservationSnapshot) {
+                                                    addReservationToList(reservationSnapshot);
+
+                                                    // Log data
+                                                    Log.d("Firebase", "Names: " + names);
+                                                    Log.d("Firebase", "Locations: " + locations);
+                                                    Log.d("Firebase", "Websites: " + websites);
+                                                    Log.d("Firebase", "Dates: " + dates);
+                                                    Log.d("Firebase", "Times: " + times);
+
+                                                    // Notify adapter
+                                                    adapter.notifyDataSetChanged();
+                                                }
+
+                                                @Override
+                                                public void onCancelled(
+                                                        @NonNull DatabaseError error) {
+                                                    Log.d("Firebase",
+                                                            "Error retrieving reservation "
+                                                                    + "details for tripId: "
+                                                                    + tripId);
+                                                }
+                                        });
                                 }
-                            });
-                        }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+                                Log.d("Firebase", "Error retrieving trips for userId: " + userId);
+                            }
+                        });
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
-                        Log.d("Firebase", "Error retrieving trips for userId: " + userId);
+                        Log.d("Firebase", "Error retrieving user data");
                     }
                 });
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.d("Firebase", "Error retrieving user data");
-            }
-        });
     }
 
     private void addReservationToList(DataSnapshot reservationDetailsSnapshot) {
