@@ -56,7 +56,6 @@ public class DiningActivity extends AppCompatActivity {
             dialog.show(getSupportFragmentManager(), "AddReservationDialog");
         });
     }
-
     private void navigation() {
         boolean checkSelected = false;
         int[] navIcons = {
