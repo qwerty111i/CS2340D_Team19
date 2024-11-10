@@ -148,7 +148,16 @@ public class DestinationsActivity extends AppCompatActivity {
                 endDates.clear();
                 days.clear();
 
+                for (DataSnapshot childSnapshot : userSnapshot.getChildren()) {
+                    // Log the key of the current child
+                    Log.d("Firebase", "Child key: " + childSnapshot.getKey());
+
+                    // Log the data of the current child (it can be a map of the data)
+                    Log.d("Firebase", "Child data: " + childSnapshot.getValue());
+                }
+
                 // Snapshot of the user with the associated email ID
+
                 DataSnapshot userData = userSnapshot.getChildren().iterator().next();
                 String userId = userData.getKey();
 
@@ -178,11 +187,14 @@ public class DestinationsActivity extends AppCompatActivity {
 
                             // Currently at users/userId/"Trips"/tripId/"Travel Details"
                             DatabaseReference travelDetailsRef = tripsRef.child(tripId).child("Travel Details");
+                            Log.d("check1", travelDetailsRef.getKey());
 
                             // Adds the travel details to the lists
                             travelDetailsRef.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot travelSnapshot) {
+                                    Log.d("fore", travelSnapshot.getKey());
+
                                     addTravelToLists(travelSnapshot);
                                     getAllDuration(startDates, endDates);
 
@@ -221,8 +233,9 @@ public class DestinationsActivity extends AppCompatActivity {
     private void addTravelToLists(DataSnapshot travelDetailsSnapshot) {
         //Loop through each travel detail
         for (DataSnapshot snapshot : travelDetailsSnapshot.getChildren()) {
-
+            Log.d("fore", snapshot.getValue().toString());
             String startDate = snapshot.child("startDate").getValue(String.class);
+            //Log.d("foeeeeeeeere", startDate);
             String endDate = snapshot.child("endDate").getValue(String.class);
             String location = snapshot.child("location").getValue(String.class);
             String tripName = snapshot.child("tripName").getValue(String.class);

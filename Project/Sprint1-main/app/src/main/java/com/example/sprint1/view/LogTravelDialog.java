@@ -89,6 +89,7 @@ public class LogTravelDialog extends DialogFragment {
     }
 
     private void startDialog() {
+
         // Binds the variables to the proper xml components
         location = binding.locationView;
         locationText = binding.locationText;
@@ -105,7 +106,7 @@ public class LogTravelDialog extends DialogFragment {
         // Calls the date picker dialog when clicked
         startDateText.setOnClickListener(v -> showDatePickerDialog(startDateText));
         endDateText.setOnClickListener(v -> showDatePickerDialog(endDateText));
-
+        Log.d("arre we here", "startDialog: ");
         // Sets the list of trips
         viewModel.setDropdownItems();
 
