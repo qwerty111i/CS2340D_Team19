@@ -175,11 +175,12 @@
             android:id="@+id/submit"
             android:layout_width="0dp"
             android:layout_height="50dp"
+            android:layout_marginTop="20dp"
             android:backgroundTint="@color/modern_blue"
             android:fontFamily="@font/poppins_regular"
             android:text="@string/log_travel_submit"
             android:textSize="20sp"
-            app:layout_constraintTop_toBottomOf="@id/number_of_rooms"
+            app:layout_constraintTop_toBottomOf="@id/dropdown_box"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHeight_percent="0.12"
             app:layout_constraintStart_toStartOf="parent"
@@ -276,7 +277,7 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/start_date_view">
+            app:layout_constraintTop_toBottomOf="@id/number_of_rooms">
 
             <AutoCompleteTextView
                 android:id="@+id/dropdown"
