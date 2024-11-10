@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import com.example.sprint1.R;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 // Adapts dining details to be shown on the Dining Screen UI
@@ -34,9 +36,18 @@ public class DiningAdapter extends RecyclerView.Adapter<DiningAdapter.ViewHolder
     @Override
     public DiningAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         //Inflates layout and creates design of each row
-        View view = LayoutInflater.from(parent.getContext()).
-                inflate(R.layout.dining_log_layout, parent, false);
+        View view;
 
+        if (viewType == 1) {
+            view = LayoutInflater.from(parent.getContext()).
+                    inflate(R.layout.dining_log_layout, parent, false);
+        } else {
+            for (int i = 0; i < tripNames.size(); i++) {
+                tripNames.set(i, "(Expired) " + tripNames.get(i));
+            }
+            view = LayoutInflater.from(parent.getContext()).
+                    inflate(R.layout.expired_dining_log_layout, parent, false);
+        }
 
         return new DiningAdapter.ViewHolder(view);
     }
@@ -58,6 +69,27 @@ public class DiningAdapter extends RecyclerView.Adapter<DiningAdapter.ViewHolder
         return locations.size();
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        String reservationDate = dates.get(position);
+        if (isExpired(reservationDate)) {
+            return 0;
+        }
+        return 1;
+    }
+
+    // Checks if the date is expired
+    public boolean isExpired(String reservationDate) {
+        // Converts the reservationDate into an actual Date
+        SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-YY");
+        try {
+            Date checkDate = sdf.parse(reservationDate);
+            Date currentDate = new Date();
+            return checkDate.before(currentDate);
+        } catch (Exception e) {
+            return false;
+        }
+    }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private TextView tvTrip;
