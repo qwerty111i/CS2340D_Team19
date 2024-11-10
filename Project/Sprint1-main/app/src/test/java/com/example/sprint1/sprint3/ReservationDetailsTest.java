@@ -1,6 +1,5 @@
 package com.example.sprint1.sprint3;
 
-import com.example.sprint1.model.Accommodation;
 import com.example.sprint1.model.ReservationDetails;
 
 import org.junit.Assert;
