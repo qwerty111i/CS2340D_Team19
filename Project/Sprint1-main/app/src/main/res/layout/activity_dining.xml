@@ -15,6 +15,7 @@
         android:id="@+id/destinations"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@drawable/dining_background"
         tools:context=".view.DiningActivity">
 
         <TextView
@@ -40,7 +41,7 @@
             android:text="Add Reservation"
             android:textSize="23sp"
             android:fontFamily="@font/poppins_regular"
-            app:backgroundTint="@color/modern_blue"
+            app:backgroundTint="@color/modern_purple"
             app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Medium"
             app:layout_constraintWidth_percent="0.78"
             app:layout_constraintStart_toStartOf="parent"

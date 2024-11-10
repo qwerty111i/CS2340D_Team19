@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,16 +25,16 @@ public class LogTravelDialog extends DialogFragment {
 
     private DestinationsViewModel viewModel;
     private ActivityLogTravelDialogBinding binding;
-    private Button submitButton;
     private TextInputLayout location;
-    private TextInputLayout startDate;
-    private TextInputLayout endDate;
-    private AutoCompleteTextView tripDropDown;
     private TextInputEditText locationText;
+    private TextInputLayout startDate;
     private TextInputEditText startDateText;
+    private TextInputLayout endDate;
     private TextInputEditText endDateText;
-    private String selectedTrip;
+    private AutoCompleteTextView tripDropDown;
+    private Button submitButton;
     private ArrayList<String> updatedTripList;
+    private String selectedTrip;
 
 
     @Override
@@ -184,6 +183,18 @@ public class LogTravelDialog extends DialogFragment {
             }
         });
 
+        // Obtains trip error using getTripError in viewModel
+        // Updates new variable errorMessage to match the trip error
+        viewModel.getTripError().observe(this, errorMessage -> {
+            if (errorMessage != null) {
+                tripDropDown.setError(errorMessage);
+            } else {
+                tripDropDown.setError(null);
+            }
+        });
+
+        // Observes new trips using getTripList in viewModel
+        // Updates the dropdown to add the new trips
         viewModel.getTripList().observe(this, trips -> {
             updatedTripList.clear();
             updatedTripList.addAll(trips);

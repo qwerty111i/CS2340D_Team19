@@ -47,10 +47,10 @@
             android:exported="true" />
         <activity
             android:name=".view.DestinationsActivity"
-            android:exported="true" />
+            android:exported="false" />
         <activity
             android:name=".view.LogisticsActivity"
-            android:exported="true"
+            android:exported="false"
             android:theme="@style/Theme.Sprint1" />
         <activity
             android:name=".view.SplashActivity"

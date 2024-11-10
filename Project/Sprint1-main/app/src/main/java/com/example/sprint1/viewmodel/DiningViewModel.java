@@ -15,44 +15,48 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Locale;
 
 public class DiningViewModel extends ViewModel {
+    private MutableLiveData<String> name = new MutableLiveData<>();
+    private MutableLiveData<String> nameError = new MutableLiveData<>();
     private MutableLiveData<String> location = new MutableLiveData<>();
     private MutableLiveData<String> locationError = new MutableLiveData<>();
     private MutableLiveData<String> website = new MutableLiveData<>();
     private MutableLiveData<String> websiteError = new MutableLiveData<>();
-    private MutableLiveData<String> startDate = new MutableLiveData<>();
-    private MutableLiveData<String> startDateError = new MutableLiveData<>();
-    private MutableLiveData<String> endDate = new MutableLiveData<>();
-    private MutableLiveData<String> endDateError = new MutableLiveData<>();
+    private MutableLiveData<String> date = new MutableLiveData<>();
     private MutableLiveData<String> dateError = new MutableLiveData<>();
-    private MutableLiveData<String> startTime = new MutableLiveData<>();
+    private MutableLiveData<String> time = new MutableLiveData<>();
     private MutableLiveData<String> timeError = new MutableLiveData<>();
     private MutableLiveData<Boolean> validInputs = new MutableLiveData<>();
     private MutableLiveData<String> trip = new MutableLiveData<>();
+    private MutableLiveData<String> tripError = new MutableLiveData<>();
     private MutableLiveData<ArrayList<String>> tripList = new MutableLiveData<>();
 
-    public void setReservationDetails(String location, String website, String startDate,
-                                 String endDate, String startTime, String trip) {
+    public void setReservationDetails(String name, String location, String website,
+                                      String date, String time, String trip) {
         // Sets the values of the MutableLiveData
+        this.name.setValue(name);
         this.location.setValue(location);
         this.website.setValue(website);
-        this.startDate.setValue(startDate);
-        this.endDate.setValue(endDate);
-        this.startTime.setValue(startTime);
+        this.date.setValue(date);
+        this.time.setValue(time);
         this.trip.setValue(trip);
 
         // Checks whether inputs are valid
+        boolean validName = checkInput(name);
         boolean validLocation = checkInput(location);
         boolean validWebsite = checkInput(website);
-        boolean validDates = checkDates(startDate, endDate);
-        boolean validTime = checkInput(startTime);
+        boolean validDates = checkInput(date);
+        boolean validTime = checkInput(time);
+        boolean validTrip = checkInput(trip);
+
+        // Sets the Name error message
+        if (!validName) {
+            nameError.setValue("Invalid Name Input!");
+        } else {
+            nameError.setValue(null);
+        }
 
         // Sets the Location error message
         if (!validLocation) {
@@ -70,20 +74,28 @@ public class DiningViewModel extends ViewModel {
 
         // Sets the Date error message
         if (!validDates) {
-            dateError.setValue("Invalid Dates!");
+            dateError.setValue("Invalid Date!");
         } else {
             dateError.setValue(null);
         }
 
         // Sets the Time error message
         if (!validTime) {
-            timeError.setValue("Invalid Dates!");
+            timeError.setValue("Invalid Time!");
         } else {
             timeError.setValue(null);
         }
 
+        // Sets the Trip error message
+        if (!validTrip) {
+            tripError.setValue("No Trip Selected!");
+        } else {
+            tripError.setValue(null);
+        }
+
         // Sets the value of validInputs (true/false)
-        validInputs.setValue(validLocation && validWebsite && validDates && validTime);
+        validInputs.setValue(validName && validLocation && validWebsite
+                && validDates && validTime && validTrip);
     }
 
     public void setDropdownItems() {
@@ -126,49 +138,15 @@ public class DiningViewModel extends ViewModel {
         return input != null && !input.isEmpty();
     }
 
-    // Checks if dates are valid
-    public boolean checkDates(String date1, String date2) {
-        if (date1 != null && date2 != null) {
-            try {
-                // Creates a SimpleDateFormat instance, formatted as below
-                SimpleDateFormat sdf = new SimpleDateFormat("M/d/yy", Locale.getDefault());
-
-                // Creates new Dates following the format created above
-                Date startDate = sdf.parse(date1);
-                Date endDate = sdf.parse(date2);
-
-                // Checks if the start date is less than or equal to the end date
-                return !startDate.after(endDate);
-            } catch (ParseException e) {
-                return false;
-            }
-        }
-        return false;
-    }
-
-    // Helper method to validate date format
-    private boolean isValidDate(String dateStr, SimpleDateFormat formatter) {
-        if (dateStr == null) {
-            return true;
-        }  // Null means it's not required in some cases
-        try {
-            formatter.setLenient(false);
-            formatter.parse(dateStr);
-            return true;
-        } catch (ParseException e) {
-            return false;
-        }
-    }
-
     // Saves the details in the database
     public void saveReservationsDetails() {
         // Creates a new ReservationDetails object, storing all the data
         ReservationDetails reservationDetails = new ReservationDetails(
+                name.getValue(),
                 location.getValue(),
                 website.getValue(),
-                startDate.getValue(),
-                endDate.getValue(),
-                startTime.getValue(),
+                date.getValue(),
+                time.getValue(),
                 trip.getValue());
 
         // Uses the Singleton implemented Database to store information
@@ -177,6 +155,10 @@ public class DiningViewModel extends ViewModel {
 
     public LiveData<Boolean> areInputsValid() {
         return validInputs;
+    }
+
+    public LiveData<String> getNameError() {
+        return nameError;
     }
 
     public LiveData<String> getLocationError() {
@@ -191,27 +173,19 @@ public class DiningViewModel extends ViewModel {
         return dateError;
     }
 
-    public LiveData<String> getStartDateError() {
-        return startDateError;
-    }
-
-    public LiveData<String> getEndDateError() {
-        return endDateError;
-    }
-
-    public LiveData<String> getStartDate() {
-        return startDate;
-    }
-
-    public LiveData<String> getEndDate() {
-        return endDate;
+    public LiveData<String> getDate() {
+        return date;
     }
 
     public LiveData<String> getTimeError() {
-        return endDateError;
+        return timeError;
     }
 
     public LiveData<ArrayList<String>> getTripList() {
         return tripList;
+    }
+
+    public LiveData<String> getTripError() {
+        return tripError;
     }
 }

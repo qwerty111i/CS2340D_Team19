@@ -39,7 +39,8 @@ public class DestinationsViewModel extends ViewModel {
     private MutableLiveData<String> startVacationDate = new MutableLiveData<>();
     private MutableLiveData<String> endVacationDate = new MutableLiveData<>();
     private MutableLiveData<String> toastMessage = new MutableLiveData<>();
-    private MutableLiveData<String> tripName = new MutableLiveData<>();
+    private MutableLiveData<String> trip = new MutableLiveData<>();
+    private MutableLiveData<String> tripError = new MutableLiveData<>();
     private MutableLiveData<ArrayList<String>> tripList = new MutableLiveData<>();
 
     public void setTravelDetails(String location, String startDate,
@@ -48,11 +49,12 @@ public class DestinationsViewModel extends ViewModel {
         this.location.setValue(location);
         this.startDate.setValue(startDate);
         this.endDate.setValue(endDate);
-        this.tripName.setValue(tripName);
+        this.trip.setValue(tripName);
 
         // Checks whether location and date are valid
         boolean validLocation = checkInput(location);
         boolean validDates = checkDates(startDate, endDate);
+        boolean validTrip = checkInput(tripName);
 
         // Sets the Location error message
         if (!validLocation) {
@@ -68,8 +70,15 @@ public class DestinationsViewModel extends ViewModel {
             dateError.setValue(null);
         }
 
+        // Sets the Trip error message
+        if (!validTrip) {
+            tripError.setValue("No Trip Selected!");
+        } else {
+            tripError.setValue(null);
+        }
+
         // Sets the value of validInputs (true/false)
-        validInputs.setValue(validLocation && validDates);
+        validInputs.setValue(validLocation && validDates && validTrip);
     }
 
     public void setDropdownItems() {
@@ -291,7 +300,7 @@ public class DestinationsViewModel extends ViewModel {
                 location.getValue(),
                 startDate.getValue(),
                 endDate.getValue(),
-                tripName.getValue());
+                trip.getValue());
 
         // Uses the Singleton implemented Database to store information
         UserModel.getInstance().storeTravelDetails(travelDetails);
@@ -306,7 +315,7 @@ public class DestinationsViewModel extends ViewModel {
                 Integer.parseInt(duration.getValue()));
 
         // Uses the Singleton implemented user Database to store information
-        UserModel.getInstance().storeVacation(vtime);
+        UserModel.getInstance().storeVacationTime(vtime);
     }
 
     public LiveData<Boolean> areInputsValid() {
@@ -355,5 +364,9 @@ public class DestinationsViewModel extends ViewModel {
 
     public LiveData<ArrayList<String>> getTripList() {
         return tripList;
+    }
+
+    public LiveData<String> getTripError() {
+        return tripError;
     }
 }

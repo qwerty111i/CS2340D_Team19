@@ -11,9 +11,8 @@ import com.example.sprint1.R;
 
 import java.util.List;
 
-//Adapts travel details to be shown on the Desination Screens UI
+// Adapts travel details to be shown on the Destination Screen UI
 public class TravelAdapter extends RecyclerView.Adapter<TravelAdapter.ViewHolder> {
-    //Context context;
     private List<String> tripNames;
     private List<String> locations;
     private List<String> days;
@@ -28,9 +27,9 @@ public class TravelAdapter extends RecyclerView.Adapter<TravelAdapter.ViewHolder
     @NonNull
     @Override
     public TravelAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        //Inflates layout and creates design of each row
+        // Inflates layout and creates design of each row
         View view = LayoutInflater.from(parent.getContext()).
-                inflate(R.layout.log_item_layout, parent, false);
+                inflate(R.layout.travel_log_layout, parent, false);
 
 
         return new TravelAdapter.ViewHolder(view);
@@ -38,7 +37,7 @@ public class TravelAdapter extends RecyclerView.Adapter<TravelAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull TravelAdapter.ViewHolder holder, int position) {
-        //assigns values to each rows
+        // Assigns values to each rows
         holder.tvTrip.setText(tripNames.get(position));
         holder.tvDestination.setText(locations.get(position));
         holder.tvDays.setText(days.get(position));
@@ -46,7 +45,7 @@ public class TravelAdapter extends RecyclerView.Adapter<TravelAdapter.ViewHolder
 
     @Override
     public int getItemCount() {
-        //recycler view wants to know how many items need to be displayed in total
+        // Recycler view wants to know how many items need to be displayed in total
         return locations.size();
     }
 
