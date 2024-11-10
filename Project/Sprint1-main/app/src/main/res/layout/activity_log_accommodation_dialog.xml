@@ -16,7 +16,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/dialog_background"
-        tools:context=".view.Accommodation">
+        tools:context=".view.Accommodation"
+        >
 
         <TextView
             android:id="@+id/title"
@@ -174,11 +175,12 @@
             android:id="@+id/submit"
             android:layout_width="0dp"
             android:layout_height="50dp"
+            android:layout_marginTop="20dp"
             android:backgroundTint="@color/modern_blue"
             android:fontFamily="@font/poppins_regular"
             android:text="@string/log_travel_submit"
             android:textSize="20sp"
-            app:layout_constraintTop_toBottomOf="@id/number_of_rooms"
+            app:layout_constraintTop_toBottomOf="@id/dropdown_box"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHeight_percent="0.12"
             app:layout_constraintStart_toStartOf="parent"
@@ -196,12 +198,12 @@
             android:textColor="@android:color/black"
             android:fontFamily="@font/poppins_regular"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/start_date_view" />
+            app:layout_constraintTop_toBottomOf="@id/end_date_view" />
 
         <com.google.android.material.textfield.TextInputLayout
             style="@style/Widget.Material3.TextInputLayout.FilledBox.Dense.ExposedDropdownMenu"
             android:id="@+id/number_of_rooms"
-            android:layout_width="0dp"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
             app:boxBackgroundMode="filled"
             app:boxBackgroundColor="@color/light_modern_purple"
@@ -210,9 +212,8 @@
             app:errorTextAppearance="@style/ErrorTextStyle"
             app:errorTextColor="@color/muted_red"
             app:layout_constraintTop_toBottomOf="@id/number_of_rooms_title"
-            app:layout_constraintEnd_toEndOf="@id/start_date_view"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintHeight_percent="0.12"
-            app:layout_constraintStart_toStartOf="@id/start_date_view"
             app:startIconTint="@color/black">
 
         <AutoCompleteTextView
@@ -221,12 +222,14 @@
             android:layout_height="wrap_content"
             android:inputType="none"
             android:fontFamily="@font/poppins_regular"
-            android:textColor="@color/black" />
+            android:textColor="@color/black"
+
+            />
         </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
             android:id="@+id/room_type_title"
-            android:layout_width="wrap_content"
+            android:layout_width="150dp"
             android:gravity="start"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
@@ -234,7 +237,7 @@
             android:textSize="18sp"
             android:textColor="@android:color/black"
             android:fontFamily="@font/poppins_regular"
-            app:layout_constraintStart_toEndOf="@id/number_of_rooms"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/end_date_view" />
 
         <com.google.android.material.textfield.TextInputLayout
@@ -251,7 +254,6 @@
             app:layout_constraintTop_toBottomOf="@id/number_of_rooms_title"
             app:layout_constraintEnd_toEndOf="@id/end_date_view"
             app:layout_constraintHeight_percent="0.12"
-            app:layout_constraintStart_toStartOf="@id/room_type_title"
             app:startIconTint="@color/black">
 
             <AutoCompleteTextView
@@ -260,7 +262,28 @@
                 android:layout_height="wrap_content"
                 android:inputType="none"
                 android:fontFamily="@font/poppins_regular"
-                android:textColor="@color/black" />
+                android:textColor="@color/black"
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/dropdown_box"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:hint="Select a Trip"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/number_of_rooms">
+
+            <AutoCompleteTextView
+                android:id="@+id/dropdown"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none"/>
         </com.google.android.material.textfield.TextInputLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

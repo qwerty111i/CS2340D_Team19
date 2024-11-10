@@ -1,9 +1,9 @@
-package com.example.sprint1;
+package com.example.sprint1.sprint2;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
-import com.example.sprint1.viewmodel.LoginViewModel;
+
 import com.example.sprint1.viewmodel.SignupViewModel;
 
 import org.robolectric.RobolectricTestRunner;

@@ -14,7 +14,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.sprint1.BR;
 import com.example.sprint1.R;
-import com.example.sprint1.databinding.ActivityDestinationsBinding;
 import com.example.sprint1.databinding.ActivityLogisticsBinding;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
@@ -230,9 +229,7 @@ public class LogisticsActivity extends AppCompatActivity implements InviteUserSp
 
         builder.setPositiveButton("Save", (dialog, which) -> {
             String note = input.getText().toString();
-            if (!note.isEmpty()) {
-                //viewModel.addNote("trip", note);
-            } else {
+            if (note.isEmpty()) {
                 Toast.makeText(this, "Note cannot be empty", Toast.LENGTH_SHORT).show();
             }
         });

@@ -7,15 +7,12 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.TimePicker;
 
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -32,23 +29,24 @@ public class AddReservationDialog extends DialogFragment {
 
     private DiningViewModel viewModel;
     private ActivityAddReservationDialogBinding binding;
+    private TextInputLayout name;
     private TextInputLayout location;
     private TextInputLayout website;
-    private TextInputLayout startDate;
-    private TextInputLayout endDate;
-    private TextInputLayout startTime;
+    private TextInputLayout date;
+    private TextInputLayout time;
+    private TextInputEditText nameText;
     private TextInputEditText locationText;
     private TextInputEditText websiteText;
-    private TextInputEditText startDateText;
-    private TextInputEditText endDateText;
-    private TextInputEditText startTimeText;
+    private TextInputEditText dateText;
+    private TextInputEditText timeText;
     private AutoCompleteTextView tripDropDown;
     private Button submitButton;
     private String selectedTrip;
     private ArrayList<String> updatedTripList;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View
+        onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the binding for the dialog layout
         binding = ActivityAddReservationDialogBinding.inflate(inflater, container, false);
 
@@ -98,46 +96,45 @@ public class AddReservationDialog extends DialogFragment {
 
     private void startDialog() {
         // Binds the variables to the proper xml components
+        name = binding.nameView;
+        nameText = binding.nameText;
+
         location = binding.locationView;
         locationText = binding.locationText;
 
         website = binding.websiteView;
         websiteText = binding.websiteText;
 
-        startDate = binding.startDateView;
-        startDateText = binding.startDateText;
+        date = binding.dateView;
+        dateText = binding.dateText;
 
-        endDate = binding.endDateView;
-        endDateText = binding.endDateText;
-
-        startTime = binding.startTimeView;
-        startTimeText = binding.startTimeText;
+        time = binding.timeView;
+        timeText = binding.timeText;
 
         tripDropDown = binding.dropdown;
         submitButton = binding.submit;
 
         // Calls the date picker dialog when clicked
-        startDateText.setOnClickListener(v -> showDatePickerDialog(startDateText));
-        endDateText.setOnClickListener(v -> showDatePickerDialog(endDateText));
+        dateText.setOnClickListener(v -> showDatePickerDialog(dateText));
 
         // Calls the time picker dialog when clicked
-        startTimeText.setOnClickListener(v -> showTimePickerDialog(startTimeText));
+        timeText.setOnClickListener(v -> showTimePickerDialog(timeText));
 
         // Sets the list of trips
         viewModel.setDropdownItems();
 
         // Called when the Submit button is pressed
         submitButton.setOnClickListener(v -> {
+            String nameText = this.nameText.getText().toString();
             String locationText = this.locationText.getText().toString();
             String websiteText = this.websiteText.getText().toString();
-            String startDateText = this.startDateText.getText().toString();
-            String endDateText = this.endDateText.getText().toString();
-            String startTimeText = this.startTimeText.getText().toString();
+            String dateText = this.dateText.getText().toString();
+            String timeText = this.timeText.getText().toString();
             String currentTripText = selectedTrip;
 
             // Updates the MutableLiveData in the View Model
-            viewModel.setReservationDetails(locationText,
-                    websiteText, startDateText, endDateText, startTimeText, currentTripText);
+            viewModel.setReservationDetails(nameText, locationText,
+                    websiteText, dateText, timeText, currentTripText);
 
             if (viewModel.areInputsValid().getValue()) {
                 // Saves details in the database
@@ -204,6 +201,16 @@ public class AddReservationDialog extends DialogFragment {
     }
 
     private void observers() {
+        // Obtains name error using getNameError in viewModel
+        // Updates new variable errorMessage to match the name error
+        viewModel.getNameError().observe(this, errorMessage -> {
+            if (errorMessage != null) {
+                name.setError(errorMessage);
+            } else {
+                name.setError(null);
+            }
+        });
+
         // Obtains location error using getLocationError in viewModel
         // Updates new variable errorMessage to match the location error
         viewModel.getLocationError().observe(this, errorMessage -> {
@@ -214,8 +221,8 @@ public class AddReservationDialog extends DialogFragment {
             }
         });
 
-        // Obtains location error using getLocationError in viewModel
-        // Updates new variable errorMessage to match the location error
+        // Obtains website error using getWebsiteError in viewModel
+        // Updates new variable errorMessage to match the website error
         viewModel.getWebsiteError().observe(this, errorMessage -> {
             if (errorMessage != null) {
                 website.setError(errorMessage);
@@ -228,24 +235,34 @@ public class AddReservationDialog extends DialogFragment {
         // Updates new variable errorMessage to match the date error
         viewModel.getDateError().observe(this, errorMessage -> {
             if (errorMessage != null) {
-                startDate.setError(errorMessage);
-                endDate.setError(errorMessage);
+                date.setError(errorMessage);
             } else {
-                startDate.setError(null);
-                endDate.setError(null);
+                date.setError(null);
             }
         });
 
-        // Obtains date error using getDateError in viewModel
-        // Updates new variable errorMessage to match the date error
+        // Obtains time error using getTimeError in viewModel
+        // Updates new variable errorMessage to match the time error
         viewModel.getTimeError().observe(this, errorMessage -> {
             if (errorMessage != null) {
-                startTime.setError(errorMessage);
+                time.setError(errorMessage);
             } else {
-                startTime.setError(null);
+                time.setError(null);
             }
         });
 
+        // Obtains trip error using getTripError in viewModel
+        // Updates new variable errorMessage to match the trip error
+        viewModel.getTripError().observe(this, errorMessage -> {
+            if (errorMessage != null) {
+                tripDropDown.setError(errorMessage);
+            } else {
+                tripDropDown.setError(null);
+            }
+        });
+
+        // Observes new trips using getTripList in viewModel
+        // Updates the dropdown to add the new trips
         viewModel.getTripList().observe(this, trips -> {
             updatedTripList.clear();
             updatedTripList.addAll(trips);
@@ -265,7 +282,22 @@ public class AddReservationDialog extends DialogFragment {
     }
 
     private void textWatchers() {
-        // Checks if username text field is edited after error is shown
+        // Checks if name text field is edited after error is shown
+        nameText.addTextChangedListener(new android.text.TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            public void afterTextChanged(android.text.Editable s) {
+                // Sets error to null if field is edited
+                nameText.setError(null);
+            }
+        });
+
+        // Checks if location text field is edited after error is shown
         locationText.addTextChangedListener(new android.text.TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {

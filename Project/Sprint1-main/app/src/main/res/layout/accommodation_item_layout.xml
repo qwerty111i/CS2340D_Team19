@@ -82,7 +82,7 @@
         android:id="@+id/number_of_rooms_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Number of Rooms: 0"
+        android:text="0 rooms"
         android:layout_marginTop="1dp"
         android:layout_marginBottom="8dp"
         android:textSize="18sp"
@@ -91,6 +91,22 @@
         android:fontFamily="@font/poppins_regular"
         app:layout_constraintTop_toBottomOf="@id/check_out"
         android:paddingStart="22dp"
+        tools:ignore="MissingConstraints,RtlSymmetry" />
+
+    <TextView
+        android:id="@+id/type_of_room_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=" - Penthouse"
+        android:layout_marginTop="1dp"
+        android:layout_marginBottom="8dp"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:fontFamily="@font/poppins_regular"
+        app:layout_constraintTop_toBottomOf="@id/check_out"
+        app:layout_constraintLeft_toRightOf="@id/number_of_rooms_text"
+        android:paddingStart="0dp"
         tools:ignore="MissingConstraints,RtlSymmetry" />
 
     <TextView

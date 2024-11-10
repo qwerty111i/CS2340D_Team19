@@ -1,4 +1,4 @@
-package com.example.sprint1;
+package com.example.sprint1.sprint2;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

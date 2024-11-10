@@ -1,4 +1,4 @@
-package com.example.sprint1;
+package com.example.sprint1.sprint2;
 
 
 import com.example.sprint1.viewmodel.SignupViewModel;
