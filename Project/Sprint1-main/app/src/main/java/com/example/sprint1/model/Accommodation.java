@@ -7,7 +7,7 @@ public class Accommodation {
     private int numRooms;
     private String roomType;
     private String trip;
-    private String ColorResID;
+
 
 
 
@@ -18,7 +18,7 @@ public class Accommodation {
         this.location = location;
         this.numRooms = numRooms;
         this.roomType = roomType;
-        ColorResID = "w";
+
 
     }
 

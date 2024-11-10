@@ -3,9 +3,12 @@ package com.example.sprint1.view;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import androidx.appcompat.widget.Toolbar;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -30,8 +33,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+
 
 public class AccommodationsActivity extends AppCompatActivity {
     private TabLayout tabLayout;
@@ -53,6 +62,10 @@ public class AccommodationsActivity extends AppCompatActivity {
         ActivityAccommodationsBinding binding =
                 ActivityAccommodationsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Sort");
 
         // Creating the ViewModel
         viewModel = new ViewModelProvider(this).get(AccommodationViewModel.class);
@@ -202,6 +215,64 @@ public class AccommodationsActivity extends AppCompatActivity {
             public void onTabReselected(TabLayout.Tab tab) { }
         });
     };
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.menu_sort_accommodations, menu); //inflate menu xml
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        if(item.getItemId() == R.id.accom_sort_CheckIn){
+            sortAccommodationsByCheckIn();
+            return true;
+        } else if(item.getItemId() == R.id.accom_sort_CheckOut) {
+            sortAccommodationsByCheckOut();
+            return true;
+        }
+        else{
+            return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void sortAccommodationsByCheckIn(){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yy", Locale.getDefault());
+
+        Collections.sort(accommodations, (d1, d2) ->{
+            try{
+                Date date1 = dateFormat.parse(d1.getCheckIn());
+                Date date2 = dateFormat.parse(d2.getCheckIn());
+
+                if(date1 != null && date2 != null){
+                    return date1.compareTo(date2);
+                }
+            } catch (ParseException e) {
+                throw new RuntimeException(e);
+            }
+            return 0;
+        });
+        adapter.notifyDataSetChanged();
+    }
+
+    private void sortAccommodationsByCheckOut(){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yy", Locale.getDefault());
+
+        Collections.sort(accommodations, (d1, d2) ->{
+            try{
+                Date date1 = dateFormat.parse(d1.getCheckOut());
+                Date date2 = dateFormat.parse(d2.getCheckOut());
+
+                if(date1 != null && date2 != null){
+                    return date1.compareTo(date2);
+                }
+            } catch (ParseException e) {
+                throw new RuntimeException(e);
+            }
+            return 0;
+        });
+        adapter.notifyDataSetChanged();
+    }
 
 
 
