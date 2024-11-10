@@ -51,11 +51,14 @@
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/sort_options"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginStart="15dp"
             app:tabIndicatorColor="@android:color/holo_blue_dark"
             app:tabMode="fixed"
             app:tabGravity="fill"
+            app:layout_constraintWidth_percent="0.3"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/add_reservation" />
 
