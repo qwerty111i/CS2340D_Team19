@@ -8,6 +8,8 @@ public class AccommodationDetails {
     private String roomType;
     private String tripName;
 
+    public AccommodationDetails() { }
+
     public AccommodationDetails(String checkIn, String checkOut, String location, int numRooms,
                                 String roomType, String tripName) {
         this.checkIn = checkIn;

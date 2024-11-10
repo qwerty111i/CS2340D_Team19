@@ -8,6 +8,8 @@ public class ReservationDetails {
     private String time;
     private String tripName;
 
+    public ReservationDetails() { }
+
     public ReservationDetails(String name, String location, String website,
                               String date, String time, String tripName) {
         this.name = name;
@@ -40,5 +42,9 @@ public class ReservationDetails {
 
     public String getTripName() {
         return tripName;
+    }
+
+    public void setTripName(String TripName) {
+        this.tripName = TripName;
     }
 }

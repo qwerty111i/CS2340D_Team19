@@ -8,6 +8,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.sprint1.model.ReservationDetails;
 import com.example.sprint1.model.Trip;
 import com.example.sprint1.model.UserModel;
 import com.example.sprint1.model.VacationTime;
@@ -473,7 +474,26 @@ public class LogisticsViewModel extends ViewModel {
                                                     });
                                         }
                                     }
+                                    DataSnapshot reservationDetailsSnapshot = tripSnapshot.child("Reservation Details");
+                                    for (DataSnapshot reservationIdSnapshot : reservationDetailsSnapshot.getChildren()) {
+                                        ReservationDetails reservationDetails = reservationIdSnapshot.getValue(ReservationDetails.class);
+                                        if (reservationDetails != null) {
+                                            String sharedTripName2 = trip.getTripName() + " (Shared by " + inviterEmail + ")";
+                                            reservationDetails.setTripName(sharedTripName2);
+                                            // Share travel details under the new shared trip
+                                            userReference.child(invitedUserId).child("Trips").child(newTripId)
+                                                    .child("Reservation Details").child(reservationIdSnapshot.getKey()).setValue(reservationDetails)
+                                                    .addOnCompleteListener(task -> {
+                                                        if (task.isSuccessful()) {
+                                                            Log.d("Firebase", "Travel details shared successfully.");
+                                                        } else {
+                                                            Log.d("Firebase", "Failed to share travel details.");
+                                                        }
+                                                    });
+                                        }
+                                    }
                                 }
+
 
                                 // Share notes with the invited user under the selected trip
                                 DataSnapshot notesSnapshot = tripSnapshot.child("Notes");
