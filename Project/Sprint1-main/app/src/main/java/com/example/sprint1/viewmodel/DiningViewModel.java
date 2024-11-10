@@ -1,11 +1,14 @@
 package com.example.sprint1.viewmodel;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.sprint1.model.ReservationDetails;
+import com.example.sprint1.model.TravelDetails;
 import com.example.sprint1.model.Trip;
 import com.example.sprint1.model.UserModel;
 import com.google.firebase.auth.FirebaseAuth;
@@ -29,7 +32,7 @@ public class DiningViewModel extends ViewModel {
     private MutableLiveData<String> time = new MutableLiveData<>();
     private MutableLiveData<String> timeError = new MutableLiveData<>();
     private MutableLiveData<Boolean> validInputs = new MutableLiveData<>();
-    private MutableLiveData<String> trip = new MutableLiveData<>();
+    private MutableLiveData<String> tripName = new MutableLiveData<>();
     private MutableLiveData<String> tripError = new MutableLiveData<>();
     private MutableLiveData<ArrayList<String>> tripList = new MutableLiveData<>();
 
@@ -41,7 +44,7 @@ public class DiningViewModel extends ViewModel {
         this.website.setValue(website);
         this.date.setValue(date);
         this.time.setValue(time);
-        this.trip.setValue(trip);
+        this.tripName.setValue(trip);
 
         // Checks whether inputs are valid
         boolean validName = checkInput(name);
@@ -147,10 +150,130 @@ public class DiningViewModel extends ViewModel {
                 website.getValue(),
                 date.getValue(),
                 time.getValue(),
-                trip.getValue());
+                tripName.getValue());
 
         // Uses the Singleton implemented Database to store information
         UserModel.getInstance().storeReservationDetails(reservationDetails);
+
+        String inviterEmail = null;
+        String baseTripName = tripName.getValue();
+        if (tripName.getValue() != null && tripName.getValue().contains("(Shared by ")) {
+            int startIndex = tripName.getValue().indexOf("(Shared by ") + "(Shared by ".length();
+            int somestart = tripName.getValue().indexOf("(Shared by ");
+            int endIndex = tripName.getValue().indexOf(")", startIndex);
+            inviterEmail = tripName.getValue().substring(startIndex, endIndex);
+            baseTripName = tripName.getValue().substring(0, somestart - 1);
+        }
+
+        if (inviterEmail != null) {
+            DatabaseReference userReference = FirebaseDatabase.getInstance().getReference("users");
+
+            // Add a single-value event listener to search for the inviter's UID based on their email
+            String finalInviterEmail = inviterEmail; // Make inviterEmail accessible within the inner class
+            String finalBaseTripName = baseTripName;
+            String finalBaseTripName1 = baseTripName;
+            String finalBaseTripName2 = baseTripName;
+            userReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    String inviterId = null;
+
+                    // Loop through each child under "Users" to find the matching email
+                    for (DataSnapshot userSnapshot : snapshot.getChildren()) {  // Use 'snapshot' instead of 'dataSnapshot'
+                        String email = userSnapshot.child("email").getValue(String.class);
+                        Log.d("d", email);
+                        if (finalInviterEmail.equals(email)) {  // Use 'finalInviterEmail' here
+                            inviterId = userSnapshot.getKey();// The UID is the key for each user node
+                            Log.d("ID?", inviterId);
+                            Log.d("email?", email);
+                            break;
+                        }
+                    }
+                    if (inviterId != null) {
+                        DatabaseReference tripsReference = FirebaseDatabase.getInstance()
+                                .getReference("users")
+                                .child(inviterId)
+                                .child("Trips");
+                        String finalInviterId = inviterId;
+                        String finalInviterId1 = inviterId;
+                        tripsReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot tripsSnapshot) {
+                                Log.d("world", "hello");
+                                if(tripsSnapshot.exists()) {
+                                    for (DataSnapshot tripSnapshot : tripsSnapshot.getChildren()) {
+                                        String tripNameDb = tripSnapshot.child("tripName").getValue(String.class);
+                                        Log.d("name?", tripNameDb);
+                                        Log.d("nametripnamebase", finalBaseTripName);
+                                        if (tripNameDb.equals(finalBaseTripName)) {
+                                            Log.d("nameactual", tripNameDb);
+                                            String reservationDetailsId = tripSnapshot.child("Reservation Details").getKey();
+                                            ReservationDetails reservationDetails = new ReservationDetails(
+                                                    name.getValue(),
+                                                    location.getValue(),
+                                                    website.getValue(),
+                                                    date.getValue(),
+                                                    time.getValue(),
+                                                    finalBaseTripName1);
+
+                                            DatabaseReference inviterTripsRef = FirebaseDatabase.getInstance()
+                                                    .getReference("users") // Assuming the users are under "users" node
+                                                    .child(finalInviterId1) // The inviter's UID
+                                                    .child("Trips");
+                                            inviterTripsRef.orderByChild("tripName").equalTo(finalBaseTripName).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                    for (DataSnapshot tripSnapshot : snapshot.getChildren()) {
+                                                        String tripId = tripSnapshot.getKey(); // Get the trip ID
+                                                        Log.d("id?", tripId.toString());
+                                                        DatabaseReference reservationDetailsRef = inviterTripsRef
+                                                                .child(tripId)
+                                                                .child("Reservation Details");
+
+                                                        DataSnapshot reservationDetailsSnapshot = tripSnapshot.child("Reservation Details");
+                                                        String newReservationDetailsId = reservationDetailsRef.push().getKey();
+                                                        //Log.d("IDEK", newTravelDetailsId);
+
+                                                        if (newReservationDetailsId != null) {
+                                                            reservationDetailsRef.child(newReservationDetailsId).setValue(reservationDetails)
+                                                                    .addOnCompleteListener(task -> {
+                                                                        if (task.isSuccessful()) {
+                                                                            Log.d("Firebase", "Travel details added successfully to inviter's trip.");
+                                                                        } else {
+                                                                            Log.d("Firebase", "Failed to add travel details to inviter's trip.");
+                                                                        }
+                                                                    });
+                                                        }
+                                                    }
+                                                }
+
+                                                @Override
+                                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                                }
+                                            });
+
+
+                                        }
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Log.e("Firebase", "Error retrieving inviter data", error.toException());
+                }
+            });
+        }
     }
 
     public LiveData<Boolean> areInputsValid() {
