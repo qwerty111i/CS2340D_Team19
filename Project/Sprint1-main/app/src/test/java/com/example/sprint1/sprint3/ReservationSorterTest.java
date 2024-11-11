@@ -34,9 +34,9 @@ public class ReservationSorterTest {
         sorter.setStrategy(new SortByName());
         sorter.sortReservations(reservations);
 
-        Assert.assertEquals("Reservation 2", reservations.get(0).getName());
-        Assert.assertEquals("Reservation 1", reservations.get(1).getLocation());
-        Assert.assertEquals("Reservation 3", reservations.get(2).getLocation());
+        Assert.assertEquals("Reservation 1", reservations.get(0).getName());
+        Assert.assertEquals("Chicago", reservations.get(1).getLocation());
+        Assert.assertEquals("Boston", reservations.get(2).getLocation());
     }
 
     // james
