@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.sprint1.BR;
 import com.example.sprint1.R;
 import com.example.sprint1.databinding.ActivityAccommodationsBinding;
+import com.example.sprint1.databinding.ActivityDiningBinding;
 import com.example.sprint1.model.AccommodationDetails;
 import com.example.sprint1.viewmodel.AccommodationAdapter;
 import com.example.sprint1.viewmodel.AccommodationViewModel;
@@ -48,6 +49,7 @@ public class AccommodationsActivity extends AppCompatActivity {
     private AccommodationAdapter adapter;
     private List<AccommodationDetails> accommodations = new ArrayList<>();
     private String currentEmail;
+    private Button createTrip;
 
     //Initialize Firebase
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -98,12 +100,22 @@ public class AccommodationsActivity extends AppCompatActivity {
 
         //Fetch Accommodation entries from firebase
         getAccommodationDetails(currentEmail);
+        chooseTrip(binding);
 
         //Create adapter (AFTER pulling data from firebase)
         adapter = new AccommodationAdapter(this, accommodations);
 
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+    }
+
+    public void chooseTrip(ActivityAccommodationsBinding binding) {
+        createTrip = binding.buttonNotes;
+
+        createTrip.setOnClickListener(v -> {
+            NotesPopupDialogCommon dialog = new NotesPopupDialogCommon();
+            dialog.show(getSupportFragmentManager(), "Create New Trip");
+        });
     }
 
     private void getAccommodationDetails(String email) {

@@ -30,4 +30,28 @@ public class AccommodationDetailTests {
         Assert.assertEquals(a1.getRoomType(), "cubic");
         Assert.assertEquals(a1.getTripName(), "trip1");
     }
+
+    //Sahadev
+    @Test
+    public void accom3_check() {
+        AccommodationDetails a1 = new AccommodationDetails(null, null, null, 0, null, null);
+        Assert.assertNull(a1.getCheckIn());
+        Assert.assertNull(a1.getCheckOut());
+        Assert.assertNull(a1.getLocation());
+        Assert.assertEquals(a1.getNumRooms(), 0);
+        Assert.assertNull(a1.getRoomType());
+        Assert.assertNull(a1.getTripName());
+    }
+    //Sahadev
+    @Test
+    public void accom4_check() {
+        AccommodationDetails a1 = new AccommodationDetails("01/01/01", null, "chennai", 0, "Hotel", null);
+        Assert.assertEquals(a1.getCheckIn(), "01/01/01");
+        Assert.assertNull(a1.getCheckOut());
+        Assert.assertEquals(a1.getLocation(), "chennai");
+        Assert.assertEquals(a1.getNumRooms(), 0);
+        Assert.assertEquals(a1.getRoomType(), "Hotel");
+        Assert.assertNull(a1.getTripName());
+
+    }
 }

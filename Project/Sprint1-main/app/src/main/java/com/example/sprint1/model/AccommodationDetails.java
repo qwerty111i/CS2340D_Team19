@@ -60,4 +60,8 @@ public class AccommodationDetails {
         return "www." + location + ".com";
     }
 
+    public void setTripName(String TripName) {
+        this.tripName = TripName;
+    }
+
 }
