@@ -8,6 +8,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.sprint1.model.AccommodationDetails;
 import com.example.sprint1.model.ReservationDetails;
 import com.example.sprint1.model.Trip;
 import com.example.sprint1.model.UserModel;
@@ -483,6 +484,24 @@ public class LogisticsViewModel extends ViewModel {
                                             // Share travel details under the new shared trip
                                             userReference.child(invitedUserId).child("Trips").child(newTripId)
                                                     .child("Reservation Details").child(reservationIdSnapshot.getKey()).setValue(reservationDetails)
+                                                    .addOnCompleteListener(task -> {
+                                                        if (task.isSuccessful()) {
+                                                            Log.d("Firebase", "Travel details shared successfully.");
+                                                        } else {
+                                                            Log.d("Firebase", "Failed to share travel details.");
+                                                        }
+                                                    });
+                                        }
+                                    }
+                                    DataSnapshot accommodationDetailsSnapshot = tripSnapshot.child("Accommodation Details");
+                                    for (DataSnapshot accommodationIdSnapshot : accommodationDetailsSnapshot.getChildren()) {
+                                        AccommodationDetails accommodationDetails = accommodationIdSnapshot.getValue(AccommodationDetails.class);
+                                        if (accommodationDetails != null) {
+                                            String sharedTripName2 = trip.getTripName() + " (Shared by " + inviterEmail + ")";
+                                            accommodationDetails.setTripName(sharedTripName2);
+                                            // Share travel details under the new shared trip
+                                            userReference.child(invitedUserId).child("Trips").child(newTripId)
+                                                    .child("Accommodation Details").child(accommodationIdSnapshot.getKey()).setValue(accommodationDetails)
                                                     .addOnCompleteListener(task -> {
                                                         if (task.isSuccessful()) {
                                                             Log.d("Firebase", "Travel details shared successfully.");

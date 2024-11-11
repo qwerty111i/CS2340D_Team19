@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 
 import androidx.activity.EdgeToEdge;
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.sprint1.BR;
 import com.example.sprint1.R;
+import com.example.sprint1.databinding.ActivityDestinationsBinding;
 import com.example.sprint1.databinding.ActivityDiningBinding;
 import com.example.sprint1.model.ReservationDetails;
 import com.example.sprint1.viewmodel.DiningAdapter;
@@ -34,6 +36,7 @@ public class DiningActivity extends AppCompatActivity {
     private TabLayout tabLayout;
     private DiningViewModel viewModel;
     private TabLayout tabs;
+    private Button createTrip;
 
     private List<ReservationDetails> reservations = new ArrayList<>();
     private ReservationSorter reservationSorter = new ReservationSorter();
@@ -93,10 +96,20 @@ public class DiningActivity extends AppCompatActivity {
 
         // Pulling data for log entries from Firebase
         getDiningDetails(currentEmail);
+        chooseTrip(binding);
 
         // Add navigation bar
         tabLayout = binding.tabNavigation;
         navigation();
+    }
+
+    public void chooseTrip(ActivityDiningBinding binding) {
+        createTrip = binding.buttonNotes;
+
+        createTrip.setOnClickListener(v -> {
+            NotesPopupDialogCommon dialog = new NotesPopupDialogCommon();
+            dialog.show(getSupportFragmentManager(), "Create New Trip");
+        });
     }
 
     public void addSortingTabs(ActivityDiningBinding binding) {
