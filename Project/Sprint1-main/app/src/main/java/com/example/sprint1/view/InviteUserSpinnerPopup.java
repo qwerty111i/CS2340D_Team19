@@ -14,17 +14,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
-import android.widget.Toast;
-
-import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.sprint1.R;
 import com.example.sprint1.databinding.ActivityNotesPopupDialogCommonBinding;
 import com.example.sprint1.viewmodel.DestinationsViewModel;
 import com.example.sprint1.viewmodel.LogisticsViewModel;

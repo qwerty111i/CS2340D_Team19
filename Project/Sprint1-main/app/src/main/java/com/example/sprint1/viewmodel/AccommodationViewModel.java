@@ -7,7 +7,6 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import com.example.sprint1.model.AccommodationDetails;
-import com.example.sprint1.model.ReservationDetails;
 import com.example.sprint1.model.Trip;
 import com.example.sprint1.model.UserModel;
 import com.google.firebase.auth.FirebaseAuth;
@@ -75,7 +74,8 @@ public class AccommodationViewModel extends ViewModel {
         }
 
         // Sets the value of validInputs (true/false)
-        validInputs.setValue(validLocation && validRoomType && validNumberOfRooms && validDates && validTripName);
+        validInputs.setValue(validLocation && validRoomType
+                && validNumberOfRooms && validDates && validTripName);
     }
 
     public void saveAccommodationDetails() {
@@ -101,8 +101,7 @@ public class AccommodationViewModel extends ViewModel {
         if (inviterEmail != null) {
             DatabaseReference userReference = FirebaseDatabase.getInstance().getReference("users");
 
-            // Add a single-value event listener to search for the inviter's UID based on their email
-            String finalInviterEmail = inviterEmail; // Make inviterEmail accessible within the inner class
+            String finalInviterEmail = inviterEmail;
             String finalBaseTripName = baseTripName;
             String finalBaseTripName1 = baseTripName;
             String finalBaseTripName2 = baseTripName;
@@ -111,12 +110,11 @@ public class AccommodationViewModel extends ViewModel {
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     String inviterId = null;
 
-                    // Loop through each child under "Users" to find the matching email
-                    for (DataSnapshot userSnapshot : snapshot.getChildren()) {  // Use 'snapshot' instead of 'dataSnapshot'
+                    for (DataSnapshot userSnapshot : snapshot.getChildren()) {
                         String email = userSnapshot.child("email").getValue(String.class);
                         Log.d("d", email);
-                        if (finalInviterEmail.equals(email)) {  // Use 'finalInviterEmail' here
-                            inviterId = userSnapshot.getKey();// The UID is the key for each user node
+                        if (finalInviterEmail.equals(email)) {
+                            inviterId = userSnapshot.getKey();
                             Log.d("ID?", inviterId);
                             Log.d("email?", email);
                             break;
@@ -133,15 +131,16 @@ public class AccommodationViewModel extends ViewModel {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot tripsSnapshot) {
                                 Log.d("world", "hello");
-                                if(tripsSnapshot.exists()) {
+                                if (tripsSnapshot.exists()) {
                                     for (DataSnapshot tripSnapshot : tripsSnapshot.getChildren()) {
-                                        String tripNameDb = tripSnapshot.child("tripName").getValue(String.class);
+                                        String tripNameDb = tripSnapshot.child("tripName")
+                                                .getValue(String.class);
                                         Log.d("name?", tripNameDb);
                                         Log.d("nametripnamebase", finalBaseTripName);
                                         if (tripNameDb.equals(finalBaseTripName)) {
                                             Log.d("nameactual", tripNameDb);
-                                            String accommodationDetailsId = tripSnapshot.child("Accommodation Details").getKey();
-                                            AccommodationDetails accommodationDetails = new AccommodationDetails(
+                                            AccommodationDetails accommodationDetails =
+                                                    new AccommodationDetails(
                                                     checkInDate.getValue(),
                                                     checkOutDate.getValue(),
                                                     location.getValue(),
@@ -149,42 +148,45 @@ public class AccommodationViewModel extends ViewModel {
                                                     roomType.getValue(),
                                                     finalBaseTripName1);
 
-                                            DatabaseReference inviterTripsRef = FirebaseDatabase.getInstance()
-                                                    .getReference("users") // Assuming the users are under "users" node
-                                                    .child(finalInviterId1) // The inviter's UID
+                                            DatabaseReference inviterTripsRef =
+                                                    FirebaseDatabase.getInstance()
+                                                    .getReference("users")
+                                                    .child(finalInviterId1)
                                                     .child("Trips");
-                                            inviterTripsRef.orderByChild("tripName").equalTo(finalBaseTripName).addListenerForSingleValueEvent(new ValueEventListener() {
-                                                @Override
-                                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                    for (DataSnapshot tripSnapshot : snapshot.getChildren()) {
-                                                        String tripId = tripSnapshot.getKey(); // Get the trip ID
-                                                        Log.d("id?", tripId.toString());
-                                                        DatabaseReference accommodationDetailsRef = inviterTripsRef
-                                                                .child(tripId)
-                                                                .child("Accommodation Details");
+                                            inviterTripsRef.orderByChild("tripName")
+                                                    .equalTo(finalBaseTripName)
+                                                    .addListenerForSingleValueEvent(
+                                                            new ValueEventListener() {
+                                                                @Override
+                                                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                                    for (DataSnapshot tripSnapshot : snapshot.getChildren()) {
+                                                                        String tripId = tripSnapshot.getKey();
+                                                                        Log.d("id?", tripId.toString());
+                                                                        DatabaseReference accommodationDetailsRef = inviterTripsRef
+                                                                                .child(tripId)
+                                                                                .child("Accommodation Details");
 
-                                                        DataSnapshot accommodationDetailsSnapshot = tripSnapshot.child("Accommodation Details");
-                                                        String newAccommodationDetailsId = accommodationDetailsRef.push().getKey();
-                                                        //Log.d("IDEK", newTravelDetailsId);
+                                                                        DataSnapshot accommodationDetailsSnapshot = tripSnapshot.child("Accommodation Details");
+                                                                        String newAccommodationDetailsId = accommodationDetailsRef.push().getKey();
 
-                                                        if (newAccommodationDetailsId != null) {
-                                                            accommodationDetailsRef.child(newAccommodationDetailsId).setValue(accommodationDetails)
-                                                                    .addOnCompleteListener(task -> {
-                                                                        if (task.isSuccessful()) {
-                                                                            Log.d("Firebase", "Travel details added successfully to inviter's trip.");
-                                                                        } else {
-                                                                            Log.d("Firebase", "Failed to add travel details to inviter's trip.");
+                                                                        if (newAccommodationDetailsId != null) {
+                                                                            accommodationDetailsRef.child(newAccommodationDetailsId).setValue(accommodationDetails)
+                                                                                    .addOnCompleteListener(task -> {
+                                                                                        if (task.isSuccessful()) {
+                                                                                            Log.d("Firebase", "Travel details added successfully to inviter's trip.");
+                                                                                        } else {
+                                                                                            Log.d("Firebase", "Failed to add travel details to inviter's trip.");
+                                                                                        }
+                                                                                    });
                                                                         }
-                                                                    });
-                                                        }
-                                                    }
-                                                }
+                                                                    }
+                                                                }
 
-                                                @Override
-                                                public void onCancelled(@NonNull DatabaseError error) {
+                                                                @Override
+                                                                public void onCancelled(@NonNull DatabaseError error) {
 
-                                                }
-                                            });
+                                                                }
+                                                            });
 
 
                                         }
@@ -293,8 +295,12 @@ public class AccommodationViewModel extends ViewModel {
     public LiveData<String> getRoomType() {
         return roomType;
     }
-    public LiveData<String> getTripError() { return tripError; }
-    public LiveData<ArrayList<String>> getTripList() { return tripList; }
+    public LiveData<String> getTripError() {
+        return tripError;
+    }
+    public LiveData<ArrayList<String>> getTripList() {
+        return tripList;
+    }
     public LiveData<String> getDateError() {
         return dateError;
     }

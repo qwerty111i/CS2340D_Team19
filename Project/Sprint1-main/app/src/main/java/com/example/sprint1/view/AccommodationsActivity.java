@@ -21,7 +21,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.sprint1.BR;
 import com.example.sprint1.R;
 import com.example.sprint1.databinding.ActivityAccommodationsBinding;
-import com.example.sprint1.databinding.ActivityDiningBinding;
 import com.example.sprint1.model.AccommodationDetails;
 import com.example.sprint1.viewmodel.AccommodationAdapter;
 import com.example.sprint1.viewmodel.AccommodationViewModel;

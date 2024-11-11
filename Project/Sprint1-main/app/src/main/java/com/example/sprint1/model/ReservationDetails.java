@@ -44,7 +44,7 @@ public class ReservationDetails {
         return tripName;
     }
 
-    public void setTripName(String TripName) {
-        this.tripName = TripName;
+    public void setTripName(String tripName) {
+        this.tripName = tripName;
     }
 }

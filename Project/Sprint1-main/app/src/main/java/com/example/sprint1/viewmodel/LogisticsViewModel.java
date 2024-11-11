@@ -445,26 +445,28 @@ public class LogisticsViewModel extends ViewModel {
                                 Trip sharedTrip = new Trip(sharedTripName);
 
                                 // Add the new Trip under the invited user's "Trips" node
-                                String newTripId = userReference.child(invitedUserId).child("Trips").push().getKey();
+                                String newTripId = userReference
+                                        .child(invitedUserId)
+                                        .child("Trips")
+                                        .push()
+                                        .getKey();
                                 if (newTripId != null) {
-                                    userReference.child(invitedUserId).child("Trips").child(newTripId).setValue(sharedTrip)
-                                            .addOnCompleteListener(task -> {
-                                                if (task.isSuccessful()) {
-                                                    Log.d("Firebase", "Shared trip created successfully.");
-                                                } else {
-                                                    Log.d("Firebase", "Failed to create shared trip.");
-                                                }
-                                            });
+                                    userReference.child(invitedUserId)
+                                            .child("Trips")
+                                            .child(newTripId)
+                                            .setValue(sharedTrip);
 
-                                    // Now copy the TravelDetails into the new shared trip for the invited user
                                     DataSnapshot travelDetailsSnapshot = tripSnapshot.child("Travel Details");
                                     for (DataSnapshot travelIdSnapshot : travelDetailsSnapshot.getChildren()) {
                                         TravelDetails travelDetails = travelIdSnapshot.getValue(TravelDetails.class);
                                         if (travelDetails != null) {
-                                            String sharedTripName2 = trip.getTripName() + " (Shared by " + inviterEmail + ")";
+                                            String sharedTripName2 = trip.getTripName()
+                                                    + " (Shared by " + inviterEmail + ")";
                                             travelDetails.setTripName(sharedTripName2);
                                             // Share travel details under the new shared trip
-                                            userReference.child(invitedUserId).child("Trips").child(newTripId)
+                                            userReference.child(invitedUserId)
+                                                    .child("Trips")
+                                                    .child(newTripId)
                                                     .child("Travel Details").child(travelIdSnapshot.getKey()).setValue(travelDetails)
                                                     .addOnCompleteListener(task -> {
                                                         if (task.isSuccessful()) {
@@ -483,14 +485,9 @@ public class LogisticsViewModel extends ViewModel {
                                             reservationDetails.setTripName(sharedTripName2);
                                             // Share travel details under the new shared trip
                                             userReference.child(invitedUserId).child("Trips").child(newTripId)
-                                                    .child("Reservation Details").child(reservationIdSnapshot.getKey()).setValue(reservationDetails)
-                                                    .addOnCompleteListener(task -> {
-                                                        if (task.isSuccessful()) {
-                                                            Log.d("Firebase", "Travel details shared successfully.");
-                                                        } else {
-                                                            Log.d("Firebase", "Failed to share travel details.");
-                                                        }
-                                                    });
+                                                    .child("Reservation Details")
+                                                    .child(reservationIdSnapshot.getKey())
+                                                    .setValue(reservationDetails);
                                         }
                                     }
                                     DataSnapshot accommodationDetailsSnapshot = tripSnapshot.child("Accommodation Details");
@@ -501,14 +498,9 @@ public class LogisticsViewModel extends ViewModel {
                                             accommodationDetails.setTripName(sharedTripName2);
                                             // Share travel details under the new shared trip
                                             userReference.child(invitedUserId).child("Trips").child(newTripId)
-                                                    .child("Accommodation Details").child(accommodationIdSnapshot.getKey()).setValue(accommodationDetails)
-                                                    .addOnCompleteListener(task -> {
-                                                        if (task.isSuccessful()) {
-                                                            Log.d("Firebase", "Travel details shared successfully.");
-                                                        } else {
-                                                            Log.d("Firebase", "Failed to share travel details.");
-                                                        }
-                                                    });
+                                                    .child("Accommodation Details")
+                                                    .child(accommodationIdSnapshot.getKey())
+                                                    .setValue(accommodationDetails);
                                         }
                                     }
                                 }
@@ -524,14 +516,9 @@ public class LogisticsViewModel extends ViewModel {
 
                                         // Share note content under the new shared trip for the invited user
                                         userReference.child(invitedUserId).child("Trips").child(newTripId)
-                                                .child("Notes").child(noteSnapshot.getKey()).setValue(noteContent)
-                                                .addOnCompleteListener(task -> {
-                                                    if (task.isSuccessful()) {
-                                                        Log.d("Firebase", "Note shared successfully.");
-                                                    } else {
-                                                        Log.d("Firebase", "Failed to share note.");
-                                                    }
-                                                });
+                                                .child("Notes")
+                                                .child(noteSnapshot.getKey())
+                                                .setValue(noteContent);
                                     }
                                 }
                             }
@@ -554,9 +541,6 @@ public class LogisticsViewModel extends ViewModel {
                     public void onDataChange(@NonNull DataSnapshot emailSnapshot) {
                         String inviterEmail = emailSnapshot.getValue(String.class);
                         if (inviterEmail != null && !inviterEmail.isEmpty()) {
-                            // Share notes
-                            //shareNotesWithInvitedUser(inviterId, inviterEmail,
-                                    //invitedUserId, userReference, selectedUser);
 
                             // Share travel details
                             shareTravelDetailsWithInvitedUser(inviterId, inviterEmail,
