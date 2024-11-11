@@ -1,5 +1,7 @@
 package com.example.sprint1.sprint3;
 
+import static org.junit.Assert.assertTrue;
+
 import com.example.sprint1.model.ReservationDetails;
 import com.example.sprint1.viewmodel.ReservationSorter;
 import com.example.sprint1.viewmodel.SortByName;
@@ -76,5 +78,29 @@ public class ReservationSorterTest {
 
         Assert.assertEquals("03/23/23", reservations.get(4).getDate());
         Assert.assertEquals("8:00 AM", reservations.get(4).getTime());
+    }
+
+    // Matthew
+    @Test
+    public void testSortByLocationEmpty() {
+        List<ReservationDetails> reservations = new ArrayList<>();
+
+        ReservationSorter sorter = new ReservationSorter();
+        sorter.setStrategy(new SortByName());
+        sorter.sortReservations(reservations);
+
+        assertTrue(reservations.isEmpty());
+    }
+
+    // Matthew
+    @Test
+    public void testSortByStartDateEmpty() {
+        List<ReservationDetails> reservations = new ArrayList<>();
+
+        ReservationSorter sorter = new ReservationSorter();
+        sorter.setStrategy(new SortByDateAndTime());
+        sorter.sortReservations(reservations);
+
+        assertTrue(reservations.isEmpty());
     }
 }
