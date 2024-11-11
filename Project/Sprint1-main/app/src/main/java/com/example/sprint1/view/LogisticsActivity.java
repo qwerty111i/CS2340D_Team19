@@ -24,7 +24,8 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.sprint1.viewmodel.LogisticsViewModel;
 import java.util.List;
 
-public class LogisticsActivity extends AppCompatActivity implements InviteUserSpinnerPopup.TripSelectionListener {
+public class LogisticsActivity extends AppCompatActivity
+        implements InviteUserSpinnerPopup.TripSelectionListener {
     private TabLayout tabLayout;
     private LogisticsViewModel viewModel;
     private Button createTrip;
@@ -150,7 +151,7 @@ public class LogisticsActivity extends AppCompatActivity implements InviteUserSp
 
 
 
-        private void showInviteDialog(List<String> userList, String selectedUser) {
+    private void showInviteDialog(List<String> userList, String selectedUser) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Select users to invite");
 

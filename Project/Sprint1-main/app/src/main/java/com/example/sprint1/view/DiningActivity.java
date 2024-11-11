@@ -16,7 +16,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.sprint1.BR;
 import com.example.sprint1.R;
-import com.example.sprint1.databinding.ActivityDestinationsBinding;
 import com.example.sprint1.databinding.ActivityDiningBinding;
 import com.example.sprint1.model.ReservationDetails;
 import com.example.sprint1.viewmodel.DiningAdapter;
@@ -242,7 +241,8 @@ public class DiningActivity extends AppCompatActivity {
                                 for (DataSnapshot tripSnapshot : tripsSnapshot.getChildren()) {
                                     // Gets the trip ID
                                     String tripId = tripSnapshot.getKey();
-                                    String tripName = tripSnapshot.child("tripName").getValue(String.class);
+                                    String tripName = tripSnapshot.child("tripName")
+                                            .getValue(String.class);
 
                                     // Currently at users/userId/"Trips"/tripId/"Reservation Details"
                                     DatabaseReference reservationDetailsRef = tripsRef
@@ -256,9 +256,6 @@ public class DiningActivity extends AppCompatActivity {
                                                 public void onDataChange(
                                                         @NonNull DataSnapshot reservationSnapshot) {
                                                     addReservationToList(reservationSnapshot, tripName);
-
-                                                    Log.d("Firebase", "Reservations: " + reservations);
-
                                                     rebuildSeparateLists();
 
                                                     adapter.notifyDataSetChanged();
@@ -324,12 +321,12 @@ public class DiningActivity extends AppCompatActivity {
     private void navigation() {
         boolean checkSelected = false;
         int[] navIcons = {
-                R.drawable.logistics,
-                R.drawable.destination,
-                R.drawable.dining,
-                R.drawable.accommodation,
-                R.drawable.transport,
-                R.drawable.travel };
+            R.drawable.logistics,
+            R.drawable.destination,
+            R.drawable.dining,
+            R.drawable.accommodation,
+            R.drawable.transport,
+            R.drawable.travel };
 
         for (int i = 0; i < navIcons.length; i++) {
             TabLayout.Tab tab = tabLayout.newTab();

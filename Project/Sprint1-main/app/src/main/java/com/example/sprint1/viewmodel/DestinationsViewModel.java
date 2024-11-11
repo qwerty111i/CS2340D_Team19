@@ -86,7 +86,6 @@ public class DestinationsViewModel extends ViewModel {
     public void setDropdownItems() {
         // Empty starting list
         ArrayList<String> newTripList = new ArrayList<>();
-        Log.d("are we here?" , "setDropdownItems: ");
         // Gets the current user ID in Firebase
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String userId = "";
@@ -324,8 +323,7 @@ public class DestinationsViewModel extends ViewModel {
         if (inviterEmail != null) {
             DatabaseReference userReference = FirebaseDatabase.getInstance().getReference("users");
 
-            // Add a single-value event listener to search for the inviter's UID based on their email
-            String finalInviterEmail = inviterEmail; // Make inviterEmail accessible within the inner class
+            String finalInviterEmail = inviterEmail;
             String finalBaseTripName = baseTripName;
             String finalBaseTripName1 = baseTripName;
             String finalBaseTripName2 = baseTripName;
@@ -334,12 +332,11 @@ public class DestinationsViewModel extends ViewModel {
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     String inviterId = null;
 
-                    // Loop through each child under "Users" to find the matching email
-                    for (DataSnapshot userSnapshot : snapshot.getChildren()) {  // Use 'snapshot' instead of 'dataSnapshot'
+                    for (DataSnapshot userSnapshot : snapshot.getChildren()) {
                         String email = userSnapshot.child("email").getValue(String.class);
                         Log.d("d", email);
-                        if (finalInviterEmail.equals(email)) {  // Use 'finalInviterEmail' here
-                            inviterId = userSnapshot.getKey();// The UID is the key for each user node
+                        if (finalInviterEmail.equals(email)) {
+                            inviterId = userSnapshot.getKey();
                             Log.d("ID?", inviterId);
                             Log.d("email?", email);
                             break;
@@ -356,31 +353,32 @@ public class DestinationsViewModel extends ViewModel {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot tripsSnapshot) {
                                 Log.d("world", "hello");
-                                if(tripsSnapshot.exists()) {
+                                if (tripsSnapshot.exists()) {
                                     for (DataSnapshot tripSnapshot : tripsSnapshot.getChildren()) {
-                                        String tripNameDb = tripSnapshot.child("tripName").getValue(String.class);
+                                        String tripNameDb = tripSnapshot.child("tripName")
+                                                .getValue(String.class);
                                         Log.d("name?", tripNameDb);
                                         Log.d("nametripnamebase", finalBaseTripName);
                                         if (tripNameDb.equals(finalBaseTripName)) {
                                             Log.d("nameactual", tripNameDb);
                                             String travelDetailsId = tripSnapshot.child("Travel Details").getKey();
 
-                                            // Create a new TravelDetails object to add to the inviter's trip
                                             TravelDetails newTravelDetails = new TravelDetails(
                                                     location.getValue(),
                                                     startDate.getValue(),
                                                     endDate.getValue(),
-                                                    finalBaseTripName1 // Using the base trip name without the "Shared by ..." part
-                                            );
+                                                    finalBaseTripName1);
+
                                             DatabaseReference inviterTripsRef = FirebaseDatabase.getInstance()
-                                                    .getReference("users") // Assuming the users are under "users" node
-                                                    .child(finalInviterId1) // The inviter's UID
+                                                    .getReference("users")
+                                                    .child(finalInviterId1)
                                                     .child("Trips");
+
                                             inviterTripsRef.orderByChild("tripName").equalTo(finalBaseTripName).addListenerForSingleValueEvent(new ValueEventListener() {
                                                 @Override
                                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                                     for (DataSnapshot tripSnapshot : snapshot.getChildren()) {
-                                                        String tripId = tripSnapshot.getKey(); // Get the trip ID
+                                                        String tripId = tripSnapshot.getKey();
                                                         Log.d("id?", tripId.toString());
                                                         DatabaseReference travelDetailsRef = inviterTripsRef
                                                                 .child(tripId)
@@ -388,24 +386,16 @@ public class DestinationsViewModel extends ViewModel {
 
                                                         DataSnapshot travelDetailsSnapshot = tripSnapshot.child("Travel Details");
                                                         String newTravelDetailsId = travelDetailsRef.push().getKey();
-                                                        Log.d("IDEK", newTravelDetailsId);
 
                                                         if (newTravelDetails != null) {
-                                                            travelDetailsRef.child(newTravelDetailsId).setValue(newTravelDetails)
-                                                                    .addOnCompleteListener(task -> {
-                                                                        if (task.isSuccessful()) {
-                                                                            Log.d("Firebase", "Travel details added successfully to inviter's trip.");
-                                                                        } else {
-                                                                            Log.d("Firebase", "Failed to add travel details to inviter's trip.");
-                                                                        }
-                                                                    });
-                                                        }
-                                                        for (DataSnapshot travelIdSnapshot : travelDetailsSnapshot.getChildren()){
-                                                            TravelDetails travelDetails = travelIdSnapshot.getValue(TravelDetails.class);
-
-                                                            Log.d("TRAVEL?", travelDetails.getLocation());
+                                                            travelDetailsRef.child(newTravelDetailsId)
+                                                                    .setValue(newTravelDetails);
                                                         }
 
+                                                        for (DataSnapshot travelIdSnapshot : travelDetailsSnapshot.getChildren()) {
+                                                            TravelDetails travelDetails = travelIdSnapshot
+                                                                    .getValue(TravelDetails.class);
+                                                        }
                                                     }
                                                 }
 
@@ -414,8 +404,6 @@ public class DestinationsViewModel extends ViewModel {
 
                                                 }
                                             });
-
-
                                         }
                                     }
                                 }

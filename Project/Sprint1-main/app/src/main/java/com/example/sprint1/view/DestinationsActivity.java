@@ -195,7 +195,8 @@ public class DestinationsActivity extends AppCompatActivity {
 
                                 @Override
                                 public void onCancelled(@NonNull DatabaseError error) {
-                                    Log.d("Firebase", "Error retrieving travel details for tripId: " + tripId);
+                                    Log.d("Firebase", "Error retrieving "
+                                            + "travel details for tripId: " + tripId);
                                 }
                             });
                         }
