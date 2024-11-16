@@ -75,7 +75,7 @@ public class CalculateVacationDialog extends DialogFragment {
 
             // Sets the values of width and height based on the device's screen
             int width = (int) (metrics.widthPixels * 0.9);
-            int height = (int) (metrics.heightPixels * 0.6);
+            int height = (int) (metrics.heightPixels * 0.5);
 
             // Sets the dialog size
             dialog.getWindow().setLayout(width, height); // Set desired size here

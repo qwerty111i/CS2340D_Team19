@@ -24,9 +24,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:text="@string/vacation_time_title"
-            android:textSize="21sp"
+            android:textSize="25sp"
             android:textColor="@android:color/black"
-            android:fontFamily="@font/poppins_bold"
+            android:fontFamily="@font/poppins_regular"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -45,32 +45,26 @@
         <TextView
             android:id="@+id/start_date"
             android:layout_width="0dp"
-            android:layout_marginStart="35dp"
-            android:layout_marginEnd="35dp"
             android:layout_marginTop="10dp"
-            android:gravity="center"
             android:layout_height="wrap_content"
             android:text="@string/start_date"
             android:textSize="18sp"
             android:textColor="@android:color/black"
             android:fontFamily="@font/poppins_regular"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toStartOf="@id/start_date_view"
             app:layout_constraintEnd_toStartOf="@id/end_date"
             app:layout_constraintTop_toBottomOf="@id/title" />
 
         <TextView
             android:id="@+id/end_date"
             android:layout_width="0dp"
-            android:gravity="center"
             android:layout_marginTop="10dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="35dp"
-            android:layout_marginEnd="35dp"
             android:text="@string/end_date"
             android:textSize="18sp"
             android:textColor="@android:color/black"
             android:fontFamily="@font/poppins_regular"
-            app:layout_constraintStart_toEndOf="@id/start_date"
+            app:layout_constraintStart_toStartOf="@id/end_date_view"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/title" />
 
@@ -78,29 +72,30 @@
             android:id="@+id/start_date_view"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:boxBackgroundMode="filled"
-            app:boxBackgroundColor="@color/light_modern_purple"
-            app:startIconDrawable="@drawable/calendar"
-            app:startIconTint="@color/black"
-            app:errorEnabled="true"
-            android:layout_marginStart="35dp"
+            android:layout_marginStart="20dp"
             android:layout_marginEnd="5dp"
+            app:boxBackgroundColor="@color/light_modern_purple"
+            app:boxBackgroundMode="filled"
             app:boxStrokeErrorColor="@color/muted_red"
+            app:errorEnabled="true"
+            app:errorIconDrawable="@null"
             app:errorTextAppearance="@style/ErrorTextStyle"
             app:errorTextColor="@color/muted_red"
-            app:errorIconDrawable="@null"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/end_date_view"
-            app:layout_constraintTop_toBottomOf="@id/start_date" >
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/start_date"
+            app:layout_constraintWidth_percent="0.44"
+            app:startIconDrawable="@drawable/calendar"
+            app:startIconTint="@color/black">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/start_date_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="false"
                 android:fontFamily="@font/poppins_regular"
                 android:hint="@string/date_view"
-                android:focusable="false"
-                android:clickable="true"
                 android:textColor="@color/black" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -119,7 +114,8 @@
             app:errorTextAppearance="@style/ErrorTextStyle"
             app:errorTextColor="@color/muted_red"
             app:errorIconDrawable="@null"
-            app:layout_constraintStart_toEndOf="@id/date_view"
+            app:layout_constraintWidth_percent="0.44"
+            app:layout_constraintStart_toEndOf="@id/start_date_view"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/end_date" >
 
@@ -137,15 +133,12 @@
         <TextView
             android:id="@+id/duration_text"
             android:layout_width="0dp"
-            android:gravity="center"
-            android:layout_marginStart="35dp"
-            android:layout_marginEnd="35dp"
             android:layout_height="wrap_content"
             android:text="@string/vacation_duration"
             android:textSize="18sp"
             android:textColor="@android:color/black"
             android:fontFamily="@font/poppins_regular"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toStartOf="@id/duration_view"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/end_date_view" />
 
@@ -199,7 +192,7 @@
             app:layout_constraintWidth_percent="0.4"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHeight_percent="0.12"
+            app:layout_constraintHeight_percent="0.14"
             app:layout_constraintTop_toBottomOf="@id/duration_view"
             app:layout_constraintBottom_toBottomOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
