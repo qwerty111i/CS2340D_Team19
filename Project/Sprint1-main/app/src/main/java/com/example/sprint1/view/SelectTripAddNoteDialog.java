@@ -16,37 +16,31 @@ import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 import android.widget.ArrayAdapter;
 
-import com.example.sprint1.databinding.ActivityNotesPopupDialogCommonBinding;
-import com.example.sprint1.viewmodel.DestinationsViewModel;
+import com.example.sprint1.databinding.DialogTripSelectorBinding;
 import com.example.sprint1.viewmodel.LogisticsViewModel;
 
 import java.util.ArrayList;
 
-public class NotesPopupDialogCommon extends DialogFragment {
+public class SelectTripAddNoteDialog extends DialogFragment {
 
-    private DestinationsViewModel viewModel;
-    private ActivityNotesPopupDialogCommonBinding binding;
+    private LogisticsViewModel viewModel;
+    private DialogTripSelectorBinding binding;
     private Button submitButton;
     private Spinner tripNameSpinner;
     private String selectedTrip;
-    private LogisticsViewModel logisticsViewModel;
 
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the binding for the dialog layout
-        binding = ActivityNotesPopupDialogCommonBinding.inflate(inflater, container, false);
+        binding = DialogTripSelectorBinding.inflate(inflater, container, false);
 
         // Creating the ViewModel
-        viewModel = new ViewModelProvider(this).get(DestinationsViewModel.class);
+        viewModel = new ViewModelProvider(this).get(LogisticsViewModel.class);
 
         // Binding the ViewModel
         binding.setViewModel(viewModel);
         binding.setLifecycleOwner(this);
-
-        logisticsViewModel = new ViewModelProvider(this).get(LogisticsViewModel.class);
-
-
 
         // Binds components and validates submit button
         startDialog();
@@ -87,7 +81,7 @@ public class NotesPopupDialogCommon extends DialogFragment {
         // Called when the Submit button is pressed
         submitButton.setOnClickListener(v -> {
             // Create the ActualNotesPopup dialog
-            ActualNotesPopup dialog = new ActualNotesPopup();
+            AddNoteDialog dialog = new AddNoteDialog();
 
             // Pass the selectedTrip to the next page (ActualNotesPopup)
             Bundle args = new Bundle();

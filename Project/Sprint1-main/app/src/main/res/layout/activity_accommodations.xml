@@ -15,6 +15,7 @@
         android:id="@+id/accommodations"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@drawable/accommodations_background"
         tools:context=".view.AccommodationsActivity">
 
         <TextView
@@ -22,11 +23,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="70dp"
-            android:text="My Accommodations"
+            android:text="Accommodations"
+            android:textColor="@color/black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:textSize="30sp"
+            android:textSize="40sp"
             android:textStyle="bold"
             android:fontFamily="@font/poppins_bold" />
 
@@ -38,7 +40,7 @@
             android:text="Log Accommodations"
             android:textSize="23sp"
             android:fontFamily="@font/poppins_regular"
-            app:backgroundTint="@color/modern_blue"
+            app:backgroundTint="@color/modern_purple"
             app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Medium"
             app:layout_constraintWidth_percent="0.78"
             app:layout_constraintStart_toStartOf="parent"
@@ -58,7 +60,7 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:title="My Accommodations"
+                android:title="Accommodations"
                 android:titleTextColor="@color/black" />
 
         </com.google.android.material.appbar.AppBarLayout>

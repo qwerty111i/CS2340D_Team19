@@ -16,7 +16,7 @@ import android.widget.Button;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.sprint1.databinding.ActivityLogAccommodationDialogBinding;
+import com.example.sprint1.databinding.DialogLogAccommodationBinding;
 import com.example.sprint1.viewmodel.AccommodationViewModel;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -26,15 +26,13 @@ import java.util.Calendar;
 
 public class LogAccommodationDialog extends DialogFragment {
 
-    private ActivityLogAccommodationDialogBinding binding;
+    private DialogLogAccommodationBinding binding;
     private AccommodationViewModel viewModel;
     private Button submitButton;
     private TextInputLayout location;
     private TextInputLayout checkInDate;
     private TextInputLayout checkOutDate;
-    private TextInputLayout numberOfRooms;
     private TextInputLayout roomType;
-    private TextInputEditText currentTrip;
     private TextInputEditText locationText;
     private TextInputEditText checkInDateText;
     private TextInputEditText checkOutDateText;
@@ -48,7 +46,7 @@ public class LogAccommodationDialog extends DialogFragment {
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         // Inflate the dialog layout
-        binding = ActivityLogAccommodationDialogBinding .inflate(inflater, container, false);
+        binding = DialogLogAccommodationBinding .inflate(inflater, container, false);
 
         viewModel = new ViewModelProvider(this).get(AccommodationViewModel.class);
 
@@ -125,7 +123,6 @@ public class LogAccommodationDialog extends DialogFragment {
         checkOutDate = binding.endDateView;
         checkOutDateText = binding.endDateText;
 
-        numberOfRooms = binding.numberOfRooms;
         numberOfRoomsText = binding.numberOfRoomsText;
 
         roomType = binding.roomType;

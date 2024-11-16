@@ -99,11 +99,9 @@ public class DestinationsViewModel extends ViewModel {
                 .getReference("users")
                 .child(userId)
                 .child("Trips");
-        Log.d("fireeeeee", database.toString());
         database.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Log.d("fireeeeee", snapshot.toString());
                 // Iterates through the Trip node and adds each child to the list
                 for (DataSnapshot tripSnapshot : snapshot.getChildren()) {
                     Trip newTrip = tripSnapshot.getValue(Trip.class); //some issue

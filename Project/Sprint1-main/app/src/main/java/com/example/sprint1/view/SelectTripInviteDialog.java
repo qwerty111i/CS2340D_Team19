@@ -1,10 +1,12 @@
 package com.example.sprint1.view;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,46 +14,40 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
-
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.sprint1.databinding.ActivityNotesPopupDialogCommonBinding;
-import com.example.sprint1.viewmodel.DestinationsViewModel;
+import com.example.sprint1.databinding.DialogTripSelectorBinding;
 import com.example.sprint1.viewmodel.LogisticsViewModel;
 
 import java.util.ArrayList;
 
-public class NotesPopupForLogistics extends DialogFragment {
+public class SelectTripInviteDialog extends DialogFragment {
 
-    private DestinationsViewModel viewModel;
-    private ActivityNotesPopupDialogCommonBinding binding;
+    private LogisticsViewModel viewModel;
+    private DialogTripSelectorBinding binding;
     private Button submitButton;
     private Spinner tripNameSpinner;
     private String selectedTrip;
-    private LogisticsViewModel logisticsViewModel;
+    private TripSelectionListener listener;
 
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the binding for the dialog layout
-        binding = ActivityNotesPopupDialogCommonBinding.inflate(inflater, container, false);
+        binding = DialogTripSelectorBinding.inflate(inflater, container, false);
 
         // Creating the ViewModel
-        viewModel = new ViewModelProvider(this).get(DestinationsViewModel.class);
+        viewModel = new ViewModelProvider(this).get(LogisticsViewModel.class);
 
         // Binding the ViewModel
         binding.setViewModel(viewModel);
         binding.setLifecycleOwner(this);
 
-        logisticsViewModel = new ViewModelProvider(this).get(LogisticsViewModel.class);
-
-
-
         // Binds components and validates submit button
         startDialog();
 
-        // Populate the Spinner with trips
+        // Populates spinner with trips
         populateTripDropdown();
 
         return binding.getRoot();
@@ -79,6 +75,16 @@ public class NotesPopupForLogistics extends DialogFragment {
         }
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof TripSelectionListener) {
+            listener = (TripSelectionListener) context;
+        } else {
+            throw new ClassCastException(context.toString() + " must implement TripSelectionListener");
+        }
+    }
+
     private void startDialog() {
         // Binds the variables to the proper xml components
         tripNameSpinner = binding.tripNameSpinner;
@@ -86,16 +92,9 @@ public class NotesPopupForLogistics extends DialogFragment {
 
         // Called when the Submit button is pressed
         submitButton.setOnClickListener(v -> {
-            // Create the ActualNotesPopup dialog
-            NotesTextViewPopupLogistics dialog = new NotesTextViewPopupLogistics();
-
-            // Pass the selectedTrip to the next page (ActualNotesPopup)
-            Bundle args = new Bundle();
-            args.putString("selectedTrip", selectedTrip);  // Set the selected trip as an argument
-            dialog.setArguments(args);
-
-            // Show the dialog
-            dialog.show(getParentFragmentManager(), "Create New Trip");
+            if (listener != null) {
+                listener.onTripSelected(selectedTrip); // Pass selectedTrip to the listener
+            }
             dismiss();
         });
 
@@ -113,8 +112,7 @@ public class NotesPopupForLogistics extends DialogFragment {
 
             // Populate the Spinner with the trip list
             if (getActivity() != null && getContext() != null) {
-                ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
-                        android.R.layout.simple_spinner_item, updatedTripList);
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, updatedTripList);
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 tripNameSpinner.setAdapter(adapter);
                 tripNameSpinner.setSelection(0);
@@ -124,9 +122,9 @@ public class NotesPopupForLogistics extends DialogFragment {
         // Set the selected trip when the user selects an item from the Spinner
         tripNameSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parentView,
-                                       View view, int position, long id) {
+            public void onItemSelected(AdapterView<?> parentView, View view, int position, long id) {
                 selectedTrip = parentView.getItemAtPosition(position).toString();
+                Log.d("SelectedTrip", "Selected Trip: " + selectedTrip);
             }
 
             @Override
@@ -135,4 +133,9 @@ public class NotesPopupForLogistics extends DialogFragment {
             }
         });
     }
+    public interface TripSelectionListener {
+        void onTripSelected(String selectedTrip);
+    }
+
+
 }

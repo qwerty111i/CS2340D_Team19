@@ -14,6 +14,7 @@ import com.example.sprint1.model.Trip;
 import com.example.sprint1.model.UserModel;
 import com.example.sprint1.model.VacationTime;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 
 import java.text.ParseException;
@@ -42,13 +43,8 @@ public class LogisticsViewModel extends ViewModel {
             new MutableLiveData<>();
     private List<String> notesList = new ArrayList<>();
     private final DatabaseReference notesRef;
+    private MutableLiveData<ArrayList<String>> tripList = new MutableLiveData<>();
 
-    public LiveData<Integer> getAllottedTime() {
-        return allottedTime;
-    }
-    public  LiveData<Integer> getPlannedTime() {
-        return plannedTime;
-    }
 
     public LogisticsViewModel() {
         allottedTime = new MutableLiveData<>(0);
@@ -72,6 +68,40 @@ public class LogisticsViewModel extends ViewModel {
 
         // Uses the Singleton implemented Database to store information
         UserModel.getInstance().storeTrip(newTrip);
+    }
+
+    public void setDropdownItems() {
+        // Empty starting list
+        ArrayList<String> newTripList = new ArrayList<>();
+        // Gets the current user ID in Firebase
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String userId = "";
+        if (user != null) {
+            userId = user.getUid();
+        }
+
+        // Gets the trips from Firebase
+        DatabaseReference database = FirebaseDatabase
+                .getInstance()
+                .getReference("users")
+                .child(userId)
+                .child("Trips");
+        database.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                // Iterates through the Trip node and adds each child to the list
+                for (DataSnapshot tripSnapshot : snapshot.getChildren()) {
+                    Trip newTrip = tripSnapshot.getValue(Trip.class); //some issue
+                    newTripList.add(newTrip.getTripName());
+                }
+
+                // Sets the tripList equal to the new list of trips
+                tripList.setValue(newTripList);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) { }
+        });
     }
 
     public void calculatePlannedTime(List<VacationTime> vacationTimes) {
@@ -242,8 +272,6 @@ public class LogisticsViewModel extends ViewModel {
         }
     }
 
-
-
     public void removeNote(String note) {
         notesList.remove(note);
         notesLiveData.setValue(notesList);
@@ -307,8 +335,6 @@ public class LogisticsViewModel extends ViewModel {
                         }
                     });
     }
-
-
 
     public void retrieveNotes() {
         notesRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -674,8 +700,16 @@ public class LogisticsViewModel extends ViewModel {
     public LiveData<List<String>> getNotesLiveData() {
         return notesLiveData;
     }
-
+    public LiveData<Integer> getAllottedTime() {
+        return allottedTime;
+    }
+    public LiveData<Integer> getPlannedTime() {
+        return plannedTime;
+    }
     public LiveData<List<String>> getInvitedUsersLiveData() {
         return invitedUsersLiveData;
+    }
+    public LiveData<ArrayList<String>> getTripList() {
+        return tripList;
     }
 }

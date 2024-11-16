@@ -17,7 +17,7 @@ import android.widget.Button;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.sprint1.databinding.ActivityAddReservationDialogBinding;
+import com.example.sprint1.databinding.DialogAddReservationBinding;
 import com.example.sprint1.viewmodel.DiningViewModel;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -28,7 +28,7 @@ import java.util.Locale;
 public class AddReservationDialog extends DialogFragment {
 
     private DiningViewModel viewModel;
-    private ActivityAddReservationDialogBinding binding;
+    private DialogAddReservationBinding binding;
     private TextInputLayout name;
     private TextInputLayout location;
     private TextInputLayout website;
@@ -48,7 +48,7 @@ public class AddReservationDialog extends DialogFragment {
     public View
         onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the binding for the dialog layout
-        binding = ActivityAddReservationDialogBinding.inflate(inflater, container, false);
+        binding = DialogAddReservationBinding.inflate(inflater, container, false);
 
         // Creating the ViewModel
         viewModel = new ViewModelProvider(this).get(DiningViewModel.class);

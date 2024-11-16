@@ -8,7 +8,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.example.sprint1.viewmodel.DestinationsViewModel" />
+            type="com.example.sprint1.viewmodel.LogisticsViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -16,7 +16,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/dialog_background"
-        tools:context=".view.TripDialog">
+        tools:context=".view.LogTripDialog">
 
         <!-- Title -->
         <TextView

@@ -34,7 +34,7 @@ public class AccommodationAdapter extends
             AccommodationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         //Inflating layout and giving look to each row
         LayoutInflater inflator = LayoutInflater.from(context);
-        View view = inflator.inflate(R.layout.accommodation_item_layout, parent, false);
+        View view = inflator.inflate(R.layout.layout_accommodation_item, parent, false);
         return new AccommodationViewHolder(view);
     }
 

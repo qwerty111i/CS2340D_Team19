@@ -109,7 +109,7 @@ public class DestinationsActivity extends AppCompatActivity {
         createTrip = binding.buttonNotes;
 
         createTrip.setOnClickListener(v -> {
-            NotesPopupDialogCommon dialog = new NotesPopupDialogCommon();
+            SelectTripAddNoteDialog dialog = new SelectTripAddNoteDialog();
             dialog.show(getSupportFragmentManager(), "Create New Trip");
         });
     }
