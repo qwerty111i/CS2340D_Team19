@@ -39,10 +39,10 @@ public class TravelAdapter extends RecyclerView.Adapter<TravelAdapter.ViewHolder
 
         if (viewType == 1) {
             view = LayoutInflater.from(parent.getContext()).
-                    inflate(R.layout.travel_log_layout, parent, false);
+                    inflate(R.layout.layout_travel_log, parent, false);
         } else {
             view = LayoutInflater.from(parent.getContext()).
-                    inflate(R.layout.expired_travel_log_layout, parent, false);
+                    inflate(R.layout.layout_expired_travel_log, parent, false);
         }
 
         return new TravelAdapter.ViewHolder(view);
@@ -83,7 +83,8 @@ public class TravelAdapter extends RecyclerView.Adapter<TravelAdapter.ViewHolder
     // Checks if the date is expired
     public boolean isExpired(String reservationDate) {
         // Converts the reservationDate into an actual Date
-        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yy");
+        SimpleDateFormat sdf;
+        sdf = new SimpleDateFormat("MM/dd/yy");
         try {
             Date checkDate = sdf.parse(reservationDate);
             Date currentDate = new Date();

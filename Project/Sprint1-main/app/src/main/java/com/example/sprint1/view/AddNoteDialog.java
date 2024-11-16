@@ -16,30 +16,30 @@ import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.sprint1.R;
-import com.example.sprint1.databinding.ActivityActualNotesPopupBinding;
-import com.example.sprint1.viewmodel.DestinationsViewModel;
+import com.example.sprint1.databinding.DialogAddNoteBinding;
 import com.example.sprint1.viewmodel.LogisticsViewModel;
 
-public class ActualNotesPopup extends DialogFragment {
-    private DestinationsViewModel viewModel;
-    private ActivityActualNotesPopupBinding binding;
+public class AddNoteDialog extends DialogFragment {
+    private LogisticsViewModel viewModel;
+    private DialogAddNoteBinding binding;
     private Button submitButton;
     private EditText noteEditText;
     private String selectedTrip;
-    private LogisticsViewModel logisticsViewModel;
-
 
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         // Inflate the binding for the dialog layout
-        binding = ActivityActualNotesPopupBinding.inflate(inflater, container, false);
+        binding = DialogAddNoteBinding.inflate(inflater, container, false);
+
         if (getArguments() != null) {
             selectedTrip = getArguments().getString("selectedTrip");
         }
+
         // Creating the ViewModel
-        viewModel = new ViewModelProvider(this).get(DestinationsViewModel.class);
-        logisticsViewModel = new ViewModelProvider(this).get(LogisticsViewModel.class);
+        viewModel = new ViewModelProvider(this).get(LogisticsViewModel.class);
+
         // Binding the ViewModel
         binding.setViewModel(viewModel);
         binding.setLifecycleOwner(this);
@@ -64,12 +64,13 @@ public class ActualNotesPopup extends DialogFragment {
 
             // Sets the values of width and height based on the device's screen
             int width = (int) (metrics.widthPixels * 0.9);
-            int height = (int) (metrics.heightPixels * 0.6);
+            int height = (int) (metrics.heightPixels * 0.35);
 
             // Sets the dialog size
             dialog.getWindow().setLayout(width, height); // Set desired size here
         }
     }
+
     private void startDialog() {
         noteEditText = binding.noteEditText;
         submitButton = binding.submitButton;
@@ -81,7 +82,7 @@ public class ActualNotesPopup extends DialogFragment {
             // Make sure trip is selected and note is not empty
             if (selectedTrip != null && !noteText.isEmpty()) {
                 // Save the note under the selected trip
-                logisticsViewModel.saveNoteForTrip(selectedTrip, noteText);
+                viewModel.saveNoteForTrip(selectedTrip, noteText);
 
 
 
@@ -101,7 +102,7 @@ public class ActualNotesPopup extends DialogFragment {
 
         if (!noteText.isEmpty() && selectedTrip != null) {
             // Call ViewModel to add the note under the selected trip in the database
-            logisticsViewModel.addNote(selectedTrip, noteText);
+            viewModel.addNote(selectedTrip, noteText);
 
             // Dismiss the dialog after saving the note
             dismiss();

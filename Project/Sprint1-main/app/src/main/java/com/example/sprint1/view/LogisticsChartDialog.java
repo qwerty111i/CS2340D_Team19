@@ -1,6 +1,6 @@
 package com.example.sprint1.view;
 
-import com.example.sprint1.databinding.ActivityLogisticsChartBinding;
+import com.example.sprint1.databinding.DialogLogisticsChartBinding;
 import com.example.sprint1.viewmodel.LogisticsViewModel;
 
 import androidx.core.content.res.ResourcesCompat;
@@ -29,15 +29,16 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LogisticsChart extends DialogFragment {
-    private ActivityLogisticsChartBinding binding;
+public class LogisticsChartDialog extends DialogFragment {
+    private DialogLogisticsChartBinding binding;
     private LogisticsViewModel viewModel;
 
     @Override
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+
         // Inflate the dialog layout
-        binding = ActivityLogisticsChartBinding.inflate(inflater, container, false);
+        binding = DialogLogisticsChartBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
 

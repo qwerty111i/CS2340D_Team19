@@ -106,7 +106,7 @@ public class DiningActivity extends AppCompatActivity {
         createTrip = binding.buttonNotes;
 
         createTrip.setOnClickListener(v -> {
-            NotesPopupDialogCommon dialog = new NotesPopupDialogCommon();
+            SelectTripAddNoteDialog dialog = new SelectTripAddNoteDialog();
             dialog.show(getSupportFragmentManager(), "Create New Trip");
         });
     }
@@ -125,8 +125,6 @@ public class DiningActivity extends AppCompatActivity {
         tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                tab.view.setBackgroundColor(getResources().getColor(R.color.golden));
-
                 String tabText = tab.getText().toString();
                 if (tabText.equals("Date")) {
                     sortReservationsByDate();
@@ -137,13 +135,11 @@ public class DiningActivity extends AppCompatActivity {
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-                tab.view.setBackgroundColor(getResources().getColor(R.color.snackbar_background));
+
             }
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-                tab.view.setBackgroundColor(getResources().getColor(R.color.golden));
-
                 String tabText = tab.getText().toString();
                 if (tabText.equals("Date")) {
                     sortReservationsByDate();

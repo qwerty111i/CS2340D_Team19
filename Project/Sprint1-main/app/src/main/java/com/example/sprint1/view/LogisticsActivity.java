@@ -25,7 +25,7 @@ import com.example.sprint1.viewmodel.LogisticsViewModel;
 import java.util.List;
 
 public class LogisticsActivity extends AppCompatActivity
-        implements InviteUserSpinnerPopup.TripSelectionListener {
+        implements SelectTripInviteDialog.TripSelectionListener {
     private TabLayout tabLayout;
     private LogisticsViewModel viewModel;
     private Button createTrip;
@@ -49,8 +49,6 @@ public class LogisticsActivity extends AppCompatActivity
 
         // Initialize UI elements
         Button btnAllotted = binding.allottedVsPlanned;
-        Button inviteButton = binding.buttonInvite;
-        Button notesButton = binding.buttonNotes;
 
         // Observe invited users LiveData
         viewModel.getInvitedUsersLiveData().observe(this, invitedUsers -> {
@@ -68,14 +66,9 @@ public class LogisticsActivity extends AppCompatActivity
 
         // Button click listeners
         btnAllotted.setOnClickListener(v -> {
-            LogisticsChart logisticsChart = new LogisticsChart();
-            logisticsChart.show(getSupportFragmentManager(), "LogisticsChart");
+            LogisticsChartDialog logisticsChartDialog = new LogisticsChartDialog();
+            logisticsChartDialog.show(getSupportFragmentManager(), "LogisticsChart");
         });
-
-        //notesButton.setOnClickListener(v -> showNotesDialog());
-        //viewModel.retrieveNotes();
-
-        //inviteButton.setOnClickListener(this::onInviteButtonClick);
 
         // Navigation bar
         tabLayout = binding.tabNavigation;
@@ -101,12 +94,12 @@ public class LogisticsActivity extends AppCompatActivity
 
         inviteButton = binding.buttonInvite;
         inviteButton.setOnClickListener(v -> {
-            InviteUserSpinnerPopup dialog = new InviteUserSpinnerPopup();
+            SelectTripInviteDialog dialog = new SelectTripInviteDialog();
             dialog.show(getSupportFragmentManager(), "Invite trip");
         });
 
         createTrip.setOnClickListener(v -> {
-            NotesPopupForLogistics dialog = new NotesPopupForLogistics();
+            SelectTripViewNoteDialog dialog = new SelectTripViewNoteDialog();
             dialog.show(getSupportFragmentManager(), "Create New Trip");
         });
 
@@ -117,7 +110,7 @@ public class LogisticsActivity extends AppCompatActivity
         createTrip = binding.addTrip;
 
         createTrip.setOnClickListener(v -> {
-            TripDialog dialog = new TripDialog();
+            AddTripDialog dialog = new AddTripDialog();
             dialog.show(getSupportFragmentManager(), "Create New Trip");
         });
     }

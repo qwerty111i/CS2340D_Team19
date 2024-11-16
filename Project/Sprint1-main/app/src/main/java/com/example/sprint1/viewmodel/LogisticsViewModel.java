@@ -14,6 +14,7 @@ import com.example.sprint1.model.Trip;
 import com.example.sprint1.model.UserModel;
 import com.example.sprint1.model.VacationTime;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 
 import java.text.ParseException;
@@ -41,14 +42,11 @@ public class LogisticsViewModel extends ViewModel {
     private final MutableLiveData<List<VacationTime>> vacationTimesLiveData =
             new MutableLiveData<>();
     private List<String> notesList = new ArrayList<>();
+    private MutableLiveData<String> tripName = new MutableLiveData<>();
+    private MutableLiveData<Boolean> validTrip = new MutableLiveData<>();
+    private MutableLiveData<ArrayList<String>> tripList = new MutableLiveData<>();
+    private MutableLiveData<String> tripError = new MutableLiveData<>();
     private final DatabaseReference notesRef;
-
-    public LiveData<Integer> getAllottedTime() {
-        return allottedTime;
-    }
-    public  LiveData<Integer> getPlannedTime() {
-        return plannedTime;
-    }
 
     public LogisticsViewModel() {
         allottedTime = new MutableLiveData<>(0);
@@ -72,6 +70,59 @@ public class LogisticsViewModel extends ViewModel {
 
         // Uses the Singleton implemented Database to store information
         UserModel.getInstance().storeTrip(newTrip);
+    }
+
+    public void setDropdownItems() {
+        // Empty starting list
+        ArrayList<String> newTripList = new ArrayList<>();
+        // Gets the current user ID in Firebase
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String userId = "";
+        if (user != null) {
+            userId = user.getUid();
+        }
+
+        // Gets the trips from Firebase
+        DatabaseReference database = FirebaseDatabase
+                .getInstance()
+                .getReference("users")
+                .child(userId)
+                .child("Trips");
+        database.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                // Iterates through the Trip node and adds each child to the list
+                for (DataSnapshot tripSnapshot : snapshot.getChildren()) {
+                    Trip newTrip = tripSnapshot.getValue(Trip.class); //some issue
+                    newTripList.add(newTrip.getTripName());
+                }
+
+                // Sets the tripList equal to the new list of trips
+                tripList.setValue(newTripList);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) { }
+        });
+    }
+
+    public void setTrip(String tripName) {
+        this.tripName.setValue(tripName);
+
+        boolean noError = checkInput(tripName);
+        validTrip.setValue(noError);
+
+        // Sets the Trip error message
+        if (!noError) {
+            tripError.setValue("No Trip Selected!");
+        } else {
+            tripError.setValue(null);
+        }
+    }
+
+    // Base check for inputs (empty or not)
+    public boolean checkInput(String input) {
+        return input != null && !input.isEmpty();
     }
 
     public void calculatePlannedTime(List<VacationTime> vacationTimes) {
@@ -242,8 +293,6 @@ public class LogisticsViewModel extends ViewModel {
         }
     }
 
-
-
     public void removeNote(String note) {
         notesList.remove(note);
         notesLiveData.setValue(notesList);
@@ -270,7 +319,7 @@ public class LogisticsViewModel extends ViewModel {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if (snapshot.exists()) {
                             for (DataSnapshot inviterSnapshot : snapshot.getChildren()) {
-                                // Get the inviter's user ID
+                                // Get the inviters user ID
                                 String inviterId = inviterSnapshot.getKey();
                                 if (inviterId != null) {
                                     DatabaseReference inviterNotesRef =
@@ -307,8 +356,6 @@ public class LogisticsViewModel extends ViewModel {
                         }
                     });
     }
-
-
 
     public void retrieveNotes() {
         notesRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -664,18 +711,28 @@ public class LogisticsViewModel extends ViewModel {
         });
     }
 
-
-
-
-
     public LiveData<List<String>> getUsersLiveData() {
         return usersLiveData;
     }
     public LiveData<List<String>> getNotesLiveData() {
         return notesLiveData;
     }
-
+    public LiveData<Integer> getAllottedTime() {
+        return allottedTime;
+    }
+    public LiveData<Integer> getPlannedTime() {
+        return plannedTime;
+    }
     public LiveData<List<String>> getInvitedUsersLiveData() {
         return invitedUsersLiveData;
+    }
+    public LiveData<ArrayList<String>> getTripList() {
+        return tripList;
+    }
+    public LiveData<Boolean> isTripValid() {
+        return validTrip;
+    }
+    public LiveData<String> getTripError() {
+        return tripError;
     }
 }

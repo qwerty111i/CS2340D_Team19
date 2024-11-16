@@ -15,6 +15,7 @@ import com.example.sprint1.model.AccommodationDetails;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -32,9 +33,16 @@ public class AccommodationAdapter extends
     @Override
     public AccommodationAdapter.
             AccommodationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        //Inflating layout and giving look to each row
-        LayoutInflater inflator = LayoutInflater.from(context);
-        View view = inflator.inflate(R.layout.accommodation_item_layout, parent, false);
+        View view;
+
+        if (viewType == 1) {
+            view = LayoutInflater.from(parent.getContext()).
+                    inflate(R.layout.layout_accommodation_log, parent, false);
+        } else {
+            view = LayoutInflater.from(parent.getContext()).
+                    inflate(R.layout.layout_expired_accommodation_log, parent, false);
+        }
+
         return new AccommodationViewHolder(view);
     }
 
@@ -57,17 +65,11 @@ public class AccommodationAdapter extends
             if (checkInDate != null && checkInDate.before(currentDate)) {
                 //If check-in date is in the past, turn text red
                 holder.tvCheckIn.setTextColor(Color.RED);
-            } else {
-                //set default color
-                holder.tvCheckIn.setTextColor(Color.WHITE); //Replace w default white
             }
 
             if (checkOutDate != null && checkOutDate.before(currentDate)) {
                 //If check-in date is in the past, turn text red
                 holder.tvCheckOut.setTextColor(Color.RED);
-            } else {
-                //set default color
-                holder.tvCheckOut.setTextColor(Color.WHITE); //Replace w default white
             }
         } catch (ParseException e) {
             throw new RuntimeException(e);
@@ -78,15 +80,14 @@ public class AccommodationAdapter extends
         //based on the position of the recycler view
         holder.tvCheckIn.setText("Check In: " + accommodations.get(position).getCheckIn());
         holder.tvCheckOut.setText("Check Out: " + accommodations.get(position).getCheckOut());
+        holder.tvName.setText(accommodations.get(position).getName());
         holder.tvLocation.setText(accommodations.get(position).getLocation());
         holder.tvNumRooms.setText(String.valueOf(accommodations.get(position).getNumRooms())
                 + " rooms");
         holder.tvTypeRoom.setText(" - " + String.valueOf(accommodations.get(position).
                 getRoomType()));
-        holder.tvHotel.setText(accommodations.get(position).getHotel());
         holder.tvWebsite.setText(accommodations.get(position).getWebsite());
-
-
+        holder.tvTripName.setText(accommodations.get(position).getTripName());
     }
 
     @Override
@@ -95,26 +96,69 @@ public class AccommodationAdapter extends
         return accommodations.size();
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        String checkOutDate = accommodations.get(position).getCheckOut();
+        if (isExpired(checkOutDate)) {
+            if (!accommodations.get(position).getTripName().contains("(Expired)")) {
+                accommodations.get(position).setTripName("(Expired) " + accommodations.get(position).getTripName());
+            }
+            return 0;
+        }
+        return 1;
+    }
+
+    // Checks if the date is expired
+    public boolean isExpired(String reservationDate) {
+        // Converts the reservationDate into an actual Date
+        SimpleDateFormat sdf;
+        sdf = new SimpleDateFormat("MM/dd/yy");
+        try {
+            Date checkDate = sdf.parse(reservationDate);
+            Date currentDate = new Date();
+
+            // Resetting the time
+            checkDate = resetTime(checkDate);
+            currentDate = resetTime(currentDate);
+
+            return checkDate.before(currentDate);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    // Resets the time in a date
+    private Date resetTime(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        return calendar.getTime();
+    }
+
     public static class AccommodationViewHolder extends RecyclerView.ViewHolder {
         //grabbing items from layout file and assigning them to variables
         private TextView tvCheckIn;
         private TextView tvCheckOut;
+        private TextView tvName;
         private TextView tvLocation;
         private TextView tvNumRooms;
         private TextView tvTypeRoom;
-        private TextView tvHotel;
         private TextView tvWebsite;
+        private TextView tvTripName;
 
         public AccommodationViewHolder(@NonNull View itemView) {
             super(itemView);
             tvCheckIn = itemView.findViewById(R.id.check_in);
             tvCheckOut = itemView.findViewById(R.id.check_out);
+            tvName = itemView.findViewById(R.id.name_text);
             tvLocation = itemView.findViewById(R.id.location_text);
             tvNumRooms = itemView.findViewById(R.id.number_of_rooms_text);
             tvTypeRoom = itemView.findViewById(R.id.type_of_room_text);
-            tvHotel = itemView.findViewById(R.id.hotel_text);
             tvWebsite = itemView.findViewById(R.id.website_text);
-
+            tvTripName = itemView.findViewById(R.id.log_trip);
         }
     }
 }
