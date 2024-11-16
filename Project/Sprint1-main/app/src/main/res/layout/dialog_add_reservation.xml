@@ -16,7 +16,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/dialog_background"
-        tools:context=".view.LogTravelDialog">
+        tools:context=".view.AddTravelDialog">
 
         <TextView
             android:id="@+id/title"
@@ -58,9 +58,9 @@
             app:boxStrokeColor="@color/modern_purple"
             app:boxStrokeWidth="3dp"
             app:boxStrokeWidthFocused="3dp"
-            app:startIconDrawable="@drawable/location"
+            app:startIconDrawable="@drawable/name"
             app:startIconTint="@color/black"
-            android:hint="Enter Location"
+            android:hint="Enter Name"
             android:textColorHint="@color/black"
             app:hintTextColor="@color/black"
             app:errorEnabled="true"

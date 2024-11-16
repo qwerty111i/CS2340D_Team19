@@ -24,21 +24,33 @@ import java.util.Date;
 import java.util.Locale;
 
 public class AccommodationViewModel extends ViewModel {
+    private final MutableLiveData<String> name = new MutableLiveData<>();
+    private final MutableLiveData<String> nameError = new MutableLiveData<>();
 
-    private MutableLiveData<String> location = new MutableLiveData<>();
-    private MutableLiveData<String> checkInDate = new MutableLiveData<>();
-    private MutableLiveData<String> checkOutDate = new MutableLiveData<>();
-    private MutableLiveData<Integer> numberOfRooms = new MutableLiveData<>();
-    private MutableLiveData<String> roomType = new MutableLiveData<>();
-    private MutableLiveData<Boolean> validInputs = new MutableLiveData<>();
-    private MutableLiveData<String> dateError = new MutableLiveData<>();
-    private MutableLiveData<String> inputError = new MutableLiveData<>();
-    private MutableLiveData<String> tripName = new MutableLiveData<>();
-    private MutableLiveData<String> tripError = new MutableLiveData<>();
-    private MutableLiveData<ArrayList<String>> tripList = new MutableLiveData<>();
+    private final MutableLiveData<String> location = new MutableLiveData<>();
+    private final MutableLiveData<String> locationError = new MutableLiveData<>();
 
-    public void setAccommodationDetails(String location, String checkIn, String checkOut,
-                                        int numRooms, String roomType, String tripName) {
+    private final MutableLiveData<String> checkInDate = new MutableLiveData<>();
+    private final MutableLiveData<String> checkOutDate = new MutableLiveData<>();
+    private final MutableLiveData<String> dateError = new MutableLiveData<>();
+
+    private final MutableLiveData<Integer> numberOfRooms = new MutableLiveData<>();
+    private final MutableLiveData<String> numRoomError = new MutableLiveData<>();
+
+    private final MutableLiveData<String> roomType = new MutableLiveData<>();
+    private final MutableLiveData<String> roomError = new MutableLiveData<>();
+
+    private final MutableLiveData<String> tripName = new MutableLiveData<>();
+    private final MutableLiveData<String> tripError = new MutableLiveData<>();
+
+    private final MutableLiveData<Boolean> validInputs = new MutableLiveData<>();
+
+    private final MutableLiveData<ArrayList<String>> tripList = new MutableLiveData<>();
+
+    public void setAccommodationDetails(String name, String location, String checkIn,
+                                        String checkOut, int numRooms, String roomType,
+                                        String tripName) {
+        this.name.setValue(name);
         this.location.setValue(location);
         this.checkInDate.setValue(checkIn);
         this.checkOutDate.setValue(checkOut);
@@ -47,6 +59,7 @@ public class AccommodationViewModel extends ViewModel {
         this.tripName.setValue(tripName);
 
         // Checks whether location and date are valid
+        boolean validName = checkInput(name);
         boolean validLocation = checkInput(location);
         boolean validRoomType = checkInput(roomType);
         boolean validNumberOfRooms = checkInput(numRooms);
@@ -54,16 +67,34 @@ public class AccommodationViewModel extends ViewModel {
         boolean validTripName = checkInput(tripName);
 
         // Set input errors based on validation
-        if (!validLocation) {
-            inputError.setValue("Location is required!");
-        } else if (!validRoomType) {
-            inputError.setValue("Room type is required!");
-        } else if (!validNumberOfRooms) {
-            inputError.setValue("Number of rooms must be greater than 0!");
-        } else if (!validTripName) {
-            inputError.setValue("Invalid Trip Selection!");
+        if (!validName) {
+            nameError.setValue("Name is required!");
         } else {
-            inputError.setValue(null); // Clear error if all inputs are valid
+            nameError.setValue(null);
+        }
+
+        if (!validLocation) {
+            locationError.setValue("Location is required!");
+        } else {
+            locationError.setValue(null);
+        }
+
+        if (!validRoomType) {
+            roomError.setValue("Room type is required!");
+        } else {
+            roomError.setValue(null);
+        }
+
+        if (!validNumberOfRooms) {
+            numRoomError.setValue("Invalid Number!");
+        } else {
+            numRoomError.setValue(null);
+        }
+
+        if (!validTripName) {
+            tripError.setValue("Invalid Trip Selection!");
+        } else {
+            tripError.setValue(null);
         }
 
         // Sets the Date error message
@@ -74,7 +105,7 @@ public class AccommodationViewModel extends ViewModel {
         }
 
         // Sets the value of validInputs (true/false)
-        validInputs.setValue(validLocation && validRoomType
+        validInputs.setValue(validName && validLocation && validRoomType
                 && validNumberOfRooms && validDates && validTripName);
     }
 
@@ -82,6 +113,7 @@ public class AccommodationViewModel extends ViewModel {
         AccommodationDetails accommodationDetails = new AccommodationDetails(
                 checkInDate.getValue(),
                 checkOutDate.getValue(),
+                name.getValue(),
                 location.getValue(),
                 numberOfRooms.getValue(),
                 roomType.getValue(),
@@ -130,19 +162,16 @@ public class AccommodationViewModel extends ViewModel {
                         tripsReference.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot tripsSnapshot) {
-                                Log.d("world", "hello");
                                 if (tripsSnapshot.exists()) {
                                     for (DataSnapshot tripSnapshot : tripsSnapshot.getChildren()) {
                                         String tripNameDb = tripSnapshot.child("tripName")
                                                 .getValue(String.class);
-                                        Log.d("name?", tripNameDb);
-                                        Log.d("nametripnamebase", finalBaseTripName);
                                         if (tripNameDb.equals(finalBaseTripName)) {
-                                            Log.d("nameactual", tripNameDb);
                                             AccommodationDetails accommodationDetails =
                                                     new AccommodationDetails(
                                                     checkInDate.getValue(),
                                                     checkOutDate.getValue(),
+                                                    name.getValue(),
                                                     location.getValue(),
                                                     numberOfRooms.getValue(),
                                                     roomType.getValue(),
@@ -280,20 +309,20 @@ public class AccommodationViewModel extends ViewModel {
     public LiveData<Boolean> areInputsValid() {
         return validInputs;
     }
+    public LiveData<String> getNameError() {
+        return nameError;
+    }
     public LiveData<String> getLocation() {
         return location;
     }
-    public LiveData<String> getCheckInDate() {
-        return checkInDate;
+    public LiveData<String> getLocationError() {
+        return locationError;
     }
-    public LiveData<String> getCheckOutDate() {
-        return checkOutDate;
+    public LiveData<String> getRoomError() {
+        return roomError;
     }
-    public LiveData<Integer> getNumberOfRooms() {
-        return numberOfRooms;
-    }
-    public LiveData<String> getRoomType() {
-        return roomType;
+    public LiveData<String> getNumRoomError() {
+        return numRoomError;
     }
     public LiveData<String> getTripError() {
         return tripError;
@@ -304,8 +333,4 @@ public class AccommodationViewModel extends ViewModel {
     public LiveData<String> getDateError() {
         return dateError;
     }
-    public LiveData<String> getInputError() {
-        return inputError;
-    }
-
 }

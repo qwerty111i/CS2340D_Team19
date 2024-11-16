@@ -16,7 +16,7 @@ import android.widget.Button;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.sprint1.databinding.ActivityLogAccommodationDialogBinding;
+import com.example.sprint1.databinding.DialogAddAccommodationBinding;
 import com.example.sprint1.viewmodel.AccommodationViewModel;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -24,23 +24,32 @@ import com.google.android.material.textfield.TextInputLayout;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class LogAccommodationDialog extends DialogFragment {
+public class AddAccommodationDialog extends DialogFragment {
 
-    private ActivityLogAccommodationDialogBinding binding;
+    private DialogAddAccommodationBinding binding;
     private AccommodationViewModel viewModel;
-    private Button submitButton;
+
+    private TextInputLayout name;
+    private TextInputEditText nameText;
+
     private TextInputLayout location;
-    private TextInputLayout checkInDate;
-    private TextInputLayout checkOutDate;
-    private TextInputLayout numberOfRooms;
-    private TextInputLayout roomType;
-    private TextInputEditText currentTrip;
     private TextInputEditText locationText;
+
+    private TextInputLayout checkInDate;
     private TextInputEditText checkInDateText;
+
+    private TextInputLayout checkOutDate;
     private TextInputEditText checkOutDateText;
-    private AutoCompleteTextView numberOfRoomsText;
+
+    private TextInputLayout roomType;
     private AutoCompleteTextView roomTypeText;
+
+    private TextInputLayout numberOfRooms;
+    private AutoCompleteTextView numberOfRoomsText;
+
     private AutoCompleteTextView tripDropDown;
+    private Button submitButton;
+
     private String selectedTrip;
     private ArrayList<String> updatedTripList;
 
@@ -48,7 +57,7 @@ public class LogAccommodationDialog extends DialogFragment {
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         // Inflate the dialog layout
-        binding = ActivityLogAccommodationDialogBinding .inflate(inflater, container, false);
+        binding = DialogAddAccommodationBinding .inflate(inflater, container, false);
 
         viewModel = new ViewModelProvider(this).get(AccommodationViewModel.class);
 
@@ -83,7 +92,7 @@ public class LogAccommodationDialog extends DialogFragment {
 
             // Sets the values of width and height based on the device's screen
             int width = (int) (metrics.widthPixels * 0.9);
-            int height = (int) (metrics.heightPixels * 0.8);
+            int height = (int) (metrics.heightPixels * 0.85);
 
             // Sets the dialog size
             dialog.getWindow().setLayout(width, height); // Set desired size here
@@ -116,6 +125,9 @@ public class LogAccommodationDialog extends DialogFragment {
     }
     private void startDialog() {
         // Binds the variables to the proper xml components
+        name = binding.nameView;
+        nameText = binding.nameText;
+
         location = binding.locationView;
         locationText = binding.locationText;
 
@@ -156,6 +168,7 @@ public class LogAccommodationDialog extends DialogFragment {
 
         // Called when the Submit button is pressed
         submitButton.setOnClickListener(v -> {
+            String nameText = this.nameText.getText().toString();
             String locationText = this.locationText.getText().toString();
             String checkInDateText = this.checkInDateText.getText().toString();
             String checkOutDateText = this.checkOutDateText.getText().toString();
@@ -165,14 +178,11 @@ public class LogAccommodationDialog extends DialogFragment {
             int numberOfRooms = 0;
             try {
                 numberOfRooms = Integer.parseInt(numberOfRoomsString);
-            } catch (NumberFormatException e) {
-                this.numberOfRoomsText.setError("Please enter a valid number of rooms");
-                return;
-            }
+            } catch (NumberFormatException e) { }
 
             String roomTypeText = this.roomTypeText.getText().toString();
 
-            viewModel.setAccommodationDetails(locationText, checkInDateText,
+            viewModel.setAccommodationDetails(nameText, locationText, checkInDateText,
                     checkOutDateText, numberOfRooms, roomTypeText, currentTripText);
 
             if (viewModel.areInputsValid().getValue()) {
@@ -182,11 +192,35 @@ public class LogAccommodationDialog extends DialogFragment {
         });
     }
     private void observers() {
-        viewModel.getInputError().observe(this, errorMessage -> {
+        viewModel.getNameError().observe(this, errorMessage -> {
+            if (errorMessage != null) {
+                name.setError(errorMessage);
+            } else {
+                name.setError(null);
+            }
+        });
+
+        viewModel.getLocationError().observe(this, errorMessage -> {
             if (errorMessage != null) {
                 location.setError(errorMessage);
             } else {
                 location.setError(null);
+            }
+        });
+
+        viewModel.getRoomError().observe(this, errorMessage -> {
+            if (errorMessage != null) {
+                roomType.setError(errorMessage);
+            } else {
+                roomType.setError(null);
+            }
+        });
+
+        viewModel.getNumRoomError().observe(this, errorMessage -> {
+            if (errorMessage != null) {
+                numberOfRooms.setError(errorMessage);
+            } else {
+                numberOfRooms.setError(null);
             }
         });
 

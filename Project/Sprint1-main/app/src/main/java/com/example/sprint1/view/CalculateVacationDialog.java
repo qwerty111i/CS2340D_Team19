@@ -15,7 +15,7 @@ import android.widget.Toast;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.sprint1.databinding.ActivityCalculateVacationDialogBinding;
+import com.example.sprint1.databinding.DialogCalculateVacationBinding;
 import com.example.sprint1.viewmodel.DestinationsViewModel;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -25,7 +25,7 @@ import java.util.Calendar;
 public class CalculateVacationDialog extends DialogFragment {
 
     private DestinationsViewModel viewModel;
-    private ActivityCalculateVacationDialogBinding binding;
+    private DialogCalculateVacationBinding binding;
     private Button submitButton;
     private TextInputLayout duration;
     private TextInputLayout startDate;
@@ -38,7 +38,7 @@ public class CalculateVacationDialog extends DialogFragment {
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the binding for the dialog layout
-        binding = ActivityCalculateVacationDialogBinding.inflate(inflater, container, false);
+        binding = DialogCalculateVacationBinding.inflate(inflater, container, false);
 
         // Creating the ViewModel
         viewModel = new ViewModelProvider(this).get(DestinationsViewModel.class);
@@ -75,7 +75,7 @@ public class CalculateVacationDialog extends DialogFragment {
 
             // Sets the values of width and height based on the device's screen
             int width = (int) (metrics.widthPixels * 0.9);
-            int height = (int) (metrics.heightPixels * 0.6);
+            int height = (int) (metrics.heightPixels * 0.5);
 
             // Sets the dialog size
             dialog.getWindow().setLayout(width, height); // Set desired size here

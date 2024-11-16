@@ -41,10 +41,10 @@ public class DiningAdapter extends RecyclerView.Adapter<DiningAdapter.ViewHolder
 
         if (viewType == 1) {
             view = LayoutInflater.from(parent.getContext()).
-                    inflate(R.layout.dining_log_layout, parent, false);
+                    inflate(R.layout.layout_dining_log, parent, false);
         } else {
             view = LayoutInflater.from(parent.getContext()).
-                    inflate(R.layout.expired_dining_log_layout, parent, false);
+                    inflate(R.layout.layout_expired_dining_log, parent, false);
         }
 
         return new DiningAdapter.ViewHolder(view);

@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -12,11 +11,11 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/log_travel_dialog"
+        android:id="@+id/calculate_vacation_dialog"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="650dp"
         android:background="@drawable/dialog_background"
-        tools:context=".view.LogTravelDialog">
+        tools:context=".view.CalculateVacationDialog">
 
         <TextView
             android:id="@+id/title"
@@ -24,32 +23,127 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="@string/log_travel_title"
-            android:textSize="35sp"
+            android:text="@string/vacation_time_title"
+            android:textSize="25sp"
             android:textColor="@android:color/black"
             android:fontFamily="@font/poppins_regular"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/travel_location"
-            android:layout_marginTop="20dp"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/date_container"
             android:layout_width="0dp"
-            android:gravity="start"
-            android:layout_marginStart="35dp"
             android:layout_height="wrap_content"
-            android:text="@string/travel_location"
-            android:textSize="18sp"
-            android:textColor="@android:color/black"
-            android:fontFamily="@font/poppins_regular"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/title"
-            app:layout_constraintBottom_toTopOf="@id/location_view" />
+            app:layout_constraintHorizontal_chainStyle="spread">
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:id="@+id/start_date"
+            android:layout_width="0dp"
+            android:layout_marginTop="10dp"
+            android:layout_height="wrap_content"
+            android:text="@string/start_date"
+            android:textSize="18sp"
+            android:textColor="@android:color/black"
+            android:fontFamily="@font/poppins_regular"
+            app:layout_constraintStart_toStartOf="@id/start_date_view"
+            app:layout_constraintEnd_toStartOf="@id/end_date"
+            app:layout_constraintTop_toBottomOf="@id/title" />
+
+        <TextView
+            android:id="@+id/end_date"
+            android:layout_width="0dp"
+            android:layout_marginTop="10dp"
+            android:layout_height="wrap_content"
+            android:text="@string/end_date"
+            android:textSize="18sp"
+            android:textColor="@android:color/black"
+            android:fontFamily="@font/poppins_regular"
+            app:layout_constraintStart_toStartOf="@id/end_date_view"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/title" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/location_view"
+            android:id="@+id/start_date_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="5dp"
+            app:boxBackgroundColor="@color/light_modern_purple"
+            app:boxBackgroundMode="filled"
+            app:boxStrokeErrorColor="@color/muted_red"
+            app:errorEnabled="true"
+            app:errorIconDrawable="@null"
+            app:errorTextAppearance="@style/ErrorTextStyle"
+            app:errorTextColor="@color/muted_red"
+            app:layout_constraintEnd_toStartOf="@id/end_date_view"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/start_date"
+            app:layout_constraintWidth_percent="0.44"
+            app:startIconDrawable="@drawable/calendar"
+            app:startIconTint="@color/black">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/start_date_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="false"
+                android:fontFamily="@font/poppins_regular"
+                android:hint="@string/date_view"
+                android:textColor="@color/black" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/end_date_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:boxBackgroundMode="filled"
+            app:boxBackgroundColor="@color/light_modern_purple"
+            app:startIconDrawable="@drawable/calendar"
+            app:startIconTint="@color/black"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="35dp"
+            app:errorEnabled="true"
+            app:boxStrokeErrorColor="@color/muted_red"
+            app:errorTextAppearance="@style/ErrorTextStyle"
+            app:errorTextColor="@color/muted_red"
+            app:errorIconDrawable="@null"
+            app:layout_constraintWidth_percent="0.44"
+            app:layout_constraintStart_toEndOf="@id/start_date_view"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/end_date" >
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/end_date_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins_regular"
+                android:hint="@string/date_view"
+                android:focusable="false"
+                android:clickable="true"
+                android:textColor="@color/black" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/duration_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/vacation_duration"
+            android:textSize="18sp"
+            android:textColor="@android:color/black"
+            android:fontFamily="@font/poppins_regular"
+            app:layout_constraintStart_toStartOf="@id/duration_view"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/end_date_view" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/duration_view"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintVertical_bias=".005"
@@ -60,8 +154,10 @@
             app:boxStrokeWidthFocused="3dp"
             app:startIconDrawable="@drawable/location"
             app:startIconTint="@color/black"
-            android:hint="@string/travel_location_input"
+            android:hint="@string/vacation_duration_hint"
             android:textColorHint="@color/black"
+            android:layout_marginStart="35dp"
+            android:layout_marginEnd="35dp"
             app:hintTextColor="@color/black"
             app:errorEnabled="true"
             app:boxStrokeErrorColor="@color/muted_red"
@@ -71,10 +167,10 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintWidth_percent="0.8"
-            app:layout_constraintTop_toBottomOf="@id/travel_location">
+            app:layout_constraintTop_toBottomOf="@id/duration_text">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/location_text"
+                android:id="@+id/duration_box"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/poppins_regular"
@@ -84,127 +180,20 @@
                 android:textColor="@color/black" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <TextView
-            android:id="@+id/start_date"
-            android:layout_width="0dp"
-            android:gravity="start"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:text="@string/start_date"
-            android:textSize="18sp"
-            android:textColor="@android:color/black"
-            android:fontFamily="@font/poppins_regular"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/end_date"
-            app:layout_constraintTop_toBottomOf="@id/location_view" />
-
-        <TextView
-            android:id="@+id/end_date"
-            android:layout_width="0dp"
-            android:gravity="start"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:text="@string/end_date"
-            android:textSize="18sp"
-            android:textColor="@android:color/black"
-            android:fontFamily="@font/poppins_regular"
-            app:layout_constraintStart_toEndOf="@id/start_date"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/location_view" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/start_date_view"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:boxBackgroundMode="filled"
-            app:boxBackgroundColor="@color/light_modern_purple"
-            app:startIconDrawable="@drawable/calendar"
-            app:startIconTint="@color/black"
-            app:errorEnabled="true"
-            app:boxStrokeErrorColor="@color/muted_red"
-            app:errorTextAppearance="@style/ErrorTextStyle"
-            app:errorTextColor="@color/muted_red"
-            app:errorIconDrawable="@null"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/end_date_view"
-            app:layout_constraintWidth_percent="0.44"
-            app:layout_constraintTop_toBottomOf="@id/start_date">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/start_date_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/poppins_regular"
-                android:hint="@string/date_view"
-                android:focusable="false"
-                android:clickable="true"
-                android:textColor="@color/black" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/end_date_view"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:boxBackgroundMode="filled"
-            app:boxBackgroundColor="@color/light_modern_purple"
-            app:errorEnabled="true"
-            app:boxStrokeErrorColor="@color/muted_red"
-            app:errorTextAppearance="@style/ErrorTextStyle"
-            app:errorTextColor="@color/muted_red"
-            app:errorIconDrawable="@null"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/start_date_view"
-            app:layout_constraintTop_toBottomOf="@id/start_date"
-            app:layout_constraintWidth_percent="0.44"
-            app:startIconDrawable="@drawable/calendar"
-            app:startIconTint="@color/black">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/end_date_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:clickable="true"
-                android:focusable="false"
-                android:fontFamily="@font/poppins_regular"
-                android:hint="@string/date_view"
-                android:textColor="@color/black" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/dropdown_box"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:hint="Select a Trip"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/start_date_view">
-
-            <AutoCompleteTextView
-                android:id="@+id/dropdown"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="none"/>
-        </com.google.android.material.textfield.TextInputLayout>
-
         <Button
             android:id="@+id/submit"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginTop="25dp"
-            android:text="@string/log_travel_submit"
-            android:textSize="20sp"
+            android:text="@string/vacation_duration_button"
+            android:textSize="17sp"
             android:fontFamily="@font/poppins_regular"
             android:backgroundTint="@color/modern_blue"
             app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Medium"
             app:layout_constraintWidth_percent="0.4"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHeight_percent="0.12"
-            app:layout_constraintTop_toBottomOf="@id/dropdown_box" />
-
+            app:layout_constraintHeight_percent="0.14"
+            app:layout_constraintTop_toBottomOf="@id/duration_view"
+            app:layout_constraintBottom_toBottomOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -53,7 +53,7 @@ public class DestinationsViewModel extends ViewModel {
         this.endDate.setValue(endDate);
         this.tripName.setValue(tripName);
 
-        // Checks whether location and date are valid
+        // Checks whether location/date/trip are valid
         boolean validLocation = checkInput(location);
         boolean validDates = checkDates(startDate, endDate);
         boolean validTrip = checkInput(tripName);
@@ -99,11 +99,9 @@ public class DestinationsViewModel extends ViewModel {
                 .getReference("users")
                 .child(userId)
                 .child("Trips");
-        Log.d("fireeeeee", database.toString());
         database.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Log.d("fireeeeee", snapshot.toString());
                 // Iterates through the Trip node and adds each child to the list
                 for (DataSnapshot tripSnapshot : snapshot.getChildren()) {
                     Trip newTrip = tripSnapshot.getValue(Trip.class); //some issue
@@ -441,51 +439,39 @@ public class DestinationsViewModel extends ViewModel {
     public LiveData<Boolean> areInputsValid() {
         return validInputs;
     }
-
     public LiveData<Boolean> areCalcInputsValid() {
         return validCalcInputs;
     }
-
     public LiveData<String> getLocationError() {
         return locationError;
     }
-
     public LiveData<String> getDurationError() {
         return durationError;
     }
-
     public LiveData<String> getDateError() {
         return dateError;
     }
-
     public LiveData<String> getStartDateError() {
         return startDateError;
     }
-
     public LiveData<String> getEndDateError() {
         return endDateError;
     }
-
     public LiveData<String> getDuration() {
         return duration;
     }
-
     public LiveData<String> getStartDate() {
         return startDate;
     }
-
     public LiveData<String> getEndDate() {
         return endDate;
     }
-
     public LiveData<String> getToastMessage() {
         return toastMessage;
     }
-
     public LiveData<ArrayList<String>> getTripList() {
         return tripList;
     }
-
     public LiveData<String> getTripError() {
         return tripError;
     }

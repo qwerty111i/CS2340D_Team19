@@ -8,29 +8,28 @@ import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-
+import android.widget.TextView;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
-
-import com.example.sprint1.databinding.ActivityTripDialogBinding;
+import com.example.sprint1.databinding.DialogViewNotesBinding;
 import com.example.sprint1.viewmodel.LogisticsViewModel;
-import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
 
-public class TripDialog extends DialogFragment {
-
+public class ViewNotesDialog extends DialogFragment {
     private LogisticsViewModel viewModel;
-    private ActivityTripDialogBinding binding;
-    private Button submitButton;
-    private TextInputLayout trip;
-    private TextInputEditText tripText;
+    private DialogViewNotesBinding binding;
+    private TextView noteText;
+    private String selectedTrip;
 
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         // Inflate the binding for the dialog layout
-        binding = ActivityTripDialogBinding.inflate(inflater, container, false);
+        binding = DialogViewNotesBinding.inflate(inflater, container, false);
+
+        if (getArguments() != null) {
+            selectedTrip = getArguments().getString("selectedTrip");
+        }
 
         // Creating the ViewModel
         viewModel = new ViewModelProvider(this).get(LogisticsViewModel.class);
@@ -39,7 +38,6 @@ public class TripDialog extends DialogFragment {
         binding.setViewModel(viewModel);
         binding.setLifecycleOwner(this);
 
-        // Binds components and validates submit button
         startDialog();
 
         return binding.getRoot();
@@ -52,7 +50,6 @@ public class TripDialog extends DialogFragment {
         Dialog dialog = getDialog();
         if (dialog != null && dialog.getWindow() != null) {
             // Sets the background color of the dialog as transparent
-            // Necessary in order to achieve rounded corners
             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
             // Gets the metrics of the current display
@@ -61,27 +58,28 @@ public class TripDialog extends DialogFragment {
 
             // Sets the values of width and height based on the device's screen
             int width = (int) (metrics.widthPixels * 0.9);
-            int height = (int) (metrics.heightPixels * 0.35);
+            int height = (int) (metrics.heightPixels * 0.6);
 
             // Sets the dialog size
-            dialog.getWindow().setLayout(width, height); // Set desired size here
+            dialog.getWindow().setLayout(width, height);
         }
     }
 
     private void startDialog() {
-        // Binds the variables to the proper xml components
-        trip = binding.tripInput;
-        tripText = binding.tripInputText;
+        noteText = binding.noteTextView;
 
-        submitButton = binding.submit;
+        viewModel.fetchNotesForTrip(selectedTrip);
 
-        // Called when the Submit button is pressed
-        submitButton.setOnClickListener(v -> {
-            String tripText = this.tripText.getText().toString();
+        viewModel.getNotesLiveData().observe(getViewLifecycleOwner(),
+            notes -> {
+                StringBuilder notesString = new StringBuilder();
+                for (String note : notes) {
+                    String dash = "- ";
+                    note = dash + note;
+                    notesString.append(note).append("\n\n");
+                }
 
-            // Updates the MutableLiveData in the View Model
-            viewModel.saveTrip(tripText);
-            dismiss();
-        });
+                noteText.setText(notesString.toString());
+            });
     }
 }
