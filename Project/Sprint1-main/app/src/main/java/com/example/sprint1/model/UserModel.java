@@ -266,18 +266,15 @@ public class UserModel {
         });
     }
 
-
-
-    public interface TripIdCallback {
-        void onTripIdRetrieved(String tripId);
-    }
-
-
     public boolean isUsernameTaken(String username) {
         return userMap.containsKey(username);
     }
 
     public String getEmailByUsername(String username) {
         return userMap.get(username);
+    }
+
+    public interface TripIdCallback {
+        void onTripIdRetrieved(String tripId);
     }
 }
