@@ -42,9 +42,11 @@ public class LogisticsViewModel extends ViewModel {
     private final MutableLiveData<List<VacationTime>> vacationTimesLiveData =
             new MutableLiveData<>();
     private List<String> notesList = new ArrayList<>();
-    private final DatabaseReference notesRef;
+    private MutableLiveData<String> tripName = new MutableLiveData<>();
+    private MutableLiveData<Boolean> validTrip = new MutableLiveData<>();
     private MutableLiveData<ArrayList<String>> tripList = new MutableLiveData<>();
-
+    private MutableLiveData<String> tripError = new MutableLiveData<>();
+    private final DatabaseReference notesRef;
 
     public LogisticsViewModel() {
         allottedTime = new MutableLiveData<>(0);
@@ -102,6 +104,25 @@ public class LogisticsViewModel extends ViewModel {
             @Override
             public void onCancelled(@NonNull DatabaseError error) { }
         });
+    }
+
+    public void setTrip(String tripName) {
+        this.tripName.setValue(tripName);
+
+        boolean noError = checkInput(tripName);
+        validTrip.setValue(noError);
+
+        // Sets the Trip error message
+        if (!noError) {
+            tripError.setValue("No Trip Selected!");
+        } else {
+            tripError.setValue(null);
+        }
+    }
+
+    // Base check for inputs (empty or not)
+    public boolean checkInput(String input) {
+        return input != null && !input.isEmpty();
     }
 
     public void calculatePlannedTime(List<VacationTime> vacationTimes) {
@@ -298,7 +319,7 @@ public class LogisticsViewModel extends ViewModel {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if (snapshot.exists()) {
                             for (DataSnapshot inviterSnapshot : snapshot.getChildren()) {
-                                // Get the inviter's user ID
+                                // Get the inviters user ID
                                 String inviterId = inviterSnapshot.getKey();
                                 if (inviterId != null) {
                                     DatabaseReference inviterNotesRef =
@@ -690,10 +711,6 @@ public class LogisticsViewModel extends ViewModel {
         });
     }
 
-
-
-
-
     public LiveData<List<String>> getUsersLiveData() {
         return usersLiveData;
     }
@@ -711,5 +728,11 @@ public class LogisticsViewModel extends ViewModel {
     }
     public LiveData<ArrayList<String>> getTripList() {
         return tripList;
+    }
+    public LiveData<Boolean> isTripValid() {
+        return validTrip;
+    }
+    public LiveData<String> getTripError() {
+        return tripError;
     }
 }

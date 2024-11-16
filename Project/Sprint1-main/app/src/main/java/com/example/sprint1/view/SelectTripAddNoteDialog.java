@@ -8,25 +8,22 @@ import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.Spinner;
-
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 import android.widget.ArrayAdapter;
-
 import com.example.sprint1.databinding.DialogTripSelectorBinding;
 import com.example.sprint1.viewmodel.LogisticsViewModel;
-
 import java.util.ArrayList;
 
 public class SelectTripAddNoteDialog extends DialogFragment {
 
     private LogisticsViewModel viewModel;
     private DialogTripSelectorBinding binding;
+    private AutoCompleteTextView tripDropDown;
     private Button submitButton;
-    private Spinner tripNameSpinner;
+    private ArrayList<String> updatedTripList;
     private String selectedTrip;
 
     @Override
@@ -42,11 +39,13 @@ public class SelectTripAddNoteDialog extends DialogFragment {
         binding.setViewModel(viewModel);
         binding.setLifecycleOwner(this);
 
+        updatedTripList = new ArrayList<>();
+
         // Binds components and validates submit button
         startDialog();
 
-        // Populate the Spinner with trips
-        populateTripDropdown();
+        // Observes changes in the Live Data
+        observers();
 
         return binding.getRoot();
     }
@@ -66,66 +65,76 @@ public class SelectTripAddNoteDialog extends DialogFragment {
 
             // Sets the values of width and height based on the device's screen
             int width = (int) (metrics.widthPixels * 0.9);
-            int height = (int) (metrics.heightPixels * 0.6);
+            int height = (int) (metrics.heightPixels * 0.35);
 
             // Sets the dialog size
-            dialog.getWindow().setLayout(width, height); // Set desired size here
+            dialog.getWindow().setLayout(width, height);
         }
     }
 
     private void startDialog() {
         // Binds the variables to the proper xml components
-        tripNameSpinner = binding.tripNameSpinner;
+        tripDropDown = binding.dropdown;
         submitButton = binding.submit;
 
-        // Called when the Submit button is pressed
+        // Sets the list of trips
+        viewModel.setDropdownItems();
+
         submitButton.setOnClickListener(v -> {
-            // Create the ActualNotesPopup dialog
-            AddNoteDialog dialog = new AddNoteDialog();
+            String currentTripText = selectedTrip;
 
-            // Pass the selectedTrip to the next page (ActualNotesPopup)
-            Bundle args = new Bundle();
-            args.putString("selectedTrip", selectedTrip);  // Set the selected trip as an argument
-            dialog.setArguments(args);
+            // Updates the MutableLiveData in the View Model
+            viewModel.setTrip(currentTripText);
 
-            // Show the dialog
-            dialog.show(getParentFragmentManager(), "Create New Trip");
-            dismiss();
+            if (viewModel.isTripValid().getValue()) {
+                // Creates the ActualNotesPopup dialog
+                AddNoteDialog dialog = new AddNoteDialog();
+
+                // Pass the selectedTrip to the next page (ActualNotesPopup)
+                Bundle args = new Bundle();
+                args.putString("selectedTrip", selectedTrip);
+                dialog.setArguments(args);
+
+                // Show the dialog
+                dialog.show(getParentFragmentManager(), "Create New Trip");
+                dismiss();
+            }
         });
-
     }
 
-    private void populateTripDropdown() {
-        // Get the list of trips from the ViewModel and set it in the Spinner
-        ArrayList<String> updatedTripList = new ArrayList<>();
+    private void setSelectedTrip() {
+        tripDropDown.setOnItemClickListener((parentView, view, position, id) -> {
+            selectedTrip = parentView.getItemAtPosition(position).toString();
+        });
+    }
 
-        // Set the trips list in the ViewModel
-        viewModel.setDropdownItems();
-        viewModel.getTripList().observe(getViewLifecycleOwner(), trips -> {
+    private void observers() {
+        // Obtains trip error using getTripError in viewModel
+        // Updates new variable errorMessage to match the trip error
+        viewModel.getTripError().observe(this, errorMessage -> {
+            if (errorMessage != null) {
+                tripDropDown.setError(errorMessage);
+            } else {
+                tripDropDown.setError(null);
+            }
+        });
+
+        // Observes new trips using getTripList in viewModel
+        // Updates the dropdown to add the new trips
+        viewModel.getTripList().observe(this, trips -> {
             updatedTripList.clear();
             updatedTripList.addAll(trips);
 
-            // Populate the Spinner with the trip list
+            // Sets the dropdown with the list of trips
             if (getActivity() != null && getContext() != null) {
-                ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
-                        android.R.layout.simple_spinner_item, updatedTripList);
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                        getContext(), android.R.layout.simple_spinner_item, updatedTripList);
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                tripNameSpinner.setAdapter(adapter);
-                tripNameSpinner.setSelection(0);
-            }
-        });
+                tripDropDown.setAdapter(adapter);
+                tripDropDown.setSelection(0);
 
-        // Set the selected trip when the user selects an item from the Spinner
-        tripNameSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parentView,
-                                       View view, int position, long id) {
-                selectedTrip = parentView.getItemAtPosition(position).toString();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parentView) {
-                // Handle case where nothing is selected
+                // Sets the dropdown and selectedTrip with the selected item
+                setSelectedTrip();
             }
         });
     }
