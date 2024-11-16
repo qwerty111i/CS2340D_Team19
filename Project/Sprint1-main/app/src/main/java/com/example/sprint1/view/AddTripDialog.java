@@ -13,15 +13,15 @@ import android.widget.Button;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.sprint1.databinding.DialogLogTripBinding;
+import com.example.sprint1.databinding.DialogAddTripBinding;
 import com.example.sprint1.viewmodel.LogisticsViewModel;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
-public class LogTripDialog extends DialogFragment {
+public class AddTripDialog extends DialogFragment {
 
     private LogisticsViewModel viewModel;
-    private DialogLogTripBinding binding;
+    private DialogAddTripBinding binding;
     private Button submitButton;
     private TextInputLayout trip;
     private TextInputEditText tripText;
@@ -30,7 +30,7 @@ public class LogTripDialog extends DialogFragment {
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the binding for the dialog layout
-        binding = DialogLogTripBinding.inflate(inflater, container, false);
+        binding = DialogAddTripBinding.inflate(inflater, container, false);
 
         // Creating the ViewModel
         viewModel = new ViewModelProvider(this).get(LogisticsViewModel.class);

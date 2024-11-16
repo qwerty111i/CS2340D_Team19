@@ -8,7 +8,7 @@
     <View
         android:id="@+id/entry_card"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="160dp"
         android:layout_marginTop="15dp"
         android:layout_marginBottom="25dp"
         android:layout_marginLeft="5dp"
@@ -36,6 +36,7 @@
         android:id="@+id/log_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:fontFamily="@font/poppins_bold"
         android:paddingStart="17dp"
         android:text="Name"
@@ -100,4 +101,13 @@
         android:paddingStart="17dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/log_location" />
+
+    <ImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/dining"
+        app:layout_constraintRight_toRightOf="@id/entry_card"
+        app:layout_constraintTop_toTopOf="@id/entry_card"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="20dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

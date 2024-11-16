@@ -16,7 +16,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/dialog_background"
-        tools:context=".view.LogTripDialog">
+        tools:context=".view.AddTripDialog">
 
         <TextView
             android:id="@+id/title"

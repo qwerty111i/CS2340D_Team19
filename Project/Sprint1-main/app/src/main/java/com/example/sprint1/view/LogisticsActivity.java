@@ -110,7 +110,7 @@ public class LogisticsActivity extends AppCompatActivity
         createTrip = binding.addTrip;
 
         createTrip.setOnClickListener(v -> {
-            LogTripDialog dialog = new LogTripDialog();
+            AddTripDialog dialog = new AddTripDialog();
             dialog.show(getSupportFragmentManager(), "Create New Trip");
         });
     }

@@ -34,10 +34,10 @@
             android:name=".view.LogisticsChartDialog"
             android:exported="false" />
         <activity
-            android:name=".view.LogAccommodationDialog"
+            android:name=".view.AddAccommodationDialog"
             android:exported="false" />
         <activity
-            android:name=".view.LogTravelDialog"
+            android:name=".view.AddTravelDialog"
             android:exported="false" />
         <activity
             android:name=".view.MainActivity"

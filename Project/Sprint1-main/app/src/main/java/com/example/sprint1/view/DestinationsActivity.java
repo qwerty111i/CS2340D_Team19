@@ -118,7 +118,7 @@ public class DestinationsActivity extends AppCompatActivity {
         logTravelBtn = binding.logTravel;
 
         logTravelBtn.setOnClickListener(v -> {
-            LogTravelDialog dialog = new LogTravelDialog();
+            AddTravelDialog dialog = new AddTravelDialog();
             dialog.show(getSupportFragmentManager(), "LogTravelDialog");
         });
     }

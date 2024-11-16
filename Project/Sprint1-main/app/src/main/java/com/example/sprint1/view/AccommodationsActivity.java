@@ -3,12 +3,9 @@ package com.example.sprint1.view;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import androidx.appcompat.widget.Toolbar;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -44,6 +41,7 @@ import java.util.Locale;
 
 public class AccommodationsActivity extends AppCompatActivity {
     private TabLayout tabLayout;
+    private TabLayout tabs;
     private AccommodationViewModel viewModel;
     private AccommodationAdapter adapter;
     private List<AccommodationDetails> accommodations = new ArrayList<>();
@@ -64,10 +62,6 @@ public class AccommodationsActivity extends AppCompatActivity {
                 ActivityAccommodationsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Sort");
-
         // Creating the ViewModel
         viewModel = new ViewModelProvider(this).get(AccommodationViewModel.class);
 
@@ -75,7 +69,7 @@ public class AccommodationsActivity extends AppCompatActivity {
         binding.setVariable(BR.viewModel, viewModel);
         binding.setLifecycleOwner(this);
 
-
+        addSortingTabs(binding);
 
         //Get currently logged in user
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -86,16 +80,16 @@ public class AccommodationsActivity extends AppCompatActivity {
 
         Button buttonLog = binding.buttonLog;
         binding.buttonLog.setOnClickListener(v -> {
-            LogAccommodationDialog accommodationLog = new LogAccommodationDialog();
+            AddAccommodationDialog accommodationLog = new AddAccommodationDialog();
             accommodationLog.show(getSupportFragmentManager(), "LogAccommodationDialog");
         });
 
         // Add navigation bar
-        tabLayout = findViewById(R.id.tab_navigation);
+        tabLayout = binding.tabNavigation;
         navigation();
 
         //Connect recycler view
-        RecyclerView recyclerView = findViewById(R.id.accommodationRecycler);
+        RecyclerView recyclerView = binding.accommodationRecycler;
 
         //Fetch Accommodation entries from firebase
         getAccommodationDetails(currentEmail);
@@ -200,21 +194,57 @@ public class AccommodationsActivity extends AppCompatActivity {
             String checkOut = snapshot.child("checkOut").getValue(String.class);
             int numRooms = snapshot.child("numRooms").getValue(int.class);
             String roomType = snapshot.child("roomType").getValue(String.class);
+            String name = snapshot.child("name").getValue(String.class);
             String location = snapshot.child("location").getValue(String.class);
             String trip = snapshot.child("tripName").getValue(String.class);
 
             Log.d("Firebase", "Check in: " + checkIn);
             Log.d("Firebase", "Check out: " + checkOut);
             Log.d("Firebase", "RoomType: " + roomType);
+            Log.d("Firebase", "Name: " + name);
             Log.d("Firebase", "Location: " + location);
             Log.d("Firebase", "Num Rooms: " + numRooms);
             Log.d("Firebase", "Trip Name: " + trip);
             //check in, checkout, location, num of rooms, room type
 
             AccommodationDetails accommodation = new AccommodationDetails(checkIn, checkOut,
-                    location, numRooms, roomType, trip);
+                    name, location, numRooms, roomType, trip);
             accommodations.add(accommodation);
         }
+    }
+
+    public void addSortingTabs(ActivityAccommodationsBinding binding) {
+        tabs = binding.sortOptions;
+
+        tabs.addTab(tabs.newTab().setText("Check-In"));
+        tabs.addTab(tabs.newTab().setText("Check-Out"));
+
+        tabs.selectTab(tabs.getTabAt(0));
+
+        tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                String tabText = tab.getText().toString();
+                if (tabText.equals("Check-In")) {
+                    sortAccommodationsByCheckIn();
+                } else if (tabText.equals("Check-Out")) {
+                    sortAccommodationsByCheckOut();
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) { }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+                String tabText = tab.getText().toString();
+                if (tabText.equals("Check-In")) {
+                    sortAccommodationsByCheckIn();
+                } else if (tabText.equals("Check-Out")) {
+                    sortAccommodationsByCheckOut();
+                }
+            }
+        });
     }
 
     private void navigation() {
@@ -272,25 +302,6 @@ public class AccommodationsActivity extends AppCompatActivity {
         });
     };
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_sort_accommodations, menu); //inflate menu xml
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.accom_sort_CheckIn) {
-            sortAccommodationsByCheckIn();
-            return true;
-        } else if (item.getItemId() == R.id.accom_sort_CheckOut) {
-            sortAccommodationsByCheckOut();
-            return true;
-        } else {
-            return super.onOptionsItemSelected(item);
-        }
-    }
-
     private void sortAccommodationsByCheckIn() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yy", Locale.getDefault());
 
@@ -328,7 +339,4 @@ public class AccommodationsActivity extends AppCompatActivity {
         });
         adapter.notifyDataSetChanged();
     }
-
-
-
 }

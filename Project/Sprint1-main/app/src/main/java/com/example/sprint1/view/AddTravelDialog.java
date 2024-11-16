@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,17 +14,17 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
-import com.example.sprint1.databinding.DialogLogTravelBinding;
+import com.example.sprint1.databinding.DialogAddTravelBinding;
 import com.example.sprint1.viewmodel.DestinationsViewModel;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class LogTravelDialog extends DialogFragment {
+public class AddTravelDialog extends DialogFragment {
 
     private DestinationsViewModel viewModel;
-    private DialogLogTravelBinding binding;
+    private DialogAddTravelBinding binding;
     private TextInputLayout location;
     private TextInputEditText locationText;
     private TextInputLayout startDate;
@@ -42,7 +41,7 @@ public class LogTravelDialog extends DialogFragment {
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the binding for the dialog layout
-        binding = DialogLogTravelBinding.inflate(inflater, container, false);
+        binding = DialogAddTravelBinding.inflate(inflater, container, false);
 
         // Creating the ViewModel
         viewModel = new ViewModelProvider(this).get(DestinationsViewModel.class);
