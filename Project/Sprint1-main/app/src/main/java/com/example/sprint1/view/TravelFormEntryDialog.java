@@ -160,12 +160,6 @@ public class TravelFormEntryDialog extends DialogFragment {
 //            viewModel.calculateVacationTime(durationText, startDateText, endDateText);
 
             if (viewModel.areInputsValid().getValue()) {
-                // Pop up message
-//                viewModel.getToastMessage().observe(getViewLifecycleOwner(), message -> {
-//                    if (message != null) {
-//                        Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show();
-//                    }
-//                });
 
                 // Saves details in the database
                 viewModel.saveTravelDetails();
