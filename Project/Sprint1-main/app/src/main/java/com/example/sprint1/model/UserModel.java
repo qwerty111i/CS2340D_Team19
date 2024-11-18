@@ -121,6 +121,50 @@ public class UserModel {
         }
     }
 
+    // Method to store transportation details under the specific user's node
+    public void storeTransportationDetails(TransportationDetails transportationDetails) {
+        String currentTripName = transportationDetails.getTripName();
+        if (userId != null) {
+            // Gets all the nodes under Trips
+            DatabaseReference tripsRef = database.child(userId).child("Trips");
+            tripsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot tripsSnapshot) {
+                    // Returns if no trips exist
+                    if (!tripsSnapshot.exists()) {
+                        Log.e("StoreTransportationDetails", "No trips found for the user");
+                        return;
+                    }
+
+                    for (DataSnapshot tripSnapshot : tripsSnapshot.getChildren()) {
+                        // Gets the trip key
+                        String tripId = tripSnapshot.getKey();
+
+                        // Gets the trip name from the trip key
+                        String tripName = tripSnapshot.child("tripName").getValue(String.class);
+
+                        // Adds the travel details if the trip names are equal
+                        if (currentTripName.equals(tripName)) {
+                            database.child(userId)
+                                    .child("Trips")
+                                    .child(tripId)
+                                    .child("Transportation Details")
+                                    .push()
+                                    .setValue(transportationDetails);
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Log.e("StoreTransportationDetails", "Unable to store: " + error.getMessage());
+                }
+            });
+        } else {
+            Log.e("UserModel", "UserId is not set, cannot store transportation details.");
+        }
+    }
+
     public void storeTravelFormEntry(TravelFormEntry tfe) {
         // Stores the TravelFormEntry data in the database under the node "user"
         if (userId != null) {

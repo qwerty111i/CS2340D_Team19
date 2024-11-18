@@ -10,7 +10,7 @@
     <View
         android:id="@+id/entry_card"
         android:layout_width="match_parent"
-        android:layout_height="110dp"
+        android:layout_height="120dp"
         android:layout_marginTop="15dp"
         android:layout_marginBottom="25dp"
         android:layout_marginLeft="5dp"
@@ -39,6 +39,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Destination"
+        android:layout_marginTop="10dp"
         android:layout_marginBottom="8dp"
         android:textSize="23sp"
         android:textStyle="bold"
@@ -89,4 +90,13 @@
         android:paddingStart="7dp"
         app:layout_constraintTop_toBottomOf="@id/log_destination_text"
         app:layout_constraintStart_toEndOf="@id/log_start_date" />
+
+    <ImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/destination"
+        app:layout_constraintRight_toRightOf="@id/entry_card"
+        app:layout_constraintTop_toTopOf="@id/entry_card"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="20dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

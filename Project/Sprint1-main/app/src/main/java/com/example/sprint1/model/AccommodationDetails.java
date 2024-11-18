@@ -59,10 +59,6 @@ public class AccommodationDetails {
         return tripName;
     }
 
-    public String getHotel() {
-        return location + " Hotel";
-    }
-
     public String getWebsite() {
         return "www." + location + ".com";
     }
