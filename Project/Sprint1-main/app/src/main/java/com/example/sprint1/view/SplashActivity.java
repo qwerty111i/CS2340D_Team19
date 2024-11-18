@@ -11,6 +11,8 @@ import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import com.airbnb.lottie.LottieAnimationView;
 import com.example.sprint1.R;
+import com.example.sprint1.model.CommunityModel;
+
 import java.io.ByteArrayOutputStream;
 
 public class SplashActivity extends AppCompatActivity {
@@ -21,6 +23,9 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_splash);
+
+        // Setting up size for travelformentry
+        CommunityModel.getInstance().addSampleIfEmpty();
 
         lottieAnimationView = findViewById(R.id.animation_view);
         lottieAnimationView.setAnimation(R.raw.splash_animation);

@@ -45,6 +45,10 @@ public class UserModel {
         this.userId = userId;
     }
 
+    public String getUserId() {
+        return userId;
+    }
+
     public void storeUser(User user) {
         // Stores the user data in the database under the node "users"
         if (userId != null) {
@@ -162,6 +166,15 @@ public class UserModel {
             });
         } else {
             Log.e("UserModel", "UserId is not set, cannot store transportation details.");
+        }
+    }
+
+    public void storeTravelFormEntry(TravelFormEntry tfe) {
+        // Stores the TravelFormEntry data in the database under the node "user"
+        if (userId != null) {
+            database.child(userId).child("Travel Form Entries").push().setValue(tfe);
+        } else {
+            Log.e("UserModel", "UserId is not set, cannot store travel form entry.");
         }
     }
 
