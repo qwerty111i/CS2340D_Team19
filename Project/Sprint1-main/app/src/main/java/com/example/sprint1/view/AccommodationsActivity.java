@@ -45,6 +45,7 @@ public class AccommodationsActivity extends AppCompatActivity {
     private AccommodationViewModel viewModel;
     private AccommodationAdapter adapter;
     private List<AccommodationDetails> accommodations = new ArrayList<>();
+    private List<String> shared = new ArrayList<>();
     private String currentEmail;
     private Button createTrip;
 
@@ -79,7 +80,7 @@ public class AccommodationsActivity extends AppCompatActivity {
         }
 
         Button buttonLog = binding.buttonLog;
-        binding.buttonLog.setOnClickListener(v -> {
+        buttonLog.setOnClickListener(v -> {
             AddAccommodationDialog accommodationLog = new AddAccommodationDialog();
             accommodationLog.show(getSupportFragmentManager(), "LogAccommodationDialog");
         });
@@ -96,7 +97,7 @@ public class AccommodationsActivity extends AppCompatActivity {
         chooseTrip(binding);
 
         //Create adapter (AFTER pulling data from firebase)
-        adapter = new AccommodationAdapter(this, accommodations);
+        adapter = new AccommodationAdapter(this, accommodations, shared);
 
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -121,6 +122,7 @@ public class AccommodationsActivity extends AppCompatActivity {
                 public void onDataChange(@NonNull DataSnapshot userSnapshot) {
                     // Clears the lists to avoid duplication
                     accommodations.clear();
+                    shared.clear();
 
                     // Snapshot of the user with the associated email ID
                     DataSnapshot userData = userSnapshot.getChildren().iterator().next();
@@ -134,6 +136,7 @@ public class AccommodationsActivity extends AppCompatActivity {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot tripsSnapshot) {
                             accommodations.clear();
+                            shared.clear();
 
                             // Returns if no trips exist
                             if (!tripsSnapshot.exists()) {
@@ -210,6 +213,7 @@ public class AccommodationsActivity extends AppCompatActivity {
             AccommodationDetails accommodation = new AccommodationDetails(checkIn, checkOut,
                     name, location, numRooms, roomType, trip);
             accommodations.add(accommodation);
+            shared.add(trip);
         }
     }
 

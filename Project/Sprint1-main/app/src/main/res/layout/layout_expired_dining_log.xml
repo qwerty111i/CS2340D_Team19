@@ -97,7 +97,7 @@
         android:textSize="18sp"
         android:textStyle="bold"
         android:textColor="@color/design_default_color_secondary"
-        android:fontFamily="@font/poppins_regular"
+        android:fontFamily="@font/poppins_medium_italic"
         android:paddingStart="17dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/log_location" />

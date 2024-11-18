@@ -8,7 +8,7 @@
     <View
         android:id="@+id/entry_card"
         android:layout_width="match_parent"
-        android:layout_height="160dp"
+        android:layout_height="195dp"
         android:layout_marginTop="15dp"
         android:layout_marginBottom="25dp"
         android:layout_marginLeft="5dp"
@@ -18,18 +18,32 @@
         android:background="@drawable/entry_rectangle_card" />
 
     <TextView
+        android:id="@+id/shared"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Shared by"
+        android:layout_marginTop="10dp"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="@color/material_dynamic_primary80"
+        android:fontFamily="@font/poppins_bold"
+        app:layout_constraintTop_toTopOf="@id/entry_card"
+        app:layout_constraintBottom_toTopOf="@id/log_trip"
+        android:paddingStart="17dp"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
         android:id="@+id/log_trip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Trip"
-        android:layout_marginTop="10dp"
         android:layout_marginBottom="8dp"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:textColor="@color/snackbar_action_text"
-        android:fontFamily="@font/poppins_bold"
+        android:textColor="@color/light_modern_purple"
+        android:fontFamily="@font/poppins_medium_italic"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/entry_card"
+        app:layout_constraintTop_toBottomOf="@id/shared"
         android:paddingStart="17dp" />
 
     <TextView
@@ -58,7 +72,7 @@
         android:layout_marginEnd="15dp"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:textColor="@color/golden"
+        android:textColor="@color/light_modern_purple"
         app:layout_constraintStart_toEndOf="@id/log_name"
         app:layout_constraintTop_toTopOf="@id/log_name" />
 
@@ -85,7 +99,7 @@
         android:layout_marginEnd="15dp"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:textColor="@color/golden"
+        android:textColor="@color/light_modern_purple"
         app:layout_constraintStart_toEndOf="@id/log_location"
         app:layout_constraintTop_toTopOf="@id/log_location" />
 

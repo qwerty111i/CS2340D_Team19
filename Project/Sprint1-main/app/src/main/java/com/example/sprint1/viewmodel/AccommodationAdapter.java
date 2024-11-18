@@ -24,10 +24,13 @@ public class AccommodationAdapter extends
         RecyclerView.Adapter<AccommodationAdapter.AccommodationViewHolder> {
     private Context context;
     private List<AccommodationDetails> accommodations;
+    private List<String> shared;
 
-    public AccommodationAdapter(Context context, List<AccommodationDetails> accommodations) {
+    public AccommodationAdapter(Context context, List<AccommodationDetails> accommodations,
+                                List<String> shared) {
         this.context = context;
         this.accommodations = accommodations;
+        this.shared = shared;
     }
     @NonNull
     @Override
@@ -35,12 +38,18 @@ public class AccommodationAdapter extends
             AccommodationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view;
 
-        if (viewType == 1) {
+        if (viewType == 0) {
             view = LayoutInflater.from(parent.getContext()).
-                    inflate(R.layout.layout_accommodation_log, parent, false);
-        } else {
+                    inflate(R.layout.layout_shared_expired_accommodation_log, parent, false);
+        } else if (viewType == 1) {
+            view = LayoutInflater.from(parent.getContext()).
+                    inflate(R.layout.layout_shared_accommodation_log, parent, false);
+        } else if (viewType == 2) {
             view = LayoutInflater.from(parent.getContext()).
                     inflate(R.layout.layout_expired_accommodation_log, parent, false);
+        } else {
+            view = LayoutInflater.from(parent.getContext()).
+                    inflate(R.layout.layout_accommodation_log, parent, false);
         }
 
         return new AccommodationViewHolder(view);
@@ -78,14 +87,15 @@ public class AccommodationAdapter extends
 
         //assign values to the views created in the row layout xml file
         //based on the position of the recycler view
+        if (holder.tvShared != null) {
+            holder.tvShared.setText(shared.get(position));
+        }
         holder.tvCheckIn.setText("Check In: " + accommodations.get(position).getCheckIn());
         holder.tvCheckOut.setText("Check Out: " + accommodations.get(position).getCheckOut());
         holder.tvName.setText(accommodations.get(position).getName());
         holder.tvLocation.setText(accommodations.get(position).getLocation());
-        holder.tvNumRooms.setText(String.valueOf(accommodations.get(position).getNumRooms())
-                + " rooms");
-        holder.tvTypeRoom.setText(" - " + String.valueOf(accommodations.get(position).
-                getRoomType()));
+        holder.tvNumRooms.setText(accommodations.get(position).getNumRooms() + " rooms");
+        holder.tvTypeRoom.setText(" - " + accommodations.get(position).getRoomType());
         holder.tvWebsite.setText(accommodations.get(position).getWebsite());
         holder.tvTripName.setText(accommodations.get(position).getTripName());
     }
@@ -99,13 +109,51 @@ public class AccommodationAdapter extends
     @Override
     public int getItemViewType(int position) {
         String checkOutDate = accommodations.get(position).getCheckOut();
-        if (isExpired(checkOutDate)) {
-            if (!accommodations.get(position).getTripName().contains("(Expired)")) {
-                accommodations.get(position).setTripName("(Expired) " + accommodations.get(position).getTripName());
+        if (accommodations.get(position).getTripName().contains("(Shared")) {
+            int index = accommodations.get(position).getTripName().indexOf("(Shared");
+            String newShared = shared.get(position).substring(index);
+            newShared = newShared.replace("(", "");
+            newShared = newShared.replace(")", "");
+            shared.set(position, newShared);
+
+            String newTripNames = accommodations.get(position).getTripName().substring(0, index);
+            accommodations.get(position).setTripName(newTripNames);
+
+            // Expired Check
+            if (isExpired(checkOutDate)) {
+                if (!accommodations.get(position).getTripName().contains("(Expired)")) {
+                    accommodations.get(position).setTripName("(Expired) " + accommodations.get(position).getTripName());
+                }
+                // Shared + Expired
+                return 0;
+            } else {
+                // Shared + Valid
+                return 1;
             }
-            return 0;
+        } else if (shared.get(position).contains("Shared")) {
+            // Expired Check
+            if (isExpired(checkOutDate)) {
+                if (!accommodations.get(position).getTripName().contains("(Expired)")) {
+                    accommodations.get(position).setTripName("(Expired) " + accommodations.get(position).getTripName());
+                }
+                // Shared + Expired
+                return 0;
+            } else {
+                // Shared + Valid
+                return 1;
+            }
+        } else {
+            if (isExpired(checkOutDate)) {
+                if (!accommodations.get(position).getTripName().contains("(Expired)")) {
+                    accommodations.get(position).setTripName("(Expired) " + accommodations.get(position).getTripName());
+                }
+                // Not Shared + Expired
+                return 2;
+            } else {
+                // Not Shared + Valid
+                return 3;
+            }
         }
-        return 1;
     }
 
     // Checks if the date is expired
@@ -140,6 +188,7 @@ public class AccommodationAdapter extends
 
     public static class AccommodationViewHolder extends RecyclerView.ViewHolder {
         //grabbing items from layout file and assigning them to variables
+        private TextView tvShared;
         private TextView tvCheckIn;
         private TextView tvCheckOut;
         private TextView tvName;
@@ -151,6 +200,7 @@ public class AccommodationAdapter extends
 
         public AccommodationViewHolder(@NonNull View itemView) {
             super(itemView);
+            tvShared = itemView.findViewById(R.id.shared);
             tvCheckIn = itemView.findViewById(R.id.check_in);
             tvCheckOut = itemView.findViewById(R.id.check_out);
             tvName = itemView.findViewById(R.id.name_text);

@@ -3,6 +3,7 @@ package com.example.sprint1.viewmodel;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,20 +11,23 @@ import android.widget.TextView;
 import com.example.sprint1.R;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 // Adapts travel details to be shown on the Destination Screen UI
 public class TravelAdapter extends RecyclerView.Adapter<TravelAdapter.ViewHolder> {
+    private List<String> shared;
     private List<String> tripNames;
     private List<String> locations;
     private List<String> days;
     private List<String> startDates;
     private List<String> endDates;
 
-    public TravelAdapter(List<String> tripNames, List<String> locations, List<String> days,
-                         List<String> startDates, List<String> endDates) {
+    public TravelAdapter(List<String> sharedNames, List<String> tripNames, List<String> locations,
+                         List<String> days, List<String> startDates, List<String> endDates) {
+        this.shared = sharedNames;
         this.tripNames = tripNames;
         this.locations = locations;
         this.days = days;
@@ -37,12 +41,18 @@ public class TravelAdapter extends RecyclerView.Adapter<TravelAdapter.ViewHolder
         // Inflates layout and creates design of each row
         View view;
 
-        if (viewType == 1) {
+        if (viewType == 0) {
             view = LayoutInflater.from(parent.getContext()).
-                    inflate(R.layout.layout_travel_log, parent, false);
-        } else {
+                    inflate(R.layout.layout_shared_expired_travel_log, parent, false);
+        } else if (viewType == 1) {
+            view = LayoutInflater.from(parent.getContext()).
+                    inflate(R.layout.layout_shared_travel_log, parent, false);
+        } else if (viewType == 2) {
             view = LayoutInflater.from(parent.getContext()).
                     inflate(R.layout.layout_expired_travel_log, parent, false);
+        } else {
+            view = LayoutInflater.from(parent.getContext()).
+                    inflate(R.layout.layout_travel_log, parent, false);
         }
 
         return new TravelAdapter.ViewHolder(view);
@@ -51,6 +61,9 @@ public class TravelAdapter extends RecyclerView.Adapter<TravelAdapter.ViewHolder
     @Override
     public void onBindViewHolder(@NonNull TravelAdapter.ViewHolder holder, int position) {
         // Assigns values to each rows
+        if (holder.tvShared != null) {
+            holder.tvShared.setText(shared.get(position));
+        }
         holder.tvTrip.setText(tripNames.get(position));
         holder.tvDestination.setText(locations.get(position));
         holder.tvDays.setText(days.get(position));
@@ -70,14 +83,52 @@ public class TravelAdapter extends RecyclerView.Adapter<TravelAdapter.ViewHolder
             startDates.set(position, startDates.get(position) + " -");
         }
 
-        String reservationDate = endDates.get(position);
-        if (isExpired(reservationDate)) {
-            if (!tripNames.get(position).contains("(Expired)")) {
-                tripNames.set(position, "(Expired) " + tripNames.get(position));
+        String endDate = endDates.get(position);
+        if (tripNames.get(position).contains("(Shared")) {
+            int index = tripNames.get(position).indexOf("(Shared");
+            String newShared = shared.get(position).substring(index);
+            newShared = newShared.replace("(", "");
+            newShared = newShared.replace(")", "");
+            shared.set(position, newShared);
+
+            String newTripNames = tripNames.get(position).substring(0, index);
+            tripNames.set(position, newTripNames);
+
+            // Expired Check
+            if (isExpired(endDate)) {
+                if (!tripNames.get(position).contains("(Expired)")) {
+                    tripNames.set(position, "(Expired) " + tripNames.get(position));
+                }
+                // Shared + Expired
+                return 0;
+            } else {
+                // Shared + Valid
+                return 1;
             }
-            return 0;
+        } else if (shared.get(position).contains("Shared")) {
+            // Expired Check
+            if (isExpired(endDate)) {
+                if (!tripNames.get(position).contains("(Expired)")) {
+                    tripNames.set(position, "(Expired) " + tripNames.get(position));
+                }
+                // Shared + Expired
+                return 0;
+            } else {
+                // Shared + Valid
+                return 1;
+            }
+        } else {
+            if (isExpired(endDate)) {
+                if (!tripNames.get(position).contains("(Expired)")) {
+                    tripNames.set(position, "(Expired) " + tripNames.get(position));
+                }
+                // Not Shared + Expired
+                return 2;
+            } else {
+                // Not Shared + Valid
+                return 3;
+            }
         }
-        return 1;
     }
 
     // Checks if the date is expired
@@ -111,6 +162,7 @@ public class TravelAdapter extends RecyclerView.Adapter<TravelAdapter.ViewHolder
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
+        private TextView tvShared;
         private TextView tvTrip;
         private TextView tvDestination;
         private TextView tvDays;
@@ -120,6 +172,7 @@ public class TravelAdapter extends RecyclerView.Adapter<TravelAdapter.ViewHolder
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
+            tvShared = itemView.findViewById(R.id.shared);
             tvTrip = itemView.findViewById(R.id.log_trip);
             tvDestination = itemView.findViewById(R.id.log_destination_text);
             tvDays = itemView.findViewById(R.id.log_days);

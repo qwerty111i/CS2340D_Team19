@@ -40,6 +40,7 @@ public class DiningActivity extends AppCompatActivity {
     private List<ReservationDetails> reservations = new ArrayList<>();
     private ReservationSorter reservationSorter = new ReservationSorter();
 
+    private List<String> shared = new ArrayList<>();
     private List<String> tripNames = new ArrayList<>();
     private List<String> names = new ArrayList<>();
     private List<String> locations = new ArrayList<>();
@@ -84,7 +85,7 @@ public class DiningActivity extends AppCompatActivity {
 
         // Connect adapter to RecyclerView
         RecyclerView recyclerView = binding.logRecycler;
-        adapter = new DiningAdapter(tripNames, names, locations, websites, dates, times);
+        adapter = new DiningAdapter(shared, tripNames, names, locations, websites, dates, times);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -169,6 +170,7 @@ public class DiningActivity extends AppCompatActivity {
     }
 
     private void rebuildSeparateLists() {
+        shared.clear();
         tripNames.clear();
         names.clear();
         locations.clear();
@@ -177,6 +179,7 @@ public class DiningActivity extends AppCompatActivity {
         times.clear();
 
         for (ReservationDetails reservation : reservations) {
+            shared.add(reservation.getTripName());
             tripNames.add(reservation.getTripName());
             names.add(reservation.getName());
             locations.add(reservation.getLocation());
@@ -202,6 +205,7 @@ public class DiningActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot userSnapshot) {
                         // Clears the lists to avoid duplication
+                        shared.clear();
                         reservations.clear();
                         tripNames.clear();
                         names.clear();

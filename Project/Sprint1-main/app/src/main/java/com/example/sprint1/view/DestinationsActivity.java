@@ -44,6 +44,7 @@ public class DestinationsActivity extends AppCompatActivity {
     private LogisticsViewModel logisticsViewModel;
 
     // Create local lists for data pulled from Firebase
+    private List<String> sharedNames = new ArrayList<>();
     private List<String> tripNames = new ArrayList<>();
     private List<String> startDates = new ArrayList<>();
     private List<String> endDates = new ArrayList<>();
@@ -92,7 +93,8 @@ public class DestinationsActivity extends AppCompatActivity {
 
         // Connect adapter to Recycler View
         RecyclerView recyclerView = binding.logRecycler;
-        adapter = new TravelAdapter(tripNames, locations, days, startDates, endDates);
+        adapter = new TravelAdapter(sharedNames, tripNames, locations, days,
+                startDates, endDates);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -157,6 +159,7 @@ public class DestinationsActivity extends AppCompatActivity {
                 tripsRef.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot tripsSnapshot) {
+                        sharedNames.clear();
                         tripNames.clear();
                         locations.clear();
                         startDates.clear();
@@ -240,6 +243,10 @@ public class DestinationsActivity extends AppCompatActivity {
 
             if (tripName != null) {
                 tripNames.add(tripName);
+            }
+
+            if (sharedNames != null) {
+                sharedNames.add(tripName);
             }
         }
     }
