@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.sprint1.model.CommunityModel;
 import com.example.sprint1.model.ReservationDetails;
 import com.example.sprint1.model.TravelFormEntry;
 import com.example.sprint1.model.Trip;
@@ -18,13 +19,20 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.net.HttpCookie;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 public class TravelViewModel extends ViewModel {
     private MutableLiveData<String> startDate = new MutableLiveData<>();
     private MutableLiveData<String> startDateError = new MutableLiveData<>();
     private MutableLiveData<String> endDate = new MutableLiveData<>();
     private MutableLiveData<String> endDateError = new MutableLiveData<>();
+    private MutableLiveData<String> dateError = new MutableLiveData<>();
     private MutableLiveData<String> destination = new MutableLiveData<>();
     private MutableLiveData<String> destinationError = new MutableLiveData<>();
     private MutableLiveData<String> accommodation = new MutableLiveData<>();
@@ -53,6 +61,8 @@ public class TravelViewModel extends ViewModel {
         boolean validAccommodation = checkInput(accommodation);
         boolean validDining = checkInput(dining);
         boolean validRating = checkInput(rating);
+
+        boolean validDates = checkDates(startDate, endDate);
 
         // Sets the Start Date error message
         if (!validStartDate) {
@@ -97,46 +107,39 @@ public class TravelViewModel extends ViewModel {
             ratingError.setValue(null);
         }
 
+        // Sets the Date error message
+
+        if (!validDates) {
+            dateError.setValue("Invalid Dates!");
+        } else {
+            dateError.setValue(null);
+        }
+
 
         // Sets the value of validInputs (true/false)
         validInputs.setValue(validStartDate && validEndDate && validDestination
-                && validAccommodation && validDining && validRating);
+                && validAccommodation && validDining && validRating && validDates);
     }
 
-//    public void setDropdownItems() {
-//        // Empty starting list
-//        ArrayList<String> newTripList = new ArrayList<>();
-//
-//        // Gets the current user ID in Firebase
-//        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-//        String userId = "";
-//        if (user != null) {
-//            userId = user.getUid();
-//        }
-//
-//        // Gets the trips from Firebase
-//        DatabaseReference database = FirebaseDatabase
-//                .getInstance()
-//                .getReference("users")
-//                .child(userId)
-//                .child("Trips");
-//        database.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                // Iterates through the Trip node and adds each child to the list
-//                for (DataSnapshot tripSnapshot : snapshot.getChildren()) {
-//                    Trip newTrip = tripSnapshot.getValue(Trip.class);
-//                    newTripList.add(newTrip.getTripName());
-//                }
-//
-//                // Sets the tripList equal to the new list of trips
-//                tripList.setValue(newTripList);
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) { }
-//        });
-//    }
+    // Checks if dates are valid
+    public boolean checkDates(String date1, String date2) {
+        if (date1 != null && date2 != null) {
+            try {
+                // Creates a SimpleDateFormat instance, formatted as below
+                SimpleDateFormat sdf = new SimpleDateFormat("M/d/yy", Locale.getDefault());
+
+                // Creates new Dates following the format created above
+                Date startDate = sdf.parse(date1);
+                Date endDate = sdf.parse(date2);
+
+                // Checks if the start date is less than or equal to the end date
+                return !startDate.after(endDate);
+            } catch (ParseException e) {
+                return false;
+            }
+        }
+        return false;
+    }
 
     // Base check for inputs (empty or not)
     public boolean checkInput(String input) {
@@ -155,7 +158,7 @@ public class TravelViewModel extends ViewModel {
                 rating.getValue());
 
         // Uses the Singleton implemented Database to store information
-        UserModel.getInstance().storeTravelFormEntry(tfe);
+        CommunityModel.getInstance().storeTravelFormEntry(tfe);
 
 
     }
@@ -179,6 +182,10 @@ public class TravelViewModel extends ViewModel {
 
     public LiveData<String> getEndDateError() {
         return endDateError;
+    }
+
+    public LiveData<String> getDateError() {
+        return dateError;
     }
 
     public LiveData<String> getDestination() {

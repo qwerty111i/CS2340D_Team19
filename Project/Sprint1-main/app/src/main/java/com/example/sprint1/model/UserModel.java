@@ -45,6 +45,10 @@ public class UserModel {
         this.userId = userId;
     }
 
+    public String getUserId() {
+        return userId;
+    }
+
     public void storeUser(User user) {
         // Stores the user data in the database under the node "users"
         if (userId != null) {

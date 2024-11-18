@@ -156,8 +156,8 @@ public class TravelFormEntryDialog extends DialogFragment {
             String diningText = this.diningText.getText().toString();
             String ratingText = this.ratingText.getText().toString();
 
-//            // Does calculations in the View Model
-//            viewModel.calculateVacationTime(durationText, startDateText, endDateText);
+            viewModel.setTravelDetails(startDateText, endDateText, destinationText,
+                    accommodationText, diningText, ratingText);
 
             if (viewModel.areInputsValid().getValue()) {
 
@@ -171,40 +171,6 @@ public class TravelFormEntryDialog extends DialogFragment {
     }
 
     private void observers() {
-        viewModel.getStartDate().observe(this, d -> {
-            if (d != null) {
-                startDateText.setText(d);
-            }
-        });
-
-        viewModel.getEndDate().observe(this, d -> {
-            if (d != null) {
-                endDateText.setText(d);
-            }
-        });
-        viewModel.getAccommodation().observe(this, d -> {
-            if (d != null) {
-                accommodationText.setText(d);
-            }
-        });
-
-        viewModel.getDestination().observe(this, d -> {
-            if (d != null) {
-                destinationText.setText(d);
-            }
-        });
-        viewModel.getDining().observe(this, d -> {
-            if (d != null) {
-                diningText.setText(d);
-            }
-        });
-
-        viewModel.getRating().observe(this, d -> {
-            if (d != null) {
-                ratingText.setText(d);
-            }
-        });
-
         // Observing Start Date Error
         viewModel.getStartDateError().observe(this, errorMessage -> {
             if (errorMessage != null) {
@@ -259,6 +225,15 @@ public class TravelFormEntryDialog extends DialogFragment {
             }
         });
 
+        viewModel.getDateError().observe(this, errorMessage -> {
+            if (errorMessage != null) {
+                startDate.setError(errorMessage);
+                endDate.setError(errorMessage);
+            } else {
+                startDate.setError(null);
+                endDate.setError(null);
+            }
+        });
     }
 
 //    private void textWatchers() {
