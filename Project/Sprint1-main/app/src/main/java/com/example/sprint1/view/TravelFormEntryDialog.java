@@ -21,8 +21,9 @@ import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.sprint1.R;
-import com.example.sprint1.databinding.ActivityCalculateVacationDialogBinding;
+import com.example.sprint1.databinding.DialogAddTravelFormEntryBinding;
 import com.example.sprint1.viewmodel.DestinationsViewModel;
+import com.example.sprint1.viewmodel.TravelViewModel;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -30,24 +31,30 @@ import java.util.Calendar;
 
 public class TravelFormEntryDialog extends DialogFragment {
 
-    private DestinationsViewModel viewModel;
-    private ActivityCalculateVacationDialogBinding binding;
+    private TravelViewModel viewModel;
+    private DialogAddTravelFormEntryBinding binding;
     private Button submitButton;
-    private TextInputLayout duration;
     private TextInputLayout startDate;
     private TextInputLayout endDate;
-    private TextInputEditText durationText;
+    private TextInputLayout destination;
+    private TextInputLayout accommodation;
+    private TextInputLayout dining;
+    private TextInputLayout rating;
     private TextInputEditText startDateText;
     private TextInputEditText endDateText;
+    private TextInputEditText destinationText;
+    private TextInputEditText accommodationText;
+    private TextInputEditText diningText;
+    private TextInputEditText ratingText;
 
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the binding for the dialog layout
-        binding = ActivityCalculateVacationDialogBinding.inflate(inflater, container, false);
+        binding = DialogAddTravelFormEntryBinding.inflate(inflater, container, false);
 
         // Creating the ViewModel
-        viewModel = new ViewModelProvider(this).get(DestinationsViewModel.class);
+        viewModel = new ViewModelProvider(this).get(TravelViewModel.class);
 
         // Binding the ViewModel
         binding.setViewModel(viewModel);
@@ -80,8 +87,8 @@ public class TravelFormEntryDialog extends DialogFragment {
             getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
 
             // Sets the values of width and height based on the device's screen
-            int width = (int) (metrics.widthPixels * 0.9);
-            int height = (int) (metrics.heightPixels * 0.6);
+            int width = (int) (metrics.widthPixels * 0.8);
+            int height = (int) (metrics.heightPixels * 0.8);
 
             // Sets the dialog size
             dialog.getWindow().setLayout(width, height); // Set desired size here
@@ -116,14 +123,23 @@ public class TravelFormEntryDialog extends DialogFragment {
 
     private void startDialog() {
         // Binds the variables to the proper xml components
-        duration = binding.durationView;
-        durationText = binding.durationBox;
-
         startDate = binding.startDateView;
         startDateText = binding.startDateText;
 
         endDate = binding.endDateView;
         endDateText = binding.endDateText;
+
+        destination = binding.destinationView;
+        destinationText = binding.destinationText;
+
+        accommodation = binding.accommodationView;
+        accommodationText = binding.accommodationText;
+
+        dining = binding.diningView;
+        diningText = binding.diningText;
+
+        rating = binding.ratingView;
+        ratingText = binding.ratingText;
 
         submitButton = binding.submit;
 
@@ -133,23 +149,26 @@ public class TravelFormEntryDialog extends DialogFragment {
 
         // Called when the Submit button is pressed
         submitButton.setOnClickListener(v -> {
-            String durationText = this.durationText.getText().toString();
             String startDateText = this.startDateText.getText().toString();
             String endDateText = this.endDateText.getText().toString();
+            String destinationText = this.destinationText.getText().toString();
+            String accommodationText = this.accommodationText.getText().toString();
+            String diningText = this.diningText.getText().toString();
+            String ratingText = this.ratingText.getText().toString();
 
-            // Does calculations in the View Model
-            viewModel.calculateVacationTime(durationText, startDateText, endDateText);
+//            // Does calculations in the View Model
+//            viewModel.calculateVacationTime(durationText, startDateText, endDateText);
 
-            if (viewModel.areCalcInputsValid().getValue()) {
+            if (viewModel.areInputsValid().getValue()) {
                 // Pop up message
-                viewModel.getToastMessage().observe(getViewLifecycleOwner(), message -> {
-                    if (message != null) {
-                        Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show();
-                    }
-                });
+//                viewModel.getToastMessage().observe(getViewLifecycleOwner(), message -> {
+//                    if (message != null) {
+//                        Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show();
+//                    }
+//                });
 
                 // Saves details in the database
-                viewModel.saveVacationTimeDetails();
+                viewModel.saveTravelDetails();
 
                 // Closes the dialog
                 dismiss();
@@ -158,12 +177,6 @@ public class TravelFormEntryDialog extends DialogFragment {
     }
 
     private void observers() {
-        viewModel.getDuration().observe(this, d -> {
-            if (d != null) {
-                durationText.setText(d);
-            }
-        });
-
         viewModel.getStartDate().observe(this, d -> {
             if (d != null) {
                 startDateText.setText(d);
@@ -175,19 +188,30 @@ public class TravelFormEntryDialog extends DialogFragment {
                 endDateText.setText(d);
             }
         });
-
-        // Obtains duration error using getDurationError in viewModel
-        // Updates new variable errorMessage to match the duration error
-        viewModel.getDurationError().observe(this, errorMessage -> {
-            if (errorMessage != null) {
-                duration.setError(errorMessage);
-            } else {
-                duration.setError(null);
+        viewModel.getAccommodation().observe(this, d -> {
+            if (d != null) {
+                accommodationText.setText(d);
             }
         });
 
-        // Obtains startdate error using getStateDateError in viewModel
-        // Updates new variable errorMessage to match the date error
+        viewModel.getDestination().observe(this, d -> {
+            if (d != null) {
+                destinationText.setText(d);
+            }
+        });
+        viewModel.getDining().observe(this, d -> {
+            if (d != null) {
+                diningText.setText(d);
+            }
+        });
+
+        viewModel.getRating().observe(this, d -> {
+            if (d != null) {
+                ratingText.setText(d);
+            }
+        });
+
+        // Observing Start Date Error
         viewModel.getStartDateError().observe(this, errorMessage -> {
             if (errorMessage != null) {
                 startDate.setError(errorMessage);
@@ -196,8 +220,7 @@ public class TravelFormEntryDialog extends DialogFragment {
             }
         });
 
-        // Obtains enddate error using getStateDateError in viewModel
-        // Updates new variable errorMessage to match the date error
+        // Observing End Date Error
         viewModel.getEndDateError().observe(this, errorMessage -> {
             if (errorMessage != null) {
                 endDate.setError(errorMessage);
@@ -205,6 +228,43 @@ public class TravelFormEntryDialog extends DialogFragment {
                 endDate.setError(null);
             }
         });
+
+        // Observing Destination Error
+        viewModel.getDestinationError().observe(this, errorMessage -> {
+            if (errorMessage != null) {
+                destination.setError(errorMessage);
+            } else {
+                destination.setError(null);
+            }
+        });
+
+        // Observing Accommodation Error
+        viewModel.getAccommodationError().observe(this, errorMessage -> {
+            if (errorMessage != null) {
+                accommodation.setError(errorMessage);
+            } else {
+                accommodation.setError(null);
+            }
+        });
+
+        // Observing Dining Error
+        viewModel.getDiningError().observe(this, errorMessage -> {
+            if (errorMessage != null) {
+                dining.setError(errorMessage);
+            } else {
+                dining.setError(null);
+            }
+        });
+
+        // Observing Rating Error
+        viewModel.getRatingError().observe(this, errorMessage -> {
+            if (errorMessage != null) {
+                rating.setError(errorMessage);
+            } else {
+                rating.setError(null);
+            }
+        });
+
     }
 
     private void textWatchers() {

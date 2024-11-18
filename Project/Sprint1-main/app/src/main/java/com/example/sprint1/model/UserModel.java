@@ -121,6 +121,15 @@ public class UserModel {
         }
     }
 
+    public void storeTravelFormEntry(TravelFormEntry tfe) {
+        // Stores the TravelFormEntry data in the database under the node "user"
+        if (userId != null) {
+            database.child(userId).child("Travel Form Entries").push().setValue(tfe);
+        } else {
+            Log.e("UserModel", "UserId is not set, cannot store travel form entry.");
+        }
+    }
+
     // Method to store accommodation details under the specific user's node
     public void storeAccommodationDetails(AccommodationDetails accommodationDetails) {
         String currentTripName = accommodationDetails.getTripName();

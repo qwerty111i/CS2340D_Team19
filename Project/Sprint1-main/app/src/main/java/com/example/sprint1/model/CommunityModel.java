@@ -43,7 +43,7 @@ public class CommunityModel {
                             ReservationDetails reservation = reservationSnapshot.getValue(ReservationDetails.class);
                             reservations.add(reservation);
                         }
-                        PostDetails postDetails = new PostDetails(
+                        TravelFormEntry postDetails = new TravelFormEntry(
                                 trip, transportation, notes, accommodations, reservations
                         );
 
