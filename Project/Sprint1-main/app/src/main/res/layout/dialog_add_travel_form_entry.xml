@@ -268,7 +268,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/rating_view"
             app:layout_constraintWidth_percent="0.44"
-            app:layout_constraintTop_toBottomOf="@id/accommodation_view">
+            app:layout_constraintTop_toBottomOf="@id/dining_title">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/dining_text"
@@ -304,7 +304,7 @@
             app:layout_constraintStart_toEndOf="@id/dining_view"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintWidth_percent="0.44"
-            app:layout_constraintTop_toBottomOf="@id/accommodation_view">
+            app:layout_constraintTop_toBottomOf="@id/rating_title">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/rating_text"
