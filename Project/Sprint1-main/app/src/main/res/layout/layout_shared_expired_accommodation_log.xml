@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_marginTop="10dp">
+
+    <!--Accommodation entry UI -->
+    <View
+        android:id="@+id/accom_entry_card"
+        android:layout_width="match_parent"
+        android:layout_height="280dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="25dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:background="@drawable/entry_rectangle_card"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/shared"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Shared by"
+        android:layout_marginTop="10dp"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="@color/material_dynamic_primary80"
+        android:fontFamily="@font/poppins_bold"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/log_trip"
+        android:paddingStart="17dp"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/log_trip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Trip"
+        android:layout_marginBottom="8dp"
+        android:paddingStart="21dp"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="@color/light_modern_purple"
+        android:fontFamily="@font/poppins_medium_italic"
+        app:layout_constraintTop_toBottomOf="@id/shared"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/name_text"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_marginTop="0dp"
+        android:fontFamily="@font/poppins_regular"
+        android:paddingStart="21dp"
+        android:text="Hotel"
+        android:textAllCaps="true"
+        android:textColor="@color/white"
+        android:textSize="34sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/log_trip"
+        app:layout_constraintBottom_toTopOf="@id/location_text"
+        tools:ignore="MissingConstraints,RtlSymmetry" />
+
+    <TextView
+        android:id="@+id/location_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Location"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="8dp"
+        android:textSize="18sp"
+        android:textStyle="italic"
+        android:textColor="@color/white"
+        android:fontFamily="@font/poppins_regular"
+        app:layout_constraintBottom_toTopOf="@id/check_in"
+        android:paddingStart="22dp"
+        tools:ignore="MissingConstraints,RtlSymmetry" />
+
+    <TextView
+        android:id="@+id/check_in"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Check in: xx/xx, 4:00pm"
+        android:layout_marginTop="1dp"
+        android:layout_marginBottom="8dp"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="@color/light_modern_purple"
+        android:fontFamily="@font/poppins_regular"
+        app:layout_constraintTop_toBottomOf="@id/location_text"
+        android:paddingStart="22dp"
+        tools:ignore="MissingConstraints,RtlSymmetry" />
+
+    <TextView
+        android:id="@+id/check_out"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Check out: xx/xx, 11:00 am"
+        android:layout_marginTop="1dp"
+        android:layout_marginBottom="8dp"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="@color/light_modern_purple"
+        android:fontFamily="@font/poppins_regular"
+        app:layout_constraintTop_toBottomOf="@id/check_in"
+        android:paddingStart="22dp"
+        tools:ignore="MissingConstraints,RtlSymmetry" />
+
+    <TextView
+        android:id="@+id/number_of_rooms_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0 rooms"
+        android:layout_marginTop="1dp"
+        android:layout_marginBottom="8dp"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:fontFamily="@font/poppins_regular"
+        app:layout_constraintTop_toBottomOf="@id/check_out"
+        android:paddingStart="22dp"
+        tools:ignore="MissingConstraints,RtlSymmetry" />
+
+    <TextView
+        android:id="@+id/type_of_room_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=" - Penthouse"
+        android:layout_marginTop="1dp"
+        android:layout_marginBottom="8dp"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:fontFamily="@font/poppins_regular"
+        app:layout_constraintTop_toBottomOf="@id/check_out"
+        app:layout_constraintLeft_toRightOf="@id/number_of_rooms_text"
+        android:paddingStart="0dp"
+        tools:ignore="MissingConstraints,RtlSymmetry" />
+
+    <TextView
+        android:id="@+id/website_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="www.hotel.com"
+        android:layout_marginTop="1dp"
+        android:layout_marginBottom="8dp"
+        android:textSize="18sp"
+        android:textStyle="italic"
+        android:textColor="@color/design_default_color_secondary"
+        android:fontFamily="@font/poppins_regular"
+        app:layout_constraintTop_toBottomOf="@id/number_of_rooms_text"
+        android:paddingStart="22dp"
+        tools:ignore="MissingConstraints,RtlSymmetry" />
+
+    <ImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/accommodation"
+        app:layout_constraintRight_toRightOf="@id/accom_entry_card"
+        app:layout_constraintTop_toTopOf="@id/accom_entry_card"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="20dp" />
+
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

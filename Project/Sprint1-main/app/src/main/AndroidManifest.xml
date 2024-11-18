@@ -28,9 +28,6 @@
             android:name=".view.SelectTripAddNoteDialog"
             android:exported="false" />
         <activity
-            android:name=".view.NotesActivity"
-            android:exported="false" />
-        <activity
             android:name=".view.LogisticsChartDialog"
             android:exported="false" />
         <activity
@@ -56,10 +53,10 @@
             android:exported="false" />
         <activity
             android:name=".view.AccommodationsActivity"
-            android:exported="true" />
+            android:exported="false" />
         <activity
             android:name=".view.DiningActivity"
-            android:exported="true" />
+            android:exported="false" />
         <activity
             android:name=".view.DestinationsActivity"
             android:exported="false" />
