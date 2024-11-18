@@ -4,16 +4,27 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.library.baseAdapters.BR;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.sprint1.R;
+import com.example.sprint1.databinding.ActivityTravelBinding;
+import com.example.sprint1.viewmodel.DestinationsViewModel;
+import com.example.sprint1.viewmodel.TravelViewModel;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class TravelActivity extends AppCompatActivity {
     private TabLayout tabLayout;
+    private TravelViewModel viewModel;
+    private Button logTravelFormEntryBtn;
+
+    private FirebaseDatabase database = FirebaseDatabase.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,10 +32,30 @@ public class TravelActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_travel);
 
+        ActivityTravelBinding binding = ActivityTravelBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
+        // Creating the ViewModel
+        viewModel = new ViewModelProvider(this).get(TravelViewModel.class);
+
+        // bind the viewmodel
+        binding.setVariable(BR.viewModel, viewModel);
+        binding.setLifecycleOwner(this);
+
+        logTravelFormEntry(binding);
 
         // Add navigation bar
         tabLayout = findViewById(R.id.tab_navigation);
         navigation();
+    }
+
+    public void logTravelFormEntry(ActivityTravelBinding binding) {
+        logTravelFormEntryBtn = binding.logTravelFormEntryDialog;
+
+        logTravelFormEntryBtn.setOnClickListener(v -> {
+            TravelFormEntryDialog dialog = new TravelFormEntryDialog();
+            dialog.show(getSupportFragmentManager(), "TravelFormEntryDialog");
+        });
     }
 
     private void navigation() {

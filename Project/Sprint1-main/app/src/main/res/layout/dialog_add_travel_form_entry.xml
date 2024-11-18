@@ -11,7 +11,7 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/log_travel_dialog"
+        android:id="@+id/log_travel_form_entry_dialog"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/dialog_background"
@@ -62,7 +62,7 @@
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/start_date_view"
             android:layout_width="0dp"
-            android:layout_height="40dp"
+            android:layout_height="60dp"
             app:boxBackgroundMode="filled"
             app:boxBackgroundColor="@color/light_modern_purple"
             app:startIconDrawable="@drawable/calendar"
@@ -91,7 +91,7 @@
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/end_date_view"
             android:layout_width="0dp"
-            android:layout_height="40dp"
+            android:layout_height="60dp"
             app:boxBackgroundMode="filled"
             app:boxBackgroundColor="@color/light_modern_purple"
             app:errorEnabled="true"
@@ -135,7 +135,7 @@
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/destination_view"
             android:layout_width="0dp"
-            android:layout_height="40dp"
+            android:layout_height="60dp"
             app:layout_constraintVertical_bias=".005"
             app:boxBackgroundMode="filled"
             app:boxBackgroundColor="@color/light_modern_purple"
@@ -186,7 +186,7 @@
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/accommodation_view"
             android:layout_width="0dp"
-            android:layout_height="40dp"
+            android:layout_height="60dp"
             app:layout_constraintVertical_bias=".005"
             app:boxBackgroundMode="filled"
             app:boxBackgroundColor="@color/light_modern_purple"
@@ -250,28 +250,35 @@
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/dining_view"
             android:layout_width="0dp"
-            android:layout_height="40dp"
+            android:layout_height="60dp"
             app:boxBackgroundMode="filled"
             app:boxBackgroundColor="@color/light_modern_purple"
+            app:boxStrokeColor="@color/modern_purple"
+            app:boxStrokeWidth="3dp"
+            app:boxStrokeWidthFocused="3dp"
             app:startIconDrawable="@drawable/dining"
             app:startIconTint="@color/black"
+            android:hint="Enter Dining"
+            android:textColorHint="@color/black"
+            app:hintTextColor="@color/black"
             app:errorEnabled="true"
             app:boxStrokeErrorColor="@color/muted_red"
             app:errorTextAppearance="@style/ErrorTextStyle"
             app:errorTextColor="@color/muted_red"
-            app:errorIconDrawable="@null"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/rating_view"
             app:layout_constraintWidth_percent="0.44"
-            app:layout_constraintTop_toBottomOf="@id/dining_title">
+            app:layout_constraintTop_toBottomOf="@id/accommodation_view">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/dining_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/poppins_regular"
-                android:hint="Enter Dining"
-                android:focusable="false"
+                android:inputType="text"
+                android:maxLines="1"
+                android:scrollHorizontally="true"
+                android:focusable="true"
                 android:clickable="true"
                 android:textColor="@color/black" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -279,33 +286,41 @@
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/rating_view"
             android:layout_width="0dp"
-            android:layout_height="40dp"
+            android:layout_height="60dp"
             app:boxBackgroundMode="filled"
             app:boxBackgroundColor="@color/light_modern_purple"
+            app:boxStrokeColor="@color/modern_purple"
+            app:boxStrokeWidth="3dp"
+            app:boxStrokeWidthFocused="3dp"
+            app:startIconDrawable="@drawable/rating"
+            app:startIconTint="@color/black"
+            android:hint="Enter Rating"
+            android:textColorHint="@color/black"
+            app:hintTextColor="@color/black"
             app:errorEnabled="true"
             app:boxStrokeErrorColor="@color/muted_red"
             app:errorTextAppearance="@style/ErrorTextStyle"
             app:errorTextColor="@color/muted_red"
-            app:errorIconDrawable="@null"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/dining_view"
-            app:layout_constraintTop_toBottomOf="@id/rating_title"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintWidth_percent="0.44"
-            app:startIconDrawable="@drawable/calendar"
-            app:startIconTint="@color/black">
+            app:layout_constraintTop_toBottomOf="@id/accommodation_view">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/rating_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:clickable="true"
-                android:focusable="false"
                 android:fontFamily="@font/poppins_regular"
-                android:hint="Enter Rating"
+                android:inputType="number"
+                android:maxLines="1"
+                android:scrollHorizontally="true"
+                android:focusable="true"
+                android:clickable="true"
                 android:textColor="@color/black" />
         </com.google.android.material.textfield.TextInputLayout>
 
-<!--        <com.google.android.material.textfield.TextInputLayout-->
+
+        <!--        <com.google.android.material.textfield.TextInputLayout-->
 <!--            android:id="@+id/dropdown_box"-->
 <!--            android:layout_width="match_parent"-->
 <!--            android:layout_height="wrap_content"-->
