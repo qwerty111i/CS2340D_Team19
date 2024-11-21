@@ -42,6 +42,7 @@ public class TravelViewModel extends ViewModel {
     private MutableLiveData<String> rating = new MutableLiveData<>();
     private MutableLiveData<String> ratingError = new MutableLiveData<>();
     private MutableLiveData<Boolean> validInputs = new MutableLiveData<>();
+    private MutableLiveData<Boolean> validRating2 = new MutableLiveData<>();
 
     public void setTravelDetails(String startDate, String endDate, String destination,
                                       String accommodation, String dining, String rating) {
@@ -63,6 +64,7 @@ public class TravelViewModel extends ViewModel {
         boolean validRating = checkInput(rating);
 
         boolean validDates = checkDates(startDate, endDate);
+        boolean validRating2 = checkRating(rating);
 
         // Sets the Start Date error message
         if (!validStartDate) {
@@ -102,8 +104,9 @@ public class TravelViewModel extends ViewModel {
         // Sets the Rating error message
         if (!validRating) {
             ratingError.setValue("Invalid Rating!");
+        } else if (!validRating2) {
+            ratingError.setValue("Rating must be between 0-10!");
         } else {
-
             ratingError.setValue(null);
         }
 
@@ -118,7 +121,7 @@ public class TravelViewModel extends ViewModel {
 
         // Sets the value of validInputs (true/false)
         validInputs.setValue(validStartDate && validEndDate && validDestination
-                && validAccommodation && validDining && validRating && validDates);
+                && validAccommodation && validDining && validRating && validDates && validRating2);
     }
 
     // Checks if dates are valid
@@ -144,6 +147,16 @@ public class TravelViewModel extends ViewModel {
     // Base check for inputs (empty or not)
     public boolean checkInput(String input) {
         return input != null && !input.isEmpty();
+    }
+
+    // Base check for the rating
+    public boolean checkRating(String rating) {
+        try {
+            int r = Integer.parseInt(rating);
+            return r >= 0 && r <= 10;
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 
     // Saves the details in the database
