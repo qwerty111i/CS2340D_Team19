@@ -137,7 +137,6 @@
         <TextView
             android:id="@+id/start_date"
             android:layout_width="0dp"
-            android:gravity="start"
             android:layout_height="wrap_content"
             android:text="Date"
             android:textSize="18sp"
@@ -146,7 +145,48 @@
             app:layout_constraintWidth_percent="0.44"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/start_time_view"
+            app:layout_constraintTop_toBottomOf="@id/type_view" />
+
+        <TextView
+            android:id="@+id/type"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:layout_marginStart="35dp"
+            android:text="Transportation Type"
+            android:textSize="18sp"
+            android:textColor="@android:color/black"
+            android:fontFamily="@font/poppins_regular"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/end_location_view" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.Material3.TextInputLayout.FilledBox.Dense.ExposedDropdownMenu"
+            android:id="@+id/type_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:boxBackgroundMode="filled"
+            app:boxBackgroundColor="@color/light_modern_purple"
+            app:errorEnabled="true"
+            app:boxStrokeErrorColor="@color/muted_red"
+            app:errorTextAppearance="@style/ErrorTextStyle"
+            app:errorTextColor="@color/muted_red"
+            app:layout_constraintTop_toBottomOf="@id/type"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHeight_percent="0.12"
+            app:layout_constraintWidth_percent="0.8"
+            app:startIconTint="@color/black">
+
+            <AutoCompleteTextView
+                android:id="@+id/type_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none"
+                android:fontFamily="@font/poppins_regular"
+                android:textColor="@color/black" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
             android:id="@+id/start_time"
@@ -161,7 +201,7 @@
             app:layout_constraintWidth_percent="0.44"
             app:layout_constraintStart_toEndOf="@id/start_date_view"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/end_location_view" />
+            app:layout_constraintTop_toBottomOf="@id/type_view" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/start_date_view"
@@ -204,7 +244,7 @@
             app:errorTextAppearance="@style/ErrorTextStyle"
             app:errorTextColor="@color/muted_red"
             app:errorIconDrawable="@null"
-            app:layout_constraintStart_toStartOf="@id/start_time"
+            app:layout_constraintStart_toEndOf="@id/start_date_view"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/start_time"
             app:layout_constraintWidth_percent="0.44"
@@ -218,48 +258,7 @@
                 android:clickable="true"
                 android:focusable="false"
                 android:fontFamily="@font/poppins_regular"
-                android:hint="@string/date_view"
-                android:textColor="@color/black" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <TextView
-            android:id="@+id/type"
-            android:layout_width="wrap_content"
-            android:gravity="center"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="6dp"
-            android:text="Transportation Type"
-            android:textSize="18sp"
-            android:textColor="@android:color/black"
-            android:fontFamily="@font/poppins_regular"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/start_time_view" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.Material3.TextInputLayout.FilledBox.Dense.ExposedDropdownMenu"
-            android:id="@+id/type_view"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:boxBackgroundMode="filled"
-            app:boxBackgroundColor="@color/light_modern_purple"
-            app:errorEnabled="true"
-            app:boxStrokeErrorColor="@color/muted_red"
-            app:errorTextAppearance="@style/ErrorTextStyle"
-            app:errorTextColor="@color/muted_red"
-            app:layout_constraintTop_toBottomOf="@id/type"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHeight_percent="0.12"
-            app:layout_constraintWidth_percent="0.8"
-            app:startIconTint="@color/black">
-
-            <AutoCompleteTextView
-                android:id="@+id/type_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="none"
-                android:fontFamily="@font/poppins_regular"
+                android:hint="Select Time"
                 android:textColor="@color/black" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -274,7 +273,7 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/type_view">
+            app:layout_constraintTop_toBottomOf="@id/start_date_view">
 
             <AutoCompleteTextView
                 android:id="@+id/dropdown"

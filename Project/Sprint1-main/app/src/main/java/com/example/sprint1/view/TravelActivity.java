@@ -14,7 +14,6 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.sprint1.R;
 import com.example.sprint1.databinding.ActivityTravelBinding;
-import com.example.sprint1.viewmodel.DestinationsViewModel;
 import com.example.sprint1.viewmodel.TravelViewModel;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.database.FirebaseDatabase;
@@ -53,7 +52,7 @@ public class TravelActivity extends AppCompatActivity {
         logTravelFormEntryBtn = binding.logTravelFormEntryDialog;
 
         logTravelFormEntryBtn.setOnClickListener(v -> {
-            TravelFormEntryDialog dialog = new TravelFormEntryDialog();
+            AddSharedTravelDialog dialog = new AddSharedTravelDialog();
             dialog.show(getSupportFragmentManager(), "TravelFormEntryDialog");
         });
     }

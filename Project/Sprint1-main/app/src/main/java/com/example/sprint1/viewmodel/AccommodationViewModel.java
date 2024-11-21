@@ -30,6 +30,9 @@ public class AccommodationViewModel extends ViewModel {
     private final MutableLiveData<String> location = new MutableLiveData<>();
     private final MutableLiveData<String> locationError = new MutableLiveData<>();
 
+    private final MutableLiveData<String> website = new MutableLiveData<>();
+    private final MutableLiveData<String> websiteError = new MutableLiveData<>();
+
     private final MutableLiveData<String> checkInDate = new MutableLiveData<>();
     private final MutableLiveData<String> checkOutDate = new MutableLiveData<>();
     private final MutableLiveData<String> dateError = new MutableLiveData<>();
@@ -47,11 +50,12 @@ public class AccommodationViewModel extends ViewModel {
 
     private final MutableLiveData<ArrayList<String>> tripList = new MutableLiveData<>();
 
-    public void setAccommodationDetails(String name, String location, String checkIn,
-                                        String checkOut, int numRooms, String roomType,
-                                        String tripName) {
+    public void setAccommodationDetails(String name, String location, String website,
+                                        String checkIn, String checkOut, int numRooms,
+                                        String roomType, String tripName) {
         this.name.setValue(name);
         this.location.setValue(location);
+        this.website.setValue(website);
         this.checkInDate.setValue(checkIn);
         this.checkOutDate.setValue(checkOut);
         this.numberOfRooms.setValue(numRooms);
@@ -61,6 +65,7 @@ public class AccommodationViewModel extends ViewModel {
         // Checks whether location and date are valid
         boolean validName = checkInput(name);
         boolean validLocation = checkInput(location);
+        boolean validWebsite = checkInput(website);
         boolean validRoomType = checkInput(roomType);
         boolean validNumberOfRooms = checkInput(numRooms);
         boolean validDates = checkDates(checkIn, checkOut);
@@ -77,6 +82,12 @@ public class AccommodationViewModel extends ViewModel {
             locationError.setValue("Location is required!");
         } else {
             locationError.setValue(null);
+        }
+
+        if (!validWebsite) {
+            websiteError.setValue("Website is required!");
+        } else {
+            websiteError.setValue(null);
         }
 
         if (!validRoomType) {
@@ -115,6 +126,7 @@ public class AccommodationViewModel extends ViewModel {
                 checkOutDate.getValue(),
                 name.getValue(),
                 location.getValue(),
+                website.getValue(),
                 numberOfRooms.getValue(),
                 roomType.getValue(),
                 tripName.getValue());
@@ -144,11 +156,8 @@ public class AccommodationViewModel extends ViewModel {
 
                     for (DataSnapshot userSnapshot : snapshot.getChildren()) {
                         String email = userSnapshot.child("email").getValue(String.class);
-                        Log.d("d", email);
                         if (finalInviterEmail.equals(email)) {
                             inviterId = userSnapshot.getKey();
-                            Log.d("ID?", inviterId);
-                            Log.d("email?", email);
                             break;
                         }
                     }
@@ -173,6 +182,7 @@ public class AccommodationViewModel extends ViewModel {
                                                     checkOutDate.getValue(),
                                                     name.getValue(),
                                                     location.getValue(),
+                                                    website.getValue(),
                                                     numberOfRooms.getValue(),
                                                     roomType.getValue(),
                                                     finalBaseTripName1);
@@ -190,7 +200,6 @@ public class AccommodationViewModel extends ViewModel {
                                                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                                                     for (DataSnapshot tripSnapshot : snapshot.getChildren()) {
                                                                         String tripId = tripSnapshot.getKey();
-                                                                        Log.d("id?", tripId.toString());
                                                                         DatabaseReference accommodationDetailsRef = inviterTripsRef
                                                                                 .child(tripId)
                                                                                 .child("Accommodation Details");
@@ -199,14 +208,7 @@ public class AccommodationViewModel extends ViewModel {
                                                                         String newAccommodationDetailsId = accommodationDetailsRef.push().getKey();
 
                                                                         if (newAccommodationDetailsId != null) {
-                                                                            accommodationDetailsRef.child(newAccommodationDetailsId).setValue(accommodationDetails)
-                                                                                    .addOnCompleteListener(task -> {
-                                                                                        if (task.isSuccessful()) {
-                                                                                            Log.d("Firebase", "Travel details added successfully to inviter's trip.");
-                                                                                        } else {
-                                                                                            Log.d("Firebase", "Failed to add travel details to inviter's trip.");
-                                                                                        }
-                                                                                    });
+                                                                            accommodationDetailsRef.child(newAccommodationDetailsId).setValue(accommodationDetails);
                                                                         }
                                                                     }
                                                                 }
@@ -216,8 +218,6 @@ public class AccommodationViewModel extends ViewModel {
 
                                                                 }
                                                             });
-
-
                                         }
                                     }
                                 }
@@ -317,6 +317,9 @@ public class AccommodationViewModel extends ViewModel {
     }
     public LiveData<String> getLocationError() {
         return locationError;
+    }
+    public LiveData<String> getWebsiteError() {
+        return websiteError;
     }
     public LiveData<String> getRoomError() {
         return roomError;

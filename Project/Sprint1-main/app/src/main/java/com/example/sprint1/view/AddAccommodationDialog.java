@@ -35,6 +35,9 @@ public class AddAccommodationDialog extends DialogFragment {
     private TextInputLayout location;
     private TextInputEditText locationText;
 
+    private TextInputLayout website;
+    private TextInputEditText websiteText;
+
     private TextInputLayout checkInDate;
     private TextInputEditText checkInDateText;
 
@@ -92,7 +95,7 @@ public class AddAccommodationDialog extends DialogFragment {
 
             // Sets the values of width and height based on the device's screen
             int width = (int) (metrics.widthPixels * 0.9);
-            int height = (int) (metrics.heightPixels * 0.85);
+            int height = (int) (metrics.heightPixels * 0.95);
 
             // Sets the dialog size
             dialog.getWindow().setLayout(width, height); // Set desired size here
@@ -131,6 +134,9 @@ public class AddAccommodationDialog extends DialogFragment {
         location = binding.locationView;
         locationText = binding.locationText;
 
+        website = binding.websiteView;
+        websiteText = binding.websiteText;
+
         checkInDate = binding.startDateView;
         checkInDateText = binding.startDateText;
 
@@ -148,7 +154,7 @@ public class AddAccommodationDialog extends DialogFragment {
         submitButton = binding.submit;
 
         AutoCompleteTextView roomTypeView = binding.roomTypeText;
-        String[] roomTypes = {"Single Room", "Double Room", "Suite", "Family Room", "Penthouse"};
+        String[] roomTypes = {"Single", "Double", "Suite", "Family", "Penthouse"};
         ArrayAdapter<String> adapter1 = new ArrayAdapter<>(getContext(),
                 android.R.layout.simple_dropdown_item_1line, roomTypes);
         roomTypeView.setAdapter(adapter1);
@@ -170,6 +176,7 @@ public class AddAccommodationDialog extends DialogFragment {
         submitButton.setOnClickListener(v -> {
             String nameText = this.nameText.getText().toString();
             String locationText = this.locationText.getText().toString();
+            String websiteText = this.websiteText.getText().toString();
             String checkInDateText = this.checkInDateText.getText().toString();
             String checkOutDateText = this.checkOutDateText.getText().toString();
             String numberOfRoomsString = this.numberOfRoomsText.getText().toString();
@@ -182,8 +189,9 @@ public class AddAccommodationDialog extends DialogFragment {
 
             String roomTypeText = this.roomTypeText.getText().toString();
 
-            viewModel.setAccommodationDetails(nameText, locationText, checkInDateText,
-                    checkOutDateText, numberOfRooms, roomTypeText, currentTripText);
+            viewModel.setAccommodationDetails(nameText, locationText, websiteText,
+                    checkInDateText, checkOutDateText, numberOfRooms, roomTypeText,
+                    currentTripText);
 
             if (viewModel.areInputsValid().getValue()) {
                 viewModel.saveAccommodationDetails();
@@ -191,6 +199,7 @@ public class AddAccommodationDialog extends DialogFragment {
             }
         });
     }
+
     private void observers() {
         viewModel.getNameError().observe(this, errorMessage -> {
             if (errorMessage != null) {
@@ -205,6 +214,14 @@ public class AddAccommodationDialog extends DialogFragment {
                 location.setError(errorMessage);
             } else {
                 location.setError(null);
+            }
+        });
+
+        viewModel.getWebsiteError().observe(this, errorMessage -> {
+            if (errorMessage != null) {
+                website.setError(errorMessage);
+            } else {
+                website.setError(null);
             }
         });
 
