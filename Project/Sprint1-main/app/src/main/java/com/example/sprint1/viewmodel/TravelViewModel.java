@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.sprint1.model.CommunityModel;
 import com.example.sprint1.model.ReservationDetails;
+import com.example.sprint1.model.TFEUser;
 import com.example.sprint1.model.TravelFormEntry;
 import com.example.sprint1.model.Trip;
 import com.example.sprint1.model.UserModel;
@@ -25,6 +26,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 public class TravelViewModel extends ViewModel {
@@ -174,6 +176,38 @@ public class TravelViewModel extends ViewModel {
         CommunityModel.getInstance().storeTravelFormEntry(tfe);
 
 
+    }
+
+    private MutableLiveData<List<TFEUser>> travelEntriesLiveData = new MutableLiveData<>();
+
+    public TravelViewModel() {
+        loadTravelEntries();
+    }
+
+    public LiveData<List<TFEUser>> getTravelEntriesLiveData() {
+        return travelEntriesLiveData;
+    }
+
+    private void loadTravelEntries() {
+        DatabaseReference communityRef = FirebaseDatabase.getInstance().getReference("CommunityPosts");
+        communityRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                List<TFEUser> tfeUserList = new ArrayList<>();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    TFEUser tfeUser = snapshot.getValue(TFEUser.class);
+                    if (tfeUser != null) {
+                        tfeUserList.add(tfeUser);
+                    }
+                }
+                travelEntriesLiveData.setValue(tfeUserList);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("TravelViewModel", "Failed to load travel entries: " + databaseError.getMessage());
+            }
+        });
     }
 
     public LiveData<Boolean> areInputsValid() {

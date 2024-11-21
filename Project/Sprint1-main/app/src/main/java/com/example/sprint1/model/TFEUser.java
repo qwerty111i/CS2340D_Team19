@@ -4,6 +4,9 @@ public class TFEUser {
     private TravelFormEntry tfe;
     private String userId;
 
+    public TFEUser() {
+    }
+
     public TFEUser(TravelFormEntry tfe, String userId) {
         this.tfe = tfe;
         this.userId = userId;

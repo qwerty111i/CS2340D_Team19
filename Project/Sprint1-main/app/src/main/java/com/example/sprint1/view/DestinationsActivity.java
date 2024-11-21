@@ -93,8 +93,7 @@ public class DestinationsActivity extends AppCompatActivity {
 
         // Connect adapter to Recycler View
         RecyclerView recyclerView = binding.logRecycler;
-        adapter = new TravelAdapter(sharedNames, tripNames, locations, days,
-                startDates, endDates);
+        adapter = new TravelAdapter(new ArrayList<>());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
