@@ -38,7 +38,7 @@ public class TFEAdapter extends RecyclerView.Adapter<TFEAdapter.ViewHolder> {
     public TFEAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // Inflate your item layout
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.layout_shared_travel_log, parent, false);
+                .inflate(R.layout.layout_community_log, parent, false);
         return new ViewHolder(view);
     }
 
