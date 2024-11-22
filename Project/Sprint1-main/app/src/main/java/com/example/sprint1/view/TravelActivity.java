@@ -18,11 +18,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.sprint1.R;
 import com.example.sprint1.databinding.ActivityTravelBinding;
 import com.example.sprint1.model.TFEUser;
-import com.example.sprint1.viewmodel.DestinationsViewModel;
 import com.example.sprint1.viewmodel.TravelAdapter;
 import com.example.sprint1.viewmodel.TravelViewModel;
 import com.google.android.material.tabs.TabLayout;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,8 +79,8 @@ public class TravelActivity extends AppCompatActivity {
         logTravelFormEntryBtn = binding.logTravelFormEntryDialog;
 
         logTravelFormEntryBtn.setOnClickListener(v -> {
-            TravelFormEntryDialog dialog = new TravelFormEntryDialog();
-            dialog.show(getSupportFragmentManager(), "TravelFormEntryDialog");
+            AddSharedTravelDialog dialog = new AddSharedTravelDialog();
+            dialog.show(getSupportFragmentManager(), "AddSharedTravelDialog");
         });
     }
 
