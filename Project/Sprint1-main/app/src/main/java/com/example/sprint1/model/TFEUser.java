@@ -3,6 +3,7 @@ package com.example.sprint1.model;
 public class TFEUser {
     private TravelFormEntry tfe;
     private String userId;
+    private String displayName;
 
     public TFEUser() {
     }
@@ -27,4 +28,5 @@ public class TFEUser {
     public void setUserId(String userId) {
         this.userId = userId;
     }
+
 }
