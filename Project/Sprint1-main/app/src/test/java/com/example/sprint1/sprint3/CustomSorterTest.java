@@ -3,7 +3,7 @@ package com.example.sprint1.sprint3;
 import static org.junit.Assert.assertTrue;
 
 import com.example.sprint1.model.ReservationDetails;
-import com.example.sprint1.viewmodel.ReservationSorter;
+import com.example.sprint1.viewmodel.CustomSorter;
 import com.example.sprint1.viewmodel.SortByName;
 import com.example.sprint1.viewmodel.SortByDateAndTime;
 
@@ -13,7 +13,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ReservationSorterTest {
+public class CustomSorterTest {
 
     // james
     @Test
@@ -30,7 +30,7 @@ public class ReservationSorterTest {
         reservations.add(reserve2);
         reservations.add(reserve3);
 
-        ReservationSorter sorter = new ReservationSorter();
+        CustomSorter sorter = new CustomSorter();
         sorter.setStrategy(new SortByName());
         sorter.sortReservations(reservations);
 
@@ -60,7 +60,7 @@ public class ReservationSorterTest {
         reservations.add(reserve4);
         reservations.add(reserve5);
 
-        ReservationSorter sorter = new ReservationSorter();
+        CustomSorter sorter = new CustomSorter();
         sorter.setStrategy(new SortByDateAndTime());
         sorter.sortReservations(reservations);
 
@@ -85,7 +85,7 @@ public class ReservationSorterTest {
     public void testSortByLocationEmpty() {
         List<ReservationDetails> reservations = new ArrayList<>();
 
-        ReservationSorter sorter = new ReservationSorter();
+        CustomSorter sorter = new CustomSorter();
         sorter.setStrategy(new SortByName());
         sorter.sortReservations(reservations);
 
@@ -97,7 +97,7 @@ public class ReservationSorterTest {
     public void testSortByStartDateEmpty() {
         List<ReservationDetails> reservations = new ArrayList<>();
 
-        ReservationSorter sorter = new ReservationSorter();
+        CustomSorter sorter = new CustomSorter();
         sorter.setStrategy(new SortByDateAndTime());
         sorter.sortReservations(reservations);
 

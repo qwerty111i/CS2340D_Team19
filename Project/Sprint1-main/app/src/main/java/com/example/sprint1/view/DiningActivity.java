@@ -20,7 +20,7 @@ import com.example.sprint1.databinding.ActivityDiningBinding;
 import com.example.sprint1.model.ReservationDetails;
 import com.example.sprint1.viewmodel.DiningAdapter;
 import com.example.sprint1.viewmodel.DiningViewModel;
-import com.example.sprint1.viewmodel.ReservationSorter;
+import com.example.sprint1.viewmodel.CustomSorter;
 import com.example.sprint1.viewmodel.SortByDateAndTime;
 import com.example.sprint1.viewmodel.SortByName;
 import com.google.android.material.tabs.TabLayout;
@@ -38,7 +38,7 @@ public class DiningActivity extends AppCompatActivity {
     private Button createTrip;
 
     private List<ReservationDetails> reservations = new ArrayList<>();
-    private ReservationSorter reservationSorter = new ReservationSorter();
+    private CustomSorter customSorter = new CustomSorter();
 
     private List<String> shared = new ArrayList<>();
     private List<String> tripNames = new ArrayList<>();
@@ -152,8 +152,8 @@ public class DiningActivity extends AppCompatActivity {
     }
 
     private void sortReservationsByDate() {
-        reservationSorter.setStrategy(new SortByDateAndTime());
-        reservationSorter.sortReservations(reservations);
+        customSorter.setStrategy(new SortByDateAndTime());
+        customSorter.sortReservations(reservations);
 
         rebuildSeparateLists();
 
@@ -161,8 +161,8 @@ public class DiningActivity extends AppCompatActivity {
     }
 
     private void sortReservationsByName() {
-        reservationSorter.setStrategy(new SortByName());
-        reservationSorter.sortReservations(reservations);
+        customSorter.setStrategy(new SortByName());
+        customSorter.sortReservations(reservations);
 
         rebuildSeparateLists();
 
