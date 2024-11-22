@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.sprint1.R;
 import com.example.sprint1.databinding.ActivityTravelBinding;
 import com.example.sprint1.model.TFEUser;
+import com.example.sprint1.viewmodel.TFEAdapter;
 import com.example.sprint1.viewmodel.TravelAdapter;
 import com.example.sprint1.viewmodel.TravelViewModel;
 import com.google.android.material.tabs.TabLayout;
@@ -30,7 +31,7 @@ public class TravelActivity extends AppCompatActivity {
     private TravelViewModel viewModel;
     private Button logTravelFormEntryBtn;
     private RecyclerView recyclerView;
-    private TravelAdapter adapter;
+    private TFEAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +54,7 @@ public class TravelActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         // Initialize adapter with empty list
-        adapter = new TravelAdapter(new ArrayList<>());
+        adapter = new TFEAdapter(new ArrayList<>());
         recyclerView.setAdapter(adapter);
 
         // Observe LiveData from ViewModel
