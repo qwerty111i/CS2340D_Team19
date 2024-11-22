@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.sprint1.BR;
 import com.example.sprint1.R;
 import com.example.sprint1.databinding.ActivityDestinationsBinding;
+import com.example.sprint1.model.TravelDetails;
 import com.example.sprint1.viewmodel.DestinationsViewModel;
 import com.example.sprint1.viewmodel.LogisticsViewModel;
 import com.example.sprint1.viewmodel.TravelAdapter;
@@ -50,7 +51,6 @@ public class DestinationsActivity extends AppCompatActivity {
     private List<String> endDates = new ArrayList<>();
     private List<String> locations = new ArrayList<>();
     private List<String> days = new ArrayList<>();
-
     private String currentEmail;
 
     // Initialize Firebase
@@ -93,7 +93,8 @@ public class DestinationsActivity extends AppCompatActivity {
 
         // Connect adapter to Recycler View
         RecyclerView recyclerView = binding.logRecycler;
-        adapter = new TravelAdapter(new ArrayList<>());
+        adapter = new TravelAdapter(sharedNames, tripNames, locations, days,
+                startDates, endDates);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -217,7 +218,7 @@ public class DestinationsActivity extends AppCompatActivity {
             }
         });
     }
-  
+
     private void addTravelToLists(DataSnapshot travelDetailsSnapshot) {
         // Loop through each travel detail
         for (DataSnapshot snapshot : travelDetailsSnapshot.getChildren()) {

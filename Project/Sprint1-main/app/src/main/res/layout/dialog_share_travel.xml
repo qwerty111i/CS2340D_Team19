@@ -15,7 +15,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/dialog_background"
-        tools:context=".view.TravelFormEntryDialog">
+        tools:context=".view.AddSharedTravelDialog">
 
         <TextView
             android:id="@+id/title"
@@ -23,7 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="Log Travel Entry"
+            android:text="Share Travel Entry"
             android:textSize="35sp"
             android:textColor="@android:color/black"
             android:fontFamily="@font/poppins_regular"
@@ -36,7 +36,8 @@
             android:layout_width="0dp"
             android:gravity="start"
             android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
+            android:layout_marginTop="15dp"
+            app:layout_constraintWidth_percent="0.44"
             android:text="@string/start_date"
             android:textSize="18sp"
             android:textColor="@android:color/black"
@@ -50,7 +51,8 @@
             android:layout_width="0dp"
             android:gravity="start"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
+            app:layout_constraintWidth_percent="0.44"
+            android:layout_marginTop="15dp"
             android:text="@string/end_date"
             android:textSize="18sp"
             android:textColor="@android:color/black"
@@ -119,10 +121,9 @@
 
         <TextView
             android:id="@+id/destinations_title"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="15dp"
             android:layout_width="0dp"
-            android:gravity="start"
-            android:layout_marginStart="10dp"
+            app:layout_constraintWidth_percent="0.8"
             android:layout_height="wrap_content"
             android:text="Destinations"
             android:textSize="18sp"
@@ -170,10 +171,9 @@
 
         <TextView
             android:id="@+id/accommodation_title"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="15dp"
             android:layout_width="0dp"
-            android:gravity="start"
-            android:layout_marginStart="10dp"
+            app:layout_constraintWidth_percent="0.8"
             android:layout_height="wrap_content"
             android:text="Accommodations"
             android:textSize="18sp"
@@ -221,33 +221,31 @@
 
         <TextView
             android:id="@+id/dining_title"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="15dp"
             android:layout_width="0dp"
-            android:gravity="start"
             android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
+            android:fontFamily="@font/poppins_regular"
             android:text="Dining"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/accommodation_view"
+            app:layout_constraintWidth_percent="0.8" />
+
+        <TextView
+            android:id="@+id/rating_title"
+            android:layout_marginTop="15dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintWidth_percent="0.8"
+            android:text="Rating"
             android:textSize="18sp"
             android:textColor="@android:color/black"
             android:fontFamily="@font/poppins_regular"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/rating_title"
-            app:layout_constraintTop_toBottomOf="@id/accommodation_view" />
-
-        <TextView
-            android:id="@+id/rating_title"
-            android:layout_width="0dp"
-            android:layout_marginTop="20dp"
-            android:gravity="start"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:text="Rating (0-10)"
-            android:textSize="18sp"
-            android:textColor="@android:color/black"
-            android:fontFamily="@font/poppins_regular"
-            app:layout_constraintStart_toEndOf="@id/dining_title"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/accommodation_view" />
+            app:layout_constraintTop_toBottomOf="@id/dining_view" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/dining_view"
@@ -268,8 +266,8 @@
             app:errorTextAppearance="@style/ErrorTextStyle"
             app:errorTextColor="@color/muted_red"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/rating_view"
-            app:layout_constraintWidth_percent="0.44"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintWidth_percent="0.8"
             app:layout_constraintTop_toBottomOf="@id/dining_title">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -296,16 +294,16 @@
             app:boxStrokeWidthFocused="3dp"
             app:startIconDrawable="@drawable/rating"
             app:startIconTint="@color/black"
-            android:hint="Enter Rating"
+            android:hint="Enter Rating out of 5"
             android:textColorHint="@color/black"
             app:hintTextColor="@color/black"
             app:errorEnabled="true"
             app:boxStrokeErrorColor="@color/muted_red"
             app:errorTextAppearance="@style/ErrorTextStyle"
             app:errorTextColor="@color/muted_red"
-            app:layout_constraintStart_toEndOf="@id/dining_view"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintWidth_percent="0.44"
+            app:layout_constraintWidth_percent="0.8"
             app:layout_constraintTop_toBottomOf="@id/rating_title">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -321,32 +319,11 @@
                 android:textColor="@color/black" />
         </com.google.android.material.textfield.TextInputLayout>
 
-
-        <!--        <com.google.android.material.textfield.TextInputLayout-->
-<!--            android:id="@+id/dropdown_box"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginBottom="16dp"-->
-<!--            android:layout_marginLeft="16dp"-->
-<!--            android:layout_marginRight="16dp"-->
-<!--            android:hint="Select a Trip"-->
-<!--            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"-->
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            app:layout_constraintTop_toBottomOf="@id/start_date_view">-->
-
-<!--            <AutoCompleteTextView-->
-<!--                android:id="@+id/dropdown"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:inputType="none"/>-->
-<!--        </com.google.android.material.textfield.TextInputLayout>-->
-
         <Button
             android:id="@+id/submit"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginTop="25dp"
+            android:layout_marginTop="18dp"
             android:text="@string/log_travel_submit"
             android:textSize="20sp"
             android:fontFamily="@font/poppins_regular"
@@ -355,8 +332,8 @@
             app:layout_constraintWidth_percent="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHeight_percent="0.12"
-            app:layout_constraintTop_toBottomOf="@id/dining_view" />
+            app:layout_constraintHeight_percent="0.08"
+            app:layout_constraintTop_toBottomOf="@id/rating_view" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

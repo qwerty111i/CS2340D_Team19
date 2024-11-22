@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.sprint1.model.AccommodationDetails;
 import com.example.sprint1.model.ReservationDetails;
+import com.example.sprint1.model.TransportationDetails;
 import com.example.sprint1.model.Trip;
 import com.example.sprint1.model.UserModel;
 import com.example.sprint1.model.VacationTime;
@@ -445,29 +446,7 @@ public class LogisticsViewModel extends ViewModel {
                     }
                 });
     }
-
-    private void shareNotesWithInvitedUser(String inviterId, String inviterEmail,
-                                           String invitedUserId, DatabaseReference userReference, String selectedTrip) {
-        userReference.child(inviterId).child("notes")
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot notesSnapshot) {
-                        for (DataSnapshot noteSnapshot : notesSnapshot.getChildren()) {
-                            String noteContent = noteSnapshot.getValue(String.class);
-                            String marker = "-->";
-                            if (noteContent != null && !noteContent.contains(marker)) {
-                                noteContent = noteContent + " -->  " + inviterEmail;
-                                userReference.child(invitedUserId).child("notes").
-                                        push().setValue(noteContent);
-                            }
-                        }
-                    }
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        Log.d("Firebase", "Error retrieving notes");
-                    }
-                });
-    }
+    
 
     private void shareTravelDetailsWithInvitedUser(String inviterId, String inviterEmail, String invitedUserId, DatabaseReference userReference, String selectedTrip) {
         // Reference to the Trips node under the current inviter
@@ -550,8 +529,20 @@ public class LogisticsViewModel extends ViewModel {
                                                     .setValue(accommodationDetails);
                                         }
                                     }
+                                    DataSnapshot transportationDetailsSnapshot = tripSnapshot.child("Transportation Details");
+                                    for (DataSnapshot transportationIdSnapshot : transportationDetailsSnapshot.getChildren()) {
+                                        TransportationDetails transportationDetails = transportationIdSnapshot.getValue(TransportationDetails.class);
+                                        if (transportationDetails != null) {
+                                            String sharedTripName2 = trip.getTripName() + " (Shared by " + inviterEmail + ")";
+                                            transportationDetails.setTripName(sharedTripName2);
+                                            // Share travel details under the new shared trip
+                                            userReference.child(invitedUserId).child("Trips").child(newTripId)
+                                                    .child("Transportation Details")
+                                                    .child(transportationIdSnapshot.getKey())
+                                                    .setValue(transportationDetails);
+                                        }
+                                    }
                                 }
-
 
                                 // Share notes with the invited user under the selected trip
                                 DataSnapshot notesSnapshot = tripSnapshot.child("Notes");

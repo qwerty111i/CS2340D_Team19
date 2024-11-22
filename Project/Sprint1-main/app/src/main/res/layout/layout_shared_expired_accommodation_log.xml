@@ -51,17 +51,17 @@
         android:id="@+id/name_text"
         android:layout_width="wrap_content"
         android:layout_height="48dp"
-        android:layout_marginTop="0dp"
         android:fontFamily="@font/poppins_regular"
         android:paddingStart="21dp"
         android:text="Hotel"
-        android:textAllCaps="true"
         android:textColor="@color/white"
         android:textSize="34sp"
         android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@id/log_trip"
         app:layout_constraintBottom_toTopOf="@id/location_text"
-        tools:ignore="MissingConstraints,RtlSymmetry" />
+        app:layout_constraintTop_toBottomOf="@id/log_trip"
+        app:layout_constraintVertical_bias="0.0"
+        tools:ignore="MissingConstraints,RtlSymmetry"
+        tools:layout_editor_absoluteX="0dp" />
 
     <TextView
         android:id="@+id/location_text"
@@ -71,9 +71,9 @@
         android:layout_marginTop="15dp"
         android:layout_marginBottom="8dp"
         android:textSize="18sp"
-        android:textStyle="italic"
-        android:textColor="@color/white"
-        android:fontFamily="@font/poppins_regular"
+        android:textStyle="bold"
+        android:textColor="@color/material_dynamic_neutral80"
+        android:fontFamily="@font/poppins_medium_italic"
         app:layout_constraintBottom_toTopOf="@id/check_in"
         android:paddingStart="22dp"
         tools:ignore="MissingConstraints,RtlSymmetry" />
@@ -147,9 +147,9 @@
         android:layout_marginTop="1dp"
         android:layout_marginBottom="8dp"
         android:textSize="18sp"
-        android:textStyle="italic"
+        android:textStyle="bold"
         android:textColor="@color/design_default_color_secondary"
-        android:fontFamily="@font/poppins_regular"
+        android:fontFamily="@font/poppins_medium_italic"
         app:layout_constraintTop_toBottomOf="@id/number_of_rooms_text"
         android:paddingStart="22dp"
         tools:ignore="MissingConstraints,RtlSymmetry" />
