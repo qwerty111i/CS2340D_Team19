@@ -10,49 +10,78 @@ import android.widget.ImageView;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.library.baseAdapters.BR;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.sprint1.R;
 import com.example.sprint1.databinding.ActivityTravelBinding;
+import com.example.sprint1.model.TFEUser;
+import com.example.sprint1.viewmodel.DestinationsViewModel;
+import com.example.sprint1.viewmodel.TravelAdapter;
 import com.example.sprint1.viewmodel.TravelViewModel;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class TravelActivity extends AppCompatActivity {
     private TabLayout tabLayout;
     private TravelViewModel viewModel;
     private Button logTravelFormEntryBtn;
-
-    private FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private RecyclerView recyclerView;
+    private TravelAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_travel);
 
+        // Inflate the layout using View Binding
         ActivityTravelBinding binding = ActivityTravelBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // Creating the ViewModel
+        // Initialize ViewModel
         viewModel = new ViewModelProvider(this).get(TravelViewModel.class);
 
-        // bind the viewmodel
+        // Bind the ViewModel
         binding.setVariable(BR.viewModel, viewModel);
         binding.setLifecycleOwner(this);
 
+        // Initialize RecyclerView
+        recyclerView = binding.recyclerViewTravelEntries;
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        // Initialize adapter with empty list
+        adapter = new TravelAdapter(new ArrayList<>());
+        recyclerView.setAdapter(adapter);
+
+        // Observe LiveData from ViewModel
+        observeViewModel();
+
         logTravelFormEntry(binding);
 
-        // Add navigation bar
+        // Initialize TabLayout
         tabLayout = findViewById(R.id.tab_navigation);
         navigation();
+    }
+
+    private void observeViewModel() {
+        viewModel.getTravelEntriesLiveData().observe(this, new Observer<List<TFEUser>>() {
+            @Override
+            public void onChanged(List<TFEUser> tfeUsers) {
+                adapter.updateData(tfeUsers);
+            }
+        });
     }
 
     public void logTravelFormEntry(ActivityTravelBinding binding) {
         logTravelFormEntryBtn = binding.logTravelFormEntryDialog;
 
         logTravelFormEntryBtn.setOnClickListener(v -> {
-            AddSharedTravelDialog dialog = new AddSharedTravelDialog();
+            TravelFormEntryDialog dialog = new TravelFormEntryDialog();
             dialog.show(getSupportFragmentManager(), "TravelFormEntryDialog");
         });
     }

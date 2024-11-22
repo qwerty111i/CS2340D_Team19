@@ -1,16 +1,32 @@
 package com.example.sprint1.viewmodel;
 
+import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.sprint1.model.CommunityModel;
+import com.example.sprint1.model.ReservationDetails;
+import com.example.sprint1.model.TFEUser;
 import com.example.sprint1.model.TravelFormEntry;
+import com.example.sprint1.model.Trip;
+import com.example.sprint1.model.UserModel;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.net.HttpCookie;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 public class TravelViewModel extends ViewModel {
@@ -28,6 +44,7 @@ public class TravelViewModel extends ViewModel {
     private MutableLiveData<String> rating = new MutableLiveData<>();
     private MutableLiveData<String> ratingError = new MutableLiveData<>();
     private MutableLiveData<Boolean> validInputs = new MutableLiveData<>();
+    private MutableLiveData<Boolean> validRating2 = new MutableLiveData<>();
 
     public void setTravelDetails(String startDate, String endDate, String destination,
                                       String accommodation, String dining, String rating) {
@@ -49,6 +66,7 @@ public class TravelViewModel extends ViewModel {
         boolean validRating = checkInput(rating);
 
         boolean validDates = checkDates(startDate, endDate);
+        boolean validRating2 = checkRating(rating);
 
         // Sets the Start Date error message
         if (!validStartDate) {
@@ -88,8 +106,9 @@ public class TravelViewModel extends ViewModel {
         // Sets the Rating error message
         if (!validRating) {
             ratingError.setValue("Invalid Rating!");
+        } else if (!validRating2) {
+            ratingError.setValue("Rating must be between 0-10!");
         } else {
-
             ratingError.setValue(null);
         }
 
@@ -104,7 +123,7 @@ public class TravelViewModel extends ViewModel {
 
         // Sets the value of validInputs (true/false)
         validInputs.setValue(validStartDate && validEndDate && validDestination
-                && validAccommodation && validDining && validRating && validDates);
+                && validAccommodation && validDining && validRating && validDates && validRating2);
     }
 
     // Checks if dates are valid
@@ -132,6 +151,16 @@ public class TravelViewModel extends ViewModel {
         return input != null && !input.isEmpty();
     }
 
+    // Base check for the rating
+    public boolean checkRating(String rating) {
+        try {
+            int r = Integer.parseInt(rating);
+            return r >= 0 && r <= 10;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
     // Saves the details in the database
     public void saveTravelDetails() {
         // Creates a new TravelFormEntry object, storing all the data
@@ -147,6 +176,38 @@ public class TravelViewModel extends ViewModel {
         CommunityModel.getInstance().storeTravelFormEntry(tfe);
 
 
+    }
+
+    private MutableLiveData<List<TFEUser>> travelEntriesLiveData = new MutableLiveData<>();
+
+    public TravelViewModel() {
+        loadTravelEntries();
+    }
+
+    public LiveData<List<TFEUser>> getTravelEntriesLiveData() {
+        return travelEntriesLiveData;
+    }
+
+    private void loadTravelEntries() {
+        DatabaseReference communityRef = FirebaseDatabase.getInstance().getReference("CommunityPosts");
+        communityRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                List<TFEUser> tfeUserList = new ArrayList<>();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    TFEUser tfeUser = snapshot.getValue(TFEUser.class);
+                    if (tfeUser != null) {
+                        tfeUserList.add(tfeUser);
+                    }
+                }
+                travelEntriesLiveData.setValue(tfeUserList);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("TravelViewModel", "Failed to load travel entries: " + databaseError.getMessage());
+            }
+        });
     }
 
     public LiveData<Boolean> areInputsValid() {
