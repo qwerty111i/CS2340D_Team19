@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.sprint1.model.AccommodationDetails;
 import com.example.sprint1.model.ReservationDetails;
+import com.example.sprint1.model.TransportationDetails;
 import com.example.sprint1.model.Trip;
 import com.example.sprint1.model.UserModel;
 import com.example.sprint1.model.VacationTime;
@@ -550,8 +551,20 @@ public class LogisticsViewModel extends ViewModel {
                                                     .setValue(accommodationDetails);
                                         }
                                     }
+                                    DataSnapshot transportationDetailsSnapshot = tripSnapshot.child("Transportation Details");
+                                    for (DataSnapshot transportationIdSnapshot : transportationDetailsSnapshot.getChildren()) {
+                                        TransportationDetails transportationDetails = transportationIdSnapshot.getValue(TransportationDetails.class);
+                                        if (transportationDetails != null) {
+                                            String sharedTripName2 = trip.getTripName() + " (Shared by " + inviterEmail + ")";
+                                            transportationDetails.setTripName(sharedTripName2);
+                                            // Share travel details under the new shared trip
+                                            userReference.child(invitedUserId).child("Trips").child(newTripId)
+                                                    .child("Transportation Details")
+                                                    .child(transportationIdSnapshot.getKey())
+                                                    .setValue(transportationDetails);
+                                        }
+                                    }
                                 }
-
 
                                 // Share notes with the invited user under the selected trip
                                 DataSnapshot notesSnapshot = tripSnapshot.child("Notes");
