@@ -210,6 +210,7 @@ public class TravelViewModel extends ViewModel {
         });
     }
 
+
     public LiveData<Boolean> areInputsValid() {
         return validInputs;
     }

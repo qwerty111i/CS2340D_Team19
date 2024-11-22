@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import com.example.sprint1.R;
 import com.example.sprint1.model.TFEUser;
@@ -37,7 +38,7 @@ public class TFEAdapter extends RecyclerView.Adapter<TFEAdapter.ViewHolder> {
     public TFEAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // Inflate your item layout
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.layout_shared_travel_log, parent, false);
+                .inflate(R.layout.layout_community_log, parent, false);
         return new ViewHolder(view);
     }
 
@@ -51,6 +52,11 @@ public class TFEAdapter extends RecyclerView.Adapter<TFEAdapter.ViewHolder> {
         holder.tvDestination.setText(tfe.getDestination());
         holder.tvStartDate.setText(tfe.getStartDate());
         holder.tvEndDate.setText(tfe.getEndDate());
+        holder.tvAccommodations.setText("Accommodations: " + tfe.getAccommodation());
+        holder.tvDining.setText("Dining: " + tfe.getDining());
+        holder.tvRating.setText("Rating: " + tfe.getRating() + "/5");
+        holder.rbRating.setRating(Float.parseFloat(tfe.getRating()));
+
         // Optionally calculate days and set tvDays
     }
 
@@ -65,6 +71,10 @@ public class TFEAdapter extends RecyclerView.Adapter<TFEAdapter.ViewHolder> {
         TextView tvDestination;
         TextView tvStartDate;
         TextView tvEndDate;
+        TextView tvAccommodations;
+        TextView tvDining;
+        TextView tvRating;
+        RatingBar rbRating;
         // Initialize other views if necessary
 
         public ViewHolder(@NonNull View itemView) {
@@ -74,6 +84,10 @@ public class TFEAdapter extends RecyclerView.Adapter<TFEAdapter.ViewHolder> {
             tvDestination = itemView.findViewById(R.id.log_destination_text);
             tvStartDate = itemView.findViewById(R.id.log_start_date);
             tvEndDate = itemView.findViewById(R.id.log_end_date);
+            tvAccommodations = itemView.findViewById(R.id.travelAccommodations);
+            tvDining = itemView.findViewById(R.id.travelDining);
+            tvRating = itemView.findViewById(R.id.travelRating);
+            rbRating = itemView.findViewById(R.id.ratingBar);
         }
     }
 }
