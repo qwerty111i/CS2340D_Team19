@@ -1,0 +1,87 @@
+.home {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    background-color: #202223;
+    box-sizing: border-box;
+    padding-left: 10%;
+    padding-right: 10%;
+    padding-top: 90px;
+    min-height: 100vh;
+    width: 100%;
+}
+
+.home .info-box {
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    flex: 1;
+    padding-right: 10%;
+}
+
+.home .title-box h1 {
+    margin-top: 20%;
+    margin-bottom: 5%;
+    font-family: "Poppins", serif;
+    font-weight: 500;
+    font-style: normal;
+    font-size: 40px;
+    background: linear-gradient(45deg, #ffd796, #dcb57a, #ec257e, #ea80da);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+.home .content-box p {
+    font-family: "Poppins", serif;
+    font-weight: 300;
+    font-style: normal;
+    color: white;
+}
+
+.home .project-box {
+    display: flex;
+    margin-top: 10%;
+    height: 7%;
+    align-items: center;
+    justify-content: center;
+}
+
+.home .project-box .project-link {
+    width: 35%;
+    height: 100%;
+    border-radius: 10px;
+    border: none;
+    background-image: linear-gradient(to right, #B24592 0%, #F15F79  51%, #B24592  100%);
+    background-size: 200% auto;
+    transition: 0.5s;
+    color: rgb(0, 0, 0);
+    font-family: "Poppins", serif;
+    font-weight: 600;
+    font-size: 18px;
+}
+
+.home .project-box .project-link:hover {
+    background-position: right center;
+    cursor: pointer; 
+}
+
+.home .display-box {
+    display: flex;
+    flex-direction: row;
+    flex: 1;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.home .splash-video .vid {
+    width: 250px;
+    height: auto;
+    border-radius: 20px;
+}
+
+.home .sign-up-video .vid {
+    width: 245px;
+    height: auto;
+    border-radius: 20px;
+}
