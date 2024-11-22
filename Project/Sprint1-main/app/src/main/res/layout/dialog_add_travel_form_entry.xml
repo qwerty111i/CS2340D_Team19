@@ -294,7 +294,7 @@
             app:boxStrokeWidthFocused="3dp"
             app:startIconDrawable="@drawable/rating"
             app:startIconTint="@color/black"
-            android:hint="Enter Rating"
+            android:hint="Enter Rating out of 5"
             android:textColorHint="@color/black"
             app:hintTextColor="@color/black"
             app:errorEnabled="true"
