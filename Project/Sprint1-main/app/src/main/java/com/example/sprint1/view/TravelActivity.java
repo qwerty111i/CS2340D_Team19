@@ -8,68 +8,80 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import androidx.activity.EdgeToEdge;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.library.baseAdapters.BR;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.sprint1.R;
 import com.example.sprint1.databinding.ActivityTravelBinding;
-import com.example.sprint1.model.TravelCommunitySingleton;
-import com.example.sprint1.model.TravelFormEntry;
-import com.example.sprint1.viewmodel.DestinationsViewModel;
+import com.example.sprint1.model.TFEUser;
+import com.example.sprint1.viewmodel.TFEAdapter;
+import com.example.sprint1.viewmodel.TravelAdapter;
 import com.example.sprint1.viewmodel.TravelViewModel;
 import com.google.android.material.tabs.TabLayout;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TravelActivity extends AppCompatActivity {
     private TabLayout tabLayout;
     private TravelViewModel viewModel;
     private Button logTravelFormEntryBtn;
-
-    private FirebaseDatabase database = FirebaseDatabase.getInstance();
-    private final DatabaseReference communityDatabaseReference = database.getReference("CommunityPosts");
-    private final DatabaseReference userReference = database.getReference("users");
-
+    private RecyclerView recyclerView;
+    private TFEAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_travel);
 
+        // Inflate the layout using View Binding
         ActivityTravelBinding binding = ActivityTravelBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // Creating the ViewModel
+        // Initialize ViewModel
         viewModel = new ViewModelProvider(this).get(TravelViewModel.class);
 
-        // bind the viewmodel
+        // Bind the ViewModel
         binding.setVariable(BR.viewModel, viewModel);
         binding.setLifecycleOwner(this);
 
+        // Initialize RecyclerView
+        recyclerView = binding.recyclerViewTravelEntries;
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        // Initialize adapter with empty list
+        adapter = new TFEAdapter(new ArrayList<>());
+        recyclerView.setAdapter(adapter);
+
+        // Observe LiveData from ViewModel
+        observeViewModel();
+
         logTravelFormEntry(binding);
 
-        // Add navigation bar
+        // Initialize TabLayout
         tabLayout = findViewById(R.id.tab_navigation);
         navigation();
+    }
 
-        //Read from Firebase
-        fetchTravelEntries();
+    private void observeViewModel() {
+        viewModel.getTravelEntriesLiveData().observe(this, new Observer<List<TFEUser>>() {
+            @Override
+            public void onChanged(List<TFEUser> tfeUsers) {
+                adapter.updateData(tfeUsers);
+            }
+        });
     }
 
     public void logTravelFormEntry(ActivityTravelBinding binding) {
         logTravelFormEntryBtn = binding.logTravelFormEntryDialog;
 
         logTravelFormEntryBtn.setOnClickListener(v -> {
-            TravelFormEntryDialog dialog = new TravelFormEntryDialog();
-            dialog.show(getSupportFragmentManager(), "TravelFormEntryDialog");
+            AddSharedTravelDialog dialog = new AddSharedTravelDialog();
+            dialog.show(getSupportFragmentManager(), "AddSharedTravelDialog");
         });
     }
 
@@ -132,78 +144,4 @@ public class TravelActivity extends AppCompatActivity {
             public void onTabReselected(TabLayout.Tab tab) { }
         });
     };
-
-    public void fetchTravelEntries(){
-        TravelCommunitySingleton.getInstance().clearEntries(); //clear existing entries
-        communityDatabaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                int postInt = 0;
-               for (DataSnapshot postSnapshot : snapshot.getChildren()){
-                   //Extract userID of the community post
-                   String userId = postSnapshot.child("userId").getValue(String.class);
-
-                   if(userId != null){
-                       //Fetch display name from users node and add to Singleton
-                       fetchUserDisplayName(userId);
-                   }
-
-                   DataSnapshot tfeSnapshot = postSnapshot.child("tfe");
-
-                   if(tfeSnapshot.exists()){
-                       String startDate = tfeSnapshot.child("startDate").getValue(String.class);
-                       String endDate = tfeSnapshot.child("endDate").getValue(String.class);
-                       String destination = tfeSnapshot.child("destination").getValue(String.class);
-                       String accommodation = tfeSnapshot.child("accommodation").getValue(String.class);
-                       String dining = tfeSnapshot.child("dining").getValue(String.class);
-                       String rating = tfeSnapshot.child("rating").getValue(String.class);
-
-                       //Checking data fetching
-                       System.out.println("Fetched: " + startDate);
-
-
-                       //Create a new TravelFormEntry
-                       TravelFormEntry entry = new TravelFormEntry(
-                               startDate,endDate,destination,accommodation,dining,rating
-                       );
-
-                       //Add entry to Singleton
-                       TravelCommunitySingleton.getInstance().addTravelFormEntry(entry);
-
-                       //Checking data fetching
-                       List<TravelFormEntry> posts = TravelCommunitySingleton.getInstance().getTravelFormEntries();
-                       System.out.println("Fetched: " + posts.get(postInt).getStartDate());
-
-                       postInt =+ 1;
-
-
-                   }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                System.err.println("DatabaseError: " + error.getMessage());
-
-            }
-        });
-    }
-
-    public void fetchUserDisplayName(String userId){
-        userReference.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String displayName = snapshot.child("displayName").getValue(String.class);
-                TravelCommunitySingleton.getInstance().addUser(displayName);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                System.err.println("DatabaseError: " + error.getMessage());
-
-            }
-        });
-
-    }
-
 }

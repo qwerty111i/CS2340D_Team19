@@ -10,29 +10,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.sprint1.R;
-import com.example.sprint1.databinding.DialogAddTravelFormEntryBinding;
-import com.example.sprint1.viewmodel.DestinationsViewModel;
+import com.example.sprint1.databinding.DialogShareTravelBinding;
 import com.example.sprint1.viewmodel.TravelViewModel;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.Calendar;
 
-public class TravelFormEntryDialog extends DialogFragment {
+public class AddSharedTravelDialog extends DialogFragment {
 
     private TravelViewModel viewModel;
-    private DialogAddTravelFormEntryBinding binding;
+    private DialogShareTravelBinding binding;
     private Button submitButton;
     private TextInputLayout startDate;
     private TextInputLayout endDate;
@@ -51,7 +43,7 @@ public class TravelFormEntryDialog extends DialogFragment {
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the binding for the dialog layout
-        binding = DialogAddTravelFormEntryBinding.inflate(inflater, container, false);
+        binding = DialogShareTravelBinding.inflate(inflater, container, false);
 
         // Creating the ViewModel
         viewModel = new ViewModelProvider(this).get(TravelViewModel.class);
@@ -87,8 +79,8 @@ public class TravelFormEntryDialog extends DialogFragment {
             getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
 
             // Sets the values of width and height based on the device's screen
-            int width = (int) (metrics.widthPixels * 0.8);
-            int height = (int) (metrics.heightPixels * 0.7);
+            int width = (int) (metrics.widthPixels * 0.9);
+            int height = (int) (metrics.heightPixels * 0.85);
 
             // Sets the dialog size
             dialog.getWindow().setLayout(width, height); // Set desired size here

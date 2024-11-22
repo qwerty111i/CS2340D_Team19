@@ -15,20 +15,21 @@
         android:id="@+id/travels"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@drawable/travel_background"
         tools:context=".view.TravelActivity">
 
         <TextView
             android:id="@+id/travels_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="70dp"
             android:text="Travel Community"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:textSize="35sp"
             android:textStyle="bold"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:fontFamily="@font/poppins_bold" />
 
         <Button
@@ -36,7 +37,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginTop="20dp"
-            android:text="Log Travel Form Entry"
+            android:text="Share Travel Entry"
             android:textSize="23sp"
             android:fontFamily="@font/poppins_regular"
             app:backgroundTint="@color/modern_blue"
@@ -67,6 +68,16 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_constraintTop_toBottomOf="@id/travels_title"
+            app:layout_constraintBottom_toTopOf="@id/tab_navigation"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView_travel_entries"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="20dp"
+            app:layout_constraintTop_toBottomOf="@id/log_travel_form_entry_dialog"
             app:layout_constraintBottom_toTopOf="@id/tab_navigation"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />

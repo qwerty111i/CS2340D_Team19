@@ -138,7 +138,7 @@
             android:textSize="18sp"
             android:textColor="@android:color/black"
             android:fontFamily="@font/poppins_regular"
-            app:layout_constraintStart_toStartOf="@id/duration_view"
+            app:layout_constraintStart_toStartOf="@id/start_date"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/end_date_view" />
 
@@ -156,16 +156,13 @@
             app:startIconTint="@color/black"
             android:hint="@string/vacation_duration_hint"
             android:textColorHint="@color/black"
-            android:layout_marginStart="35dp"
-            android:layout_marginEnd="35dp"
             app:hintTextColor="@color/black"
             app:errorEnabled="true"
             app:boxStrokeErrorColor="@color/muted_red"
             app:errorTextAppearance="@style/ErrorTextStyle"
             app:errorTextColor="@color/muted_red"
             app:errorIconTint="@color/muted_red"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/start_date"
             app:layout_constraintWidth_percent="0.8"
             app:layout_constraintTop_toBottomOf="@id/duration_text">
 

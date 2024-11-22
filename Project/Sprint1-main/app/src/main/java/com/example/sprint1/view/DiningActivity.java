@@ -201,7 +201,7 @@ public class DiningActivity extends AppCompatActivity {
 
         // Finds the user using their email
         usersRef.orderByChild("email").equalTo(email)
-                .addListenerForSingleValueEvent(new ValueEventListener() { // Use SingleValueEvent
+                .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot userSnapshot) {
                         // Clears the lists to avoid duplication
@@ -226,7 +226,7 @@ public class DiningActivity extends AppCompatActivity {
                         DatabaseReference tripsRef = usersRef.child(userId).child("Trips");
 
                         // Retrieves all trips made by the user
-                        tripsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        tripsRef.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot tripsSnapshot) {
                                 reservations.clear();
@@ -256,9 +256,8 @@ public class DiningActivity extends AppCompatActivity {
                                                 public void onDataChange(
                                                         @NonNull DataSnapshot reservationSnapshot) {
                                                     addReservationToList(reservationSnapshot, tripName);
-                                                    rebuildSeparateLists();
-
                                                     adapter.notifyDataSetChanged();
+                                                    rebuildSeparateLists();
 
                                                     TabLayout.Tab selectedTab = tabs.getTabAt(tabs.getSelectedTabPosition());
                                                     if (selectedTab != null) {
