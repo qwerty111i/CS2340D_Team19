@@ -135,6 +135,56 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
+            android:id="@+id/website"
+            android:layout_width="0dp"
+            android:gravity="start"
+            android:layout_marginStart="35dp"
+            android:layout_height="wrap_content"
+            android:text="Website"
+            android:textSize="18sp"
+            android:textColor="@android:color/black"
+            android:fontFamily="@font/poppins_regular"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/location_view" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/website_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintVertical_bias=".005"
+            app:boxBackgroundMode="filled"
+            app:boxBackgroundColor="@color/light_modern_purple"
+            app:boxStrokeColor="@color/modern_purple"
+            app:boxStrokeWidth="3dp"
+            app:boxStrokeWidthFocused="3dp"
+            app:startIconDrawable="@drawable/website"
+            app:startIconTint="@color/black"
+            android:hint="Enter Website"
+            android:textColorHint="@color/black"
+            app:hintTextColor="@color/black"
+            app:errorEnabled="true"
+            app:boxStrokeErrorColor="@color/muted_red"
+            app:errorTextAppearance="@style/ErrorTextStyle"
+            app:errorTextColor="@color/muted_red"
+            app:errorIconTint="@color/muted_red"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintWidth_percent="0.8"
+            app:layout_constraintTop_toBottomOf="@id/website" >
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/website_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins_regular"
+                android:inputType="text"
+                android:maxLines="1"
+                android:scrollHorizontally="true"
+                android:textColor="@color/black" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
             android:id="@+id/start_date"
             android:layout_width="0dp"
             android:gravity="start"
@@ -146,7 +196,7 @@
             app:layout_constraintWidth_percent="0.44"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/end_date_view"
-            app:layout_constraintTop_toBottomOf="@id/location_view" />
+            app:layout_constraintTop_toBottomOf="@id/website_view" />
 
         <TextView
             android:id="@+id/end_date"
@@ -161,7 +211,7 @@
             app:layout_constraintWidth_percent="0.44"
             app:layout_constraintStart_toEndOf="@id/start_date_view"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/location_view" />
+            app:layout_constraintTop_toBottomOf="@id/website_view" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/start_date_view"
@@ -204,7 +254,7 @@
             app:errorTextAppearance="@style/ErrorTextStyle"
             app:errorTextColor="@color/muted_red"
             app:errorIconDrawable="@null"
-            app:layout_constraintStart_toStartOf="@id/end_date"
+            app:layout_constraintStart_toEndOf="@id/start_date_view"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/end_date"
             app:layout_constraintWidth_percent="0.44"
@@ -224,14 +274,14 @@
 
         <TextView
             android:id="@+id/number_of_rooms_title"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:gravity="start"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
             android:text="# of Rooms"
             android:textSize="18sp"
             android:textColor="@android:color/black"
             android:fontFamily="@font/poppins_regular"
+            app:layout_constraintWidth_percent="0.44"
             app:layout_constraintStart_toStartOf="@id/start_date_view"
             app:layout_constraintTop_toBottomOf="@id/end_date_view" />
 
@@ -248,6 +298,7 @@
             app:errorTextColor="@color/muted_red"
             app:layout_constraintTop_toBottomOf="@id/number_of_rooms_title"
             app:layout_constraintStart_toStartOf="@id/start_date_view"
+            app:layout_constraintEnd_toEndOf="@id/start_date_view"
             app:layout_constraintHeight_percent="0.12"
             app:layout_constraintWidth_percent="0.44"
             app:startIconTint="@color/black">
@@ -263,14 +314,15 @@
 
         <TextView
             android:id="@+id/room_type_title"
-            android:layout_width="150dp"
+            android:layout_width="0dp"
             android:gravity="start"
             android:layout_height="wrap_content"
-            android:layout_marginStart="6dp"
             android:text="Room Type"
             android:textSize="18sp"
             android:textColor="@android:color/black"
             android:fontFamily="@font/poppins_regular"
+            app:layout_constraintWidth_percent="0.44"
+            app:layout_constraintStart_toEndOf="@id/start_date_view"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/end_date_view" />
 
@@ -286,8 +338,9 @@
             app:errorTextAppearance="@style/ErrorTextStyle"
             app:errorTextColor="@color/muted_red"
             app:layout_constraintTop_toBottomOf="@id/number_of_rooms_title"
-            app:layout_constraintEnd_toEndOf="@id/end_date_view"
-            app:layout_constraintHeight_percent="0.12"
+            app:layout_constraintStart_toEndOf="@id/number_of_rooms"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintWidth_percent="0.44"
             app:startIconTint="@color/black">
 
             <AutoCompleteTextView
@@ -296,6 +349,7 @@
                 android:layout_height="wrap_content"
                 android:inputType="none"
                 android:fontFamily="@font/poppins_regular"
+                android:textSize="15sp"
                 android:textColor="@color/black" />
         </com.google.android.material.textfield.TextInputLayout>
 

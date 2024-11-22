@@ -50,7 +50,7 @@
             android:exported="false" />
         <activity
             android:name=".view.TransportationActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".view.AccommodationsActivity"
             android:exported="false" />

@@ -106,13 +106,14 @@
     <TextView
         android:id="@+id/log_end_location"
         android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:text="End Location"
         android:textSize="18sp"
         android:textStyle="bold"
         android:textColor="@color/material_dynamic_primary80"
         android:fontFamily="@font/poppins_regular"
         android:paddingStart="17dp"
+        app:layout_constraintWidth_percent="0.75"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/log_start_location" />
 

@@ -199,6 +199,7 @@ public class AccommodationsActivity extends AppCompatActivity {
             String roomType = snapshot.child("roomType").getValue(String.class);
             String name = snapshot.child("name").getValue(String.class);
             String location = snapshot.child("location").getValue(String.class);
+            String website = snapshot.child("website").getValue(String.class);
             String trip = snapshot.child("tripName").getValue(String.class);
 
             Log.d("Firebase", "Check in: " + checkIn);
@@ -211,7 +212,7 @@ public class AccommodationsActivity extends AppCompatActivity {
             //check in, checkout, location, num of rooms, room type
 
             AccommodationDetails accommodation = new AccommodationDetails(checkIn, checkOut,
-                    name, location, numRooms, roomType, trip);
+                    name, location, website, numRooms, roomType, trip);
             accommodations.add(accommodation);
             shared.add(trip);
         }
