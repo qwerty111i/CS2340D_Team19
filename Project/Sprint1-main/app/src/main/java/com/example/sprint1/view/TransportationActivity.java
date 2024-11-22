@@ -18,25 +18,18 @@ import com.example.sprint1.BR;
 import com.example.sprint1.R;
 import com.example.sprint1.databinding.ActivityTransportationBinding;
 import com.example.sprint1.model.TransportationDetails;
-import com.example.sprint1.viewmodel.AccommodationAdapter;
 import com.example.sprint1.viewmodel.TransportationAdapter;
 import com.example.sprint1.viewmodel.TransportationViewModel;
+import com.example.sprint1.viewmodel.CustomSorter;
+import com.example.sprint1.viewmodel.SortByDateAndTime;
+import com.example.sprint1.viewmodel.SortByName;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.*;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class TransportationActivity extends AppCompatActivity {
     private TabLayout tabLayout;
@@ -47,6 +40,8 @@ public class TransportationActivity extends AppCompatActivity {
     private List<String> shared = new ArrayList<>();
     private String currentEmail;
     private Button createTrip;
+
+    private CustomSorter customSorter = new CustomSorter();
 
     // Initialize Firebase
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -88,7 +83,6 @@ public class TransportationActivity extends AppCompatActivity {
         //Connect recycler view
         RecyclerView recyclerView = binding.accommodationRecycler;
 
-        //Fetch Accommodation entries from firebase
         getTransportationDetails(currentEmail);
         chooseTrip(binding);
 
@@ -149,20 +143,29 @@ public class TransportationActivity extends AppCompatActivity {
                                     // Gets the trip ID
                                     String tripId = tripSnapshot.getKey();
 
-                                    // Currently at users/userId/"Trips"/tripId/"Travel Details"
-                                    DatabaseReference accommodationDetailsRef = tripsRef.child(tripId).
+                                    // Currently at users/userId/"Trips"/tripId/"Transportation Details"
+                                    DatabaseReference transportationDetailsRef = tripsRef.child(tripId).
                                             child("Transportation Details");
 
-                                    // Adds the reservation details to the lists
-                                    accommodationDetailsRef.addListenerForSingleValueEvent(
+                                    // Adds the transportation details to the lists
+                                    transportationDetailsRef.addListenerForSingleValueEvent(
                                             new ValueEventListener() {
                                                 @Override
                                                 public void onDataChange(
-                                                        @NonNull DataSnapshot accommodationSnapshot) {
-                                                    addAccommodationToList(accommodationSnapshot);
+                                                        @NonNull DataSnapshot transportationSnapshot) {
+                                                    addTransportationToList(transportationSnapshot);
 
-                                                    // Notify adapter
                                                     adapter.notifyDataSetChanged();
+
+                                                    TabLayout.Tab selectedTab = tabs.getTabAt(tabs.getSelectedTabPosition());
+                                                    if (selectedTab != null) {
+                                                        String tabText = selectedTab.getText().toString();
+                                                        if (tabText.equals("Date")) {
+                                                            sortTransportationsByDate();
+                                                        } else if (tabText.equals("Name")) {
+                                                            sortTransportationsByName();
+                                                        }
+                                                    }
                                                 }
 
                                                 @Override
@@ -190,9 +193,8 @@ public class TransportationActivity extends AppCompatActivity {
                 });
     }
 
-    private void addAccommodationToList(DataSnapshot accommodationDetailsSnapshot) {
-        // Loop through each travel detail
-        for (DataSnapshot snapshot : accommodationDetailsSnapshot.getChildren()) {
+    private void addTransportationToList(DataSnapshot transportationDetailsSnapshot) {
+        for (DataSnapshot snapshot : transportationDetailsSnapshot.getChildren()) {
             String type = snapshot.child("type").getValue(String.class);
             String startLocation = snapshot.child("startLocation").getValue(String.class);
             String endLocation = snapshot.child("endLocation").getValue(String.class);
@@ -206,7 +208,6 @@ public class TransportationActivity extends AppCompatActivity {
             Log.d("Firebase", "Start Date: " + startDate);
             Log.d("Firebase", "End Date: " + endDate);
             Log.d("Firebase", "Trip Name: " + trip);
-            //check in, checkout, location, num of rooms, room type
 
             TransportationDetails transportation = new TransportationDetails(type, startLocation,
                     endLocation, startDate, endDate, trip);
@@ -223,14 +224,17 @@ public class TransportationActivity extends AppCompatActivity {
 
         tabs.selectTab(tabs.getTabAt(0));
 
+        // initial sort by Date
+        sortTransportationsByDate();
+
         tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 String tabText = tab.getText().toString();
-                if (tabText.equals("Check-In")) {
-                    sortAccommodationsByDate();
-                } else if (tabText.equals("Check-Out")) {
-                    sortAccommodationsByDate();
+                if (tabText.equals("Date")) {
+                    sortTransportationsByDate();
+                } else if (tabText.equals("Name")) {
+                    sortTransportationsByName();
                 }
             }
 
@@ -241,23 +245,39 @@ public class TransportationActivity extends AppCompatActivity {
             public void onTabReselected(TabLayout.Tab tab) {
                 String tabText = tab.getText().toString();
                 if (tabText.equals("Date")) {
-                    sortAccommodationsByDate();
-                } else if (tabText.equals("Date")) {
-                    sortAccommodationsByDate();
+                    sortTransportationsByDate();
+                } else if (tabText.equals("Name")) {
+                    sortTransportationsByName();
                 }
             }
         });
     }
 
+    private void sortTransportationsByDate() {
+        customSorter.setStrategy(new SortByDateAndTime());
+        customSorter.sortTransportation(transportations);
+        if (adapter != null) {
+            adapter.notifyDataSetChanged();
+        }
+    }
+
+    private void sortTransportationsByName() {
+        customSorter.setStrategy(new SortByName());
+        customSorter.sortTransportation(transportations);
+        if (adapter != null) {
+            adapter.notifyDataSetChanged();
+        }
+    }
+
     private void navigation() {
         boolean checkSelected = false;
         int[] navIcons = {
-            R.drawable.logistics,
-            R.drawable.destination,
-            R.drawable.dining,
-            R.drawable.accommodation,
-            R.drawable.transport,
-            R.drawable.travel };
+                R.drawable.logistics,
+                R.drawable.destination,
+                R.drawable.dining,
+                R.drawable.accommodation,
+                R.drawable.transport,
+                R.drawable.travel };
 
         for (int i = 0; i < navIcons.length; i++) {
             TabLayout.Tab tab = tabLayout.newTab();
@@ -306,24 +326,5 @@ public class TransportationActivity extends AppCompatActivity {
             }
             public void onTabReselected(TabLayout.Tab tab) { }
         });
-    }
-
-    private void sortAccommodationsByDate() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yy", Locale.getDefault());
-
-        Collections.sort(transportations, (d1, d2) -> {
-            try {
-                Date date1 = dateFormat.parse(d1.getStartDate());
-                Date date2 = dateFormat.parse(d2.getStartDate());
-
-                if (date1 != null && date2 != null) {
-                    return date1.compareTo(date2);
-                }
-            } catch (ParseException e) {
-                throw new RuntimeException(e);
-            }
-            return 0;
-        });
-        adapter.notifyDataSetChanged();
     }
 }
