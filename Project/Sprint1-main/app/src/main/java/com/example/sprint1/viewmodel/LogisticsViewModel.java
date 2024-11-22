@@ -446,29 +446,7 @@ public class LogisticsViewModel extends ViewModel {
                     }
                 });
     }
-
-    private void shareNotesWithInvitedUser(String inviterId, String inviterEmail,
-                                           String invitedUserId, DatabaseReference userReference, String selectedTrip) {
-        userReference.child(inviterId).child("notes")
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot notesSnapshot) {
-                        for (DataSnapshot noteSnapshot : notesSnapshot.getChildren()) {
-                            String noteContent = noteSnapshot.getValue(String.class);
-                            String marker = "-->";
-                            if (noteContent != null && !noteContent.contains(marker)) {
-                                noteContent = noteContent + " -->  " + inviterEmail;
-                                userReference.child(invitedUserId).child("notes").
-                                        push().setValue(noteContent);
-                            }
-                        }
-                    }
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        Log.d("Firebase", "Error retrieving notes");
-                    }
-                });
-    }
+    
 
     private void shareTravelDetailsWithInvitedUser(String inviterId, String inviterEmail, String invitedUserId, DatabaseReference userReference, String selectedTrip) {
         // Reference to the Trips node under the current inviter
