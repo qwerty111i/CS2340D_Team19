@@ -3,6 +3,8 @@ package com.example.sprint1.model;
 
 import android.util.Log;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -17,10 +19,12 @@ public class CommunityModel {
     private DatabaseReference communityRef;
     private DatabaseReference userRef;
     private static int size;
+    public String currentDisplayName;
 
     private CommunityModel() {
         communityRef = FirebaseDatabase.getInstance().getReference("CommunityPosts");
         userRef = FirebaseDatabase.getInstance().getReference("users");
+
 
 //        initializeSizeListener();
     }
@@ -63,7 +67,7 @@ public class CommunityModel {
                             "Hyatt", "McDonalds", "6");
                     TFEUser sampleEntry = new TFEUser(
                             tfe, // destination
-                            "k5P04mzoOEYX4yagcTQF5haaPfh2" // estimated cost
+                            "default@gmail.com" // estimated cost
                     );
 
                     // Store the sample entry in the database
@@ -93,6 +97,14 @@ public class CommunityModel {
 
 
     public void storeTravelFormEntry(TravelFormEntry tfe) {
+        //Get currently logged in user
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (currentUser != null) {
+            currentDisplayName = currentUser.getEmail();
+            Log.d("UserEmail", "User email: " + currentDisplayName);
+        }
+
         // Get the userId from the UserModel
         String userId = UserModel.getInstance().getUserId();
 
@@ -103,7 +115,7 @@ public class CommunityModel {
         }
 
         // Create a TFEUser object with the TravelFormEntry and userId
-        TFEUser tfeUser = new TFEUser(tfe, userId);
+        TFEUser tfeUser = new TFEUser(tfe, currentDisplayName); //can change back to user Id
 
         // Store the TravelFormEntry data in the community database
         communityRef.push().setValue(tfeUser, new DatabaseReference.CompletionListener() {
