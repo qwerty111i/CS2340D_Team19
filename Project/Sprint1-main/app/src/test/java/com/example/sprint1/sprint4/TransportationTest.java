@@ -31,4 +31,28 @@ public class TransportationTest {
         Assert.assertEquals(test2.getStartTime(), "11:00AM");
         Assert.assertEquals(test2.getTripName(), "Trip2");
     }
+
+    // Adwaith Test 1
+    @Test
+    public void TransportationTest3() {
+        TransportationDetails test1 = new TransportationDetails(null, null, null, null, null, null);
+        Assert.assertNull(test1.getType());
+        Assert.assertNull(test1.getStartLocation());
+        Assert.assertNull(test1.getEndLocation());
+        Assert.assertNull(test1.getStartDate());
+        Assert.assertNull(test1.getStartTime());
+        Assert.assertNull(test1.getTripName());
+    }
+
+    // Adwaith Test 2
+    @Test
+    public void TransportationTest4() {
+        TransportationDetails test2 = new TransportationDetails("Train", "California", null, null, null, "Trip A");
+        Assert.assertEquals(test2.getType(), "Train");
+        Assert.assertEquals(test2.getStartLocation(), "California");
+        Assert.assertNull(test2.getEndLocation());
+        Assert.assertNull(test2.getStartDate());
+        Assert.assertNull(test2.getStartTime());
+        Assert.assertEquals(test2.getTripName(), "Trip A");
+    }
 }

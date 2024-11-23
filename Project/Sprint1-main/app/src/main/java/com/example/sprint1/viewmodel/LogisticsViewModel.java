@@ -103,7 +103,9 @@ public class LogisticsViewModel extends ViewModel {
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) { }
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("Firebase", error.getMessage());
+            }
         });
     }
 
