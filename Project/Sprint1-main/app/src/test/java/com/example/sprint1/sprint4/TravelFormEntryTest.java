@@ -30,5 +30,28 @@ public class TravelFormEntryTest {
         Assert.assertEquals(entry1.getDining(), "eatery");
         Assert.assertEquals(entry1.getRating(), "10");
     }
+    
+    // Matthew Sebastian
+    @Test
+    public void TravelFormEntryCheck3() {
+        TravelFormEntry entry = new TravelFormEntry();
+        Assert.assertNull(entry.getStartDate());
+        Assert.assertNull(entry.getEndDate());
+        Assert.assertNull(entry.getDestination());
+        Assert.assertNull(entry.getAccommodation());
+        Assert.assertNull(entry.getDining());
+        Assert.assertNull(entry.getRating());
+    }
 
+    // Matthew Sebastian
+    @Test
+    public void TravelFormEntryCheck4() {
+        TravelFormEntry entry = new TravelFormEntry(null, null, null, null, null, null);
+        Assert.assertNull(entry.getStartDate());
+        Assert.assertNull(entry.getEndDate());
+        Assert.assertNull(entry.getDestination());
+        Assert.assertNull(entry.getAccommodation());
+        Assert.assertNull(entry.getDining());
+        Assert.assertNull(entry.getRating());
+    }
 }
