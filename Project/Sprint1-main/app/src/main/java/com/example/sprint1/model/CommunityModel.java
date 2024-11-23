@@ -36,24 +36,6 @@ public class CommunityModel {
         return instance;
     }
 
-//    private void initializeSizeListener() {
-//        // Attach a listener to count the number of entries in the "CommunityPosts" node
-//        communityRef.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                // Update the size based on the number of children in the "CommunityPosts" node
-//                size = (int) dataSnapshot.getChildrenCount();
-//                Log.d("CommunityModel", "Size updated: " + size);
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//                // Handle database errors
-//                Log.e("CommunityModel", "Failed to update size: " + databaseError.getMessage());
-//            }
-//        });
-//    }
-
     public void addSampleIfEmpty() {
         communityRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -111,7 +93,7 @@ public class CommunityModel {
         // Check if the userId is valid
         if (userId == null || userId.isEmpty()) {
             Log.e("CommunityModel", "User ID is not set. Cannot store travel form entry.");
-            return; // Exit early if userId is not valid
+            return;
         }
 
         // Create a TFEUser object with the TravelFormEntry and userId
