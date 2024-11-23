@@ -148,6 +148,11 @@ public class DestinationsActivity extends AppCompatActivity {
                 endDates.clear();
                 days.clear();
 
+                if (!userSnapshot.exists()) {
+                    Log.d("Firebase", "No user found with email: " + email);
+                    return;
+                }
+
                 // Snapshot of the user with the associated email ID
                 DataSnapshot userData = userSnapshot.getChildren().iterator().next();
                 String userId = userData.getKey();
