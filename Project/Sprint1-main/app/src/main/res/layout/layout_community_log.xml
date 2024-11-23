@@ -64,20 +64,6 @@
         app:layout_constraintStart_toStartOf="parent"/>
 
     <TextView
-        android:id="@+id/log_days"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="0 days"
-        android:fontFamily="@font/poppins_regular"
-        android:layout_marginTop="37dp"
-        android:layout_marginEnd="10dp"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:textColor="@color/golden"
-        app:layout_constraintStart_toEndOf ="@id/log_destination_text"
-        app:layout_constraintTop_toTopOf="@id/log_destination_text" />
-
-    <TextView
         android:id="@+id/log_start_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
