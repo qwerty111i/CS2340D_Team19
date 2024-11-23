@@ -1,25 +1,18 @@
 package com.example.sprint1.viewmodel;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.sprint1.R;
-import com.example.sprint1.model.AccommodationDetails;
 import com.example.sprint1.model.TransportationDetails;
-
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class TransportationAdapter extends
         RecyclerView.Adapter<TransportationAdapter.TransportationViewHolder> {
@@ -58,7 +51,8 @@ public class TransportationAdapter extends
     }
 
     @Override
-    public void onBindViewHolder(@NonNull TransportationAdapter.TransportationViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull TransportationAdapter.
+            TransportationViewHolder holder, int position) {
         // Assign values to the views created in the row layout xml file
         // Based on the position of the recycler view
         if (holder.tvShared != null) {

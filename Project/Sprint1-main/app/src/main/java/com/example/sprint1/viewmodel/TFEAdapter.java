@@ -2,8 +2,6 @@ package com.example.sprint1.viewmodel;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,11 +10,6 @@ import android.widget.TextView;
 import com.example.sprint1.R;
 import com.example.sprint1.model.TFEUser;
 import com.example.sprint1.model.TravelFormEntry;
-
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 // TravelAdapter.java
@@ -66,15 +59,15 @@ public class TFEAdapter extends RecyclerView.Adapter<TFEAdapter.ViewHolder> {
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvShared;
-        TextView tvTrip;
-        TextView tvDestination;
-        TextView tvStartDate;
-        TextView tvEndDate;
-        TextView tvAccommodations;
-        TextView tvDining;
-        TextView tvRating;
-        RatingBar rbRating;
+        private TextView tvShared;
+        private TextView tvTrip;
+        private TextView tvDestination;
+        private TextView tvStartDate;
+        private TextView tvEndDate;
+        private TextView tvAccommodations;
+        private TextView tvDining;
+        private TextView tvRating;
+        private RatingBar rbRating;
         // Initialize other views if necessary
 
         public ViewHolder(@NonNull View itemView) {

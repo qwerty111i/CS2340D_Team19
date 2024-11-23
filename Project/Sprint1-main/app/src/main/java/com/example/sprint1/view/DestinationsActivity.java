@@ -6,20 +6,16 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.sprint1.BR;
 import com.example.sprint1.R;
 import com.example.sprint1.databinding.ActivityDestinationsBinding;
-import com.example.sprint1.model.TravelDetails;
 import com.example.sprint1.viewmodel.DestinationsViewModel;
-import com.example.sprint1.viewmodel.LogisticsViewModel;
 import com.example.sprint1.viewmodel.TravelAdapter;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
@@ -29,7 +25,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -42,7 +37,6 @@ public class DestinationsActivity extends AppCompatActivity {
     private DestinationsViewModel viewModel;
     private Button logTravelBtn;
     private Button vacationBtn;
-    private LogisticsViewModel logisticsViewModel;
 
     // Create local lists for data pulled from Firebase
     private List<String> sharedNames = new ArrayList<>();
@@ -52,11 +46,6 @@ public class DestinationsActivity extends AppCompatActivity {
     private List<String> locations = new ArrayList<>();
     private List<String> days = new ArrayList<>();
     private String currentEmail;
-
-    // Initialize Firebase
-    private FirebaseDatabase database = FirebaseDatabase.getInstance();
-    private DatabaseReference databaseRef = database.getReference();
-
     private TravelAdapter adapter;
     private Button createTrip;
 
@@ -138,7 +127,8 @@ public class DestinationsActivity extends AppCompatActivity {
         DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference().child("users");
 
         // Finds the user using their email
-        usersRef.orderByChild("email").equalTo(email).addValueEventListener(new ValueEventListener() {
+        usersRef.orderByChild("email").equalTo(email).addValueEventListener
+                (new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot userSnapshot) {
                 // Clears the lists to avoid duplication
@@ -183,7 +173,8 @@ public class DestinationsActivity extends AppCompatActivity {
                             String tripId = tripSnapshot.getKey();
 
                             // Currently at users/userId/"Trips"/tripId/"Travel Details"
-                            DatabaseReference travelDetailsRef = tripsRef.child(tripId).child("Travel Details");
+                            DatabaseReference travelDetailsRef = tripsRef.child(tripId)
+                                    .child("Travel Details");
 
                             // Adds the travel details to the lists
                             travelDetailsRef.addListenerForSingleValueEvent(new ValueEventListener() {

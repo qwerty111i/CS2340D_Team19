@@ -139,8 +139,9 @@ public class AddTransportationDialog extends DialogFragment {
             String currentStartTimeText = this.startTimeText.getText().toString();
             String currentTripText = selectedTrip;
 
-            viewModel.setTransportationDetails(currentTypeText, currentStartLocationText, currentEndLocationText,
-                    currentStartDateText, currentStartTimeText, currentTripText);
+            viewModel.setTransportationDetails(currentTypeText, currentStartLocationText,
+                    currentEndLocationText, currentStartDateText, currentStartTimeText,
+                    currentTripText);
 
             if (viewModel.areInputsValid().getValue()) {
                 viewModel.saveTransportationDetails();

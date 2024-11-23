@@ -6,7 +6,6 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-import com.example.sprint1.model.AccommodationDetails;
 import com.example.sprint1.model.TransportationDetails;
 import com.example.sprint1.model.Trip;
 import com.example.sprint1.model.UserModel;
@@ -17,12 +16,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Locale;
 
 public class TransportationViewModel extends ViewModel {
     private final MutableLiveData<String> type = new MutableLiveData<>();

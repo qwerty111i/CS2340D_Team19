@@ -122,7 +122,8 @@ public class AccommodationAdapter extends
             // Expired Check
             if (isExpired(checkOutDate)) {
                 if (!accommodations.get(position).getTripName().contains("(Expired)")) {
-                    accommodations.get(position).setTripName("(Expired) " + accommodations.get(position).getTripName());
+                    accommodations.get(position).setTripName("(Expired) "
+                            + accommodations.get(position).getTripName());
                 }
                 // Shared + Expired
                 return 0;
@@ -134,7 +135,8 @@ public class AccommodationAdapter extends
             // Expired Check
             if (isExpired(checkOutDate)) {
                 if (!accommodations.get(position).getTripName().contains("(Expired)")) {
-                    accommodations.get(position).setTripName("(Expired) " + accommodations.get(position).getTripName());
+                    accommodations.get(position).setTripName("(Expired) "
+                            + accommodations.get(position).getTripName());
                 }
                 // Shared + Expired
                 return 0;
@@ -145,7 +147,9 @@ public class AccommodationAdapter extends
         } else {
             if (isExpired(checkOutDate)) {
                 if (!accommodations.get(position).getTripName().contains("(Expired)")) {
-                    accommodations.get(position).setTripName("(Expired) " + accommodations.get(position).getTripName());
+                    accommodations
+                            .get(position)
+                            .setTripName("(Expired) " + accommodations.get(position).getTripName());
                 }
                 // Not Shared + Expired
                 return 2;
