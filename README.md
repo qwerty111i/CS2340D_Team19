@@ -1,10 +1,13 @@
-# CS 2340 Fall 2024 Repository
-> Please read these instructions then replace this `README.md` file with your own repository documentation as you see fit.
+# WanderSync Travel Application
 
-This repository is meant to be used throughout the semester to help you organize your work. This will be the repository you send out to your teammates as you work on your various group assignments throught the semester.
+WanderSync is a travel management application designed to simplify the process of planning and sharing trips.  With WanderSync, users can easily collaborate on creating and organizing detailed itineraries, making travel planning more efficient and enjoyable.
 
-**Please note the current directory structure, which should be maintained as you use this repository in the future.**
-- `Project` This directory currently contains an Android Studio Project called `Sprint0.5-main`. This is a template project you should feel free to use in order to set up your group's project for the semester. If you decide to start your own Android Studio Project from scratch, we recommend that you save it inside the `Project` folder as well.
-> *Note that `Sprint0.5-main` is a Project folder, which means Android Studio will recognize it as a project if and only if it is opened at this level.* If you attempt to open the project by selecting any other parent or child directory, you will run into issues as the program will not know which *gradle* configurations to use.
-- `SOLID_GRASP` This directory will be used later in the semester for your group assignments related to SOLID/GRASP.
-- `Code Smell` This directory will be used later in the semester for your group assignments related to Code Smells.
+## Key Features:
+- Plan and organize itineraries with ease.
+- Collaborate with other users to create shared trip plans.
+- Access your travel details wherever you are.
+- Share your trip recommendations to the community of users.
+
+## Learn More:
+To explore the application and see all its features, visit: 
+[WanderSync Website](https://wandersync.onrender.com/)

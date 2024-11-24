@@ -1,0 +1,134 @@
+.diagram {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    background-color: #202223;
+    box-sizing: border-box;
+    padding-left: 10%;
+    padding-right: 10%;
+    padding-top: 90px;
+    min-height: 100vh;
+    width: 100%;
+}
+
+.diagram .info-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+}
+
+.diagram .content-box h1 {
+    margin-top: 40px;
+    margin-bottom: 20px;
+    font-family: "Poppins", serif;
+    font-weight: 500;
+    font-style: normal;
+    font-size: 40px;
+    color: rgb(250, 199, 88);
+}
+
+.diagram .content-box p {
+    font-family: "Poppins", serif;
+    font-weight: 300;
+    font-style: normal;
+    color: white;
+}
+
+.diagram .image-box {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    margin-top: 50px;
+}
+
+.diagram .image-box .image {
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.diagram .image-box .image-1 {
+    margin-top: 50px;
+    width: 1000px;
+    height: auto;
+    border-radius: 15px;
+}
+
+.diagram .image-box .image-2 {
+    margin-top: 50px;
+    width: 1000px;
+    height: auto;
+    border-radius: 15px;
+}
+
+.diagram .image-box .image-3 {
+    margin-top: 50px;
+    width: 1000px;
+    height: auto;
+    border-radius: 15px;
+    margin-bottom: 50px;
+}
+
+@media screen and (max-width: 1200px) {
+    .diagram .image-box .image-1 {
+        width: 800px;
+    }
+    
+    .diagram .image-box .image-2 {
+        width: 800px;
+    }
+    
+    .diagram .image-box .image-3 {
+        width: 800px;
+    }
+}
+
+@media screen and (max-width: 1100px) {
+    .diagram {
+        flex-direction: column-reverse;
+    }
+
+    .diagram .title-box h1 {
+        font-size: 50px;
+    }
+
+    .diagram .content-box p {
+        font-size: 19px;
+    }
+}
+
+@media screen and (max-width: 900px) {
+    .diagram .image-box .image-1 {
+        width: 600px;
+    }
+    
+    .diagram .image-box .image-2 {
+        width: 600px;
+    }
+    
+    .diagram .image-box .image-3 {
+        width: 600px;
+    }
+}
+
+@media screen and (max-width: 650px) {
+    .diagram .image-box {
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .diagram .image-box .image-1 {
+        width: 400px;
+    }
+    
+    .diagram .image-box .image-2 {
+        width: 400px;
+    }
+    
+    .diagram .image-box .image-3 {
+        width: 400px;
+    }
+}

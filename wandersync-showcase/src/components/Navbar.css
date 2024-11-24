@@ -55,14 +55,17 @@
     color: black;
 }
 
-@media screen and (max-width: 1180px) {
+@media screen and (max-width: 800px) {
     .header {
         max-width: 100%;
-        background-color: #100421;
     }
 
     .navbar {
         max-width: 100%;
+    }
+
+    .nav-menu a {
+        color: white;
     }
 
     .hamburger {
@@ -87,7 +90,7 @@
     }
 
     .nav-item {
-        margin: .5rem 0;
+        margin: .9rem 0;
         font-size: 30px;
     }
 }

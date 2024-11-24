@@ -22,13 +22,13 @@ export default function Dining() {
   return (
     <div className="dining">
       <div className="display-box">
-        <div className="dining-video">
+        <div className="dining-video scroll">
           <VideoRender
             videoSrc={DiningScrollVid}
             altText="Dining Scroll Video"
           />
         </div>
-        <div className="dining-video">
+        <div className="dining-video screen">
           <VideoRender
             videoSrc={DiningVid}
             altText="Dining Screen Video"
@@ -40,11 +40,11 @@ export default function Dining() {
           <h1 className="title">Dining</h1>
         </div>
         <div className="content-box">
-          <p className="content">WanderSync is a travel management application designed to allow users to plan and share trips.  Users can collaborate on creating in itinerary with realtime updates.</p>
+          <p className="content">The Dining page allows users to add restaurant reservations for their upcoming trips.  Users can specify the exact time of each reservation, with the details displayed on visually appealing cards.</p>
           <br />
-          <p className="content">The splash screen was designed and animated in Lottie.  The Sign-Up and Sign-In pages are integrated with Firebase to securely encrypt and store credentials.</p>
+          <p className="content">Reservations can be sorted by name or date, offering users the flexibility to show upcoming reservations first.  This sorting functionality was implemented using the Strategy design pattern, resulting in a more efficient and maintainable codebase.</p>
           <br />
-          <p className="content">This application was developed using Java and Android Studio.  The database used to store user details is Firebase.</p>
+          <p className="content">All reservation details are stored in the database, with any changes updated in real-time.</p>
         </div>
       </div>
     </div>

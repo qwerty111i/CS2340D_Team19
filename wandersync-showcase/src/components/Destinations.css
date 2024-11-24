@@ -1,7 +1,7 @@
 .destinations {
     display: flex;
     flex-direction: row;
-    justify-content: center;
+    justify-content: space-evenly;
     background-color: #202223;
     box-sizing: border-box;
     padding-left: 10%;
@@ -26,7 +26,7 @@
     font-weight: 500;
     font-style: normal;
     font-size: 40px;
-    color: rgb(250, 199, 88);
+    color: rgb(250, 88, 188);
 }
 
 .destinations .content-box p {
@@ -48,4 +48,51 @@
     width: 250px;
     height: auto;
     border-radius: 20px;
+}
+
+.destinations .screen .vid {
+    margin-right: 10px;
+}
+
+.destinations .scroll .vid {
+    margin-left: 10px;
+}
+
+@media screen and (max-width: 1100px) {
+    .destinations {
+        flex-direction: column;
+    }
+
+    .destinations .title-box h1 {
+        font-size: 50px;
+    }
+
+    .destinations .content-box p {
+        font-size: 19px;
+    }
+
+    .destinations .info-box {
+        margin-bottom: 100px;
+        padding-right: 0%;
+    }
+}
+
+@media screen and (max-width: 650px) {
+    .destinations .display-box {
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .destinations .screen .vid {
+        margin-bottom: 40px;
+        margin-right: 0px;
+        width: 300px;
+    }
+
+    .destinations .scroll .vid {
+        margin-bottom: 40px;
+        margin-left: 0px;
+        width: 300px;
+    }
 }
