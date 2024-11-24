@@ -8,6 +8,7 @@ import Accommodations from './components/Accommodations';
 import Transportation from './components/Transportation';
 import Travel from './components/Travel';
 import Sharing from './components/Sharing';
+import Diagrams from './components/Diagram';
 
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
       <Transportation />
       <Travel />
       <Sharing />
+      <Diagrams />
     </div>
   );
 }

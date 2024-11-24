@@ -22,13 +22,13 @@ export default function Transportation() {
   return (
     <div className="transportation">
       <div className="display-box">
-        <div className="transportation-video">
+        <div className="transportation-video screen">
           <VideoRender
             videoSrc={TransportationVid}
             altText="Transportation Screen Video"
           />
         </div>
-        <div className="transportation-video">
+        <div className="transportation-video scroll">
           <VideoRender
             videoSrc={TransportationScrollVid}
             altText="Transportation Scroll Video"
@@ -40,11 +40,11 @@ export default function Transportation() {
           <h1 className="title">Transportation</h1>
         </div>
         <div className="content-box">
-          <p className="content">WanderSync is a travel management application designed to allow users to plan and share trips.  Users can collaborate on creating in itinerary with realtime updates.</p>
+          <p className="content">The Transportation page allows users to specify their travel arrangements between destinations.  Users can input the mode of transportation, as well as the departure time.</p>
           <br />
-          <p className="content">The splash screen was designed and animated in Lottie.  The Sign-Up and Sign-In pages are integrated with Firebase to securely encrypt and store credentials.</p>
+          <p className="content">This page is extremely convenient as it helps users plan their routes in advance, reducing stress and anxiety during a trip.  By thinking about the logistics beforehand, users can ensure smoother travel experiences.</p>
           <br />
-          <p className="content">This application was developed using Java and Android Studio.  The database used to store user details is Firebase.</p>
+          <p className="content">The application's modular database setup and adherence to design patterns makes it easy to integrate new screens like this one.  These design choices streamline the development process, allowing for faster implementation with minimal code duplication, which makes it easier to maintain and expand the app in the future.</p>
         </div>
       </div>
     </div>

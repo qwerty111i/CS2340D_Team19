@@ -58,9 +58,6 @@ public class AddSharedTravelDialog extends DialogFragment {
         // Observes changes in the Live Data
         observers();
 
-//        // Live check to see if inputs are edited after errors
-//        textWatchers();
-
         return binding.getRoot();
     }
 
@@ -227,21 +224,4 @@ public class AddSharedTravelDialog extends DialogFragment {
             }
         });
     }
-
-//    private void textWatchers() {
-//        // Checks if duration text field is edited after error is shown
-//        durationText.addTextChangedListener(new android.text.TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//            }
-//
-//            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//            }
-//
-//            public void afterTextChanged(android.text.Editable s) {
-//                // Sets error to null if field is edited
-//                durationText.setError(null);
-//            }
-//        });
-//    }
 }

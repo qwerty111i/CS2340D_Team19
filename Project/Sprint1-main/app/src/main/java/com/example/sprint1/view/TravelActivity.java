@@ -6,7 +6,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.library.baseAdapters.BR;
@@ -14,15 +13,12 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.sprint1.R;
 import com.example.sprint1.databinding.ActivityTravelBinding;
 import com.example.sprint1.model.TFEUser;
 import com.example.sprint1.viewmodel.TFEAdapter;
-import com.example.sprint1.viewmodel.TravelAdapter;
 import com.example.sprint1.viewmodel.TravelViewModel;
 import com.google.android.material.tabs.TabLayout;
-
 import java.util.ArrayList;
 import java.util.List;
 

@@ -14,8 +14,8 @@ const closeMenu = () => changeState(false);
         <nav className='navbar'>
             <h1 className='title'>WanderSync</h1>
             <div className='hamburger' onClick={clickMenu}>
-                {isOpen ? (<IoClose size={30} style={{color: '#ffffff'}}/>) 
-                : (<RxHamburgerMenu size={30} style={{color: '#ffffff'}}/>)}
+                {isOpen ? (<IoClose size={30} style={{color: '#000000'}}/>) 
+                : (<RxHamburgerMenu size={30} style={{color: '#000000'}}/>)}
             </div>
             <ul className={isOpen ? "nav-menu active" : "nav-menu"}>
                 <li className='nav-item'>
@@ -26,6 +26,9 @@ const closeMenu = () => changeState(false);
                 </li>
                 <li className='nav-item'>
                     <a href='#features' onClick={closeMenu}>Sharing</a>
+                </li>
+                <li className='nav-item'>
+                    <a href='#diagrams' onClick={closeMenu}>Diagrams</a>
                 </li>
             </ul>
         </nav>
