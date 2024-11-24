@@ -37,8 +37,7 @@
 
 .diagram .image-box {
     display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     margin-top: 50px;
@@ -47,43 +46,32 @@
 .diagram .image-box .image {
     margin-left: 20px;
     margin-right: 20px;
+    align-items: center;
 }
 
 .diagram .image-box .image-1 {
     margin-top: 50px;
-    width: 1000px;
+    width: 90%;
     height: auto;
     border-radius: 15px;
 }
 
 .diagram .image-box .image-2 {
     margin-top: 50px;
-    width: 1000px;
+    width: 90%;
     height: auto;
     border-radius: 15px;
 }
 
 .diagram .image-box .image-3 {
     margin-top: 50px;
-    width: 1000px;
+    width: 90%;
     height: auto;
     border-radius: 15px;
     margin-bottom: 50px;
 }
 
-@media screen and (max-width: 1200px) {
-    .diagram .image-box .image-1 {
-        width: 800px;
-    }
-    
-    .diagram .image-box .image-2 {
-        width: 800px;
-    }
-    
-    .diagram .image-box .image-3 {
-        width: 800px;
-    }
-}
+
 
 @media screen and (max-width: 1100px) {
     .diagram {
@@ -100,17 +88,7 @@
 }
 
 @media screen and (max-width: 900px) {
-    .diagram .image-box .image-1 {
-        width: 600px;
-    }
-    
-    .diagram .image-box .image-2 {
-        width: 600px;
-    }
-    
-    .diagram .image-box .image-3 {
-        width: 600px;
-    }
+
 }
 
 @media screen and (max-width: 650px) {
@@ -120,15 +98,4 @@
         justify-content: center;
     }
 
-    .diagram .image-box .image-1 {
-        width: 400px;
-    }
-    
-    .diagram .image-box .image-2 {
-        width: 400px;
-    }
-    
-    .diagram .image-box .image-3 {
-        width: 400px;
-    }
 }
