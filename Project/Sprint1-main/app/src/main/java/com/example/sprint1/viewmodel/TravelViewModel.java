@@ -146,7 +146,7 @@ public class TravelViewModel extends ViewModel {
     public boolean checkRating(String rating) {
         try {
             int r = Integer.parseInt(rating);
-            return r >= 0 && r <= 10;
+            return r >= 0 && r <= 5;
         } catch (NumberFormatException e) {
             return false;
         }
